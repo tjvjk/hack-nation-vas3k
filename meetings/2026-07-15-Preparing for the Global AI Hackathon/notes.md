@@ -1,0 +1,1 @@
+[Preparing for the Global AI Hackathon](https://hackathon-field-guide.khlevon.chatgpt.site/)
