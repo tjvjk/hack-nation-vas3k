@@ -4,12 +4,12 @@ import asyncio
 import sys
 
 from mcp import ClientSession
-from mcp.client.streamable_http import streamablehttp_client
+from mcp.client.streamable_http import streamable_http_client
 
 
 async def main() -> None:
     base_url = sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:8000"
-    async with streamablehttp_client(f"{base_url}/mcp") as (read, write, _), ClientSession(read, write) as session:
+    async with streamable_http_client(f"{base_url}/mcp") as (read, write, _), ClientSession(read, write) as session:
         await session.initialize()
         tools = await session.list_tools()
         names = {tool.name for tool in tools.tools}

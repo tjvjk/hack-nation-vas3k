@@ -207,11 +207,11 @@ class Store:
             "benchmark": {"low": campaign["benchmark_low"], "high": campaign["benchmark_high"], "currency": "USD"},
             "move": json.loads(move["spec_json"]),
             "jobs": public_jobs,
-            "ranking": self._rank(public_jobs, float(campaign["benchmark_low"])),
+            "ranking": self._rank(public_jobs),
         }
 
     @staticmethod
-    def _rank(jobs: list[dict[str, Any]], benchmark_low: float) -> list[dict[str, Any]]:
+    def _rank(jobs: list[dict[str, Any]]) -> list[dict[str, Any]]:
         ranked = []
         for job in jobs:
             result = job.get("result") or {}
@@ -229,12 +229,14 @@ class Store:
                 }
             )
         ranked.sort(key=lambda item: ("suspicious_lowball" in item["red_flags"], item["final_total"]))
-        safe = next((item for item in ranked if "suspicious_lowball" not in item["red_flags"]), None)
-        if safe:
-            safe["recommended"] = True
+        for candidate in ranked:
+            if "suspicious_lowball" not in candidate["red_flags"]:
+                candidate["recommended"] = True
+                break
         return ranked
 
-    def _job_with_context(self, db: sqlite3.Connection, call_id: str) -> tuple[sqlite3.Row, sqlite3.Row, sqlite3.Row]:
+    @staticmethod
+    def _job_with_context(db: sqlite3.Connection, call_id: str) -> tuple[sqlite3.Row, sqlite3.Row, sqlite3.Row]:
         job = db.execute("SELECT * FROM call_jobs WHERE id=?", (call_id,)).fetchone()
         if not job:
             raise KeyError("call not found")

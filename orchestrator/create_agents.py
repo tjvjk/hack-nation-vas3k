@@ -6,10 +6,16 @@ from dataclasses import dataclass
 import hashlib
 import os
 import sys
-from typing import Any
+from typing import Any, cast
 
 from elevenlabs.client import ElevenLabs
-from elevenlabs.types import AgentPlatformSettingsRequestModel, AuthSettings, ConversationalConfig
+from elevenlabs.types import (
+    AgentConfig,
+    AgentPlatformSettingsRequestModel,
+    AuthSettings,
+    ConversationalConfig,
+    PromptAgentApiModelOutput,
+)
 
 from app.config import Settings, settings
 from app.db import Store
@@ -29,15 +35,15 @@ class ProvisioningResult:
 
 def _conversation_config(llm: str) -> ConversationalConfig:
     return ConversationalConfig(
-        agent={
-            "first_message": AGENT_NEGOTIATOR_FIRST_MESSAGE,
-            "language": "en",
-            "prompt": {
-                "prompt": AGENT_NEGOTIATOR_SYSTEM_PROMPT,
-                "llm": llm,
-                "temperature": 0.2,
-            },
-        }
+        agent=AgentConfig(
+            first_message=AGENT_NEGOTIATOR_FIRST_MESSAGE,
+            language="en",
+            prompt=PromptAgentApiModelOutput(
+                prompt=AGENT_NEGOTIATOR_SYSTEM_PROMPT,
+                llm=llm,
+                temperature=0.2,
+            ),
+        )
     )
 
 
@@ -63,7 +69,7 @@ def _as_dict(value: Any) -> dict[str, Any]:
     if hasattr(value, "model_dump"):
         return value.model_dump(exclude_none=True)
     if hasattr(value, "__dict__"):
-        return dict(value.__dict__)
+        return dict(cast(dict[str, Any], vars(value)))
     raise RuntimeError("unexpected ElevenLabs agent response")
 
 

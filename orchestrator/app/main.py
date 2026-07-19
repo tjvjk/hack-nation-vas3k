@@ -216,7 +216,7 @@ async def elevenlabs_webhook(request: Request):
             request.headers.get("ElevenLabs-Signature"),
             settings.elevenlabs_webhook_secret,
         )
-    except Exception:
+    except ValueError:
         return error("invalid webhook signature or payload", 401)
     event_type = payload.get("type") or payload.get("event_type") or "unknown"
     data = payload.get("data") or payload

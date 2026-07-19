@@ -1,4 +1,4 @@
-const $ = (selector) => document.querySelector(selector);
+const select = (selector) => document.querySelector(selector);
 let currentCallId = null;
 
 function inventoryFrom(text) {
@@ -27,12 +27,12 @@ async function api(url, options = {}) {
 	return body;
 }
 
-$("#move-form [name=move_date]").valueAsDate = new Date(
+select("#move-form [name=move_date]").valueAsDate = new Date(
 	Date.now() + 14 * 86400000,
 );
-$("#move-form").addEventListener("submit", async (event) => {
+select("#move-form").addEventListener("submit", async (event) => {
 	event.preventDefault();
-	$("#form-error").textContent = "";
+	select("#form-error").textContent = "";
 	const form = new FormData(event.currentTarget);
 	const bool = (name) => form.get(name) === "on";
 	const payload = {
@@ -62,18 +62,18 @@ $("#move-form").addEventListener("submit", async (event) => {
 			body: JSON.stringify(payload),
 		});
 		await api(`/api/moves/${move.id}/campaign`, { method: "POST" });
-		$("#intake-card").classList.add("hidden");
+		select("#intake-card").classList.add("hidden");
 		listen();
 	} catch (error) {
-		$("#form-error").textContent = error.message;
+		select("#form-error").textContent = error.message;
 	}
 });
 
 function render(state) {
 	const campaign = state.campaigns?.[0];
 	if (!campaign) return;
-	$("#campaign-card").classList.remove("hidden");
-	$("#jobs").innerHTML = campaign.jobs
+	select("#campaign-card").classList.remove("hidden");
+	select("#jobs").innerHTML = campaign.jobs
 		.map(
 			(job) =>
 				`<div class="job"><span class="number">${job.sequence_no}</span><div><strong>${job.carrier.carrier_name}</strong><br><small>${job.carrier.headline}</small></div><span class="badge ${job.status}">${job.status.replaceAll("_", " ")}</span></div>`,
@@ -86,38 +86,38 @@ function render(state) {
 	const call = offered || active;
 	if (call) {
 		currentCallId = call.id;
-		$("#call-card").classList.remove("hidden");
-		$("#caller-name").textContent = call.carrier.carrier_name;
-		$("#caller-style").textContent = call.carrier.headline;
-		$("#persona").innerHTML =
+		select("#call-card").classList.remove("hidden");
+		select("#caller-name").textContent = call.carrier.carrier_name;
+		select("#caller-style").textContent = call.carrier.headline;
+		select("#persona").innerHTML =
 			`<strong>Private operator card</strong><p>${call.carrier.private_brief}</p>`;
-		$("#answer").classList.toggle(
+		select("#answer").classList.toggle(
 			"hidden",
 			call.status !== "offered_to_widget",
 		);
-		$("#decline").classList.toggle(
+		select("#decline").classList.toggle(
 			"hidden",
 			call.status !== "offered_to_widget",
 		);
-		$("#result-form").classList.toggle("hidden", call.status !== "in_progress");
+		select("#result-form").classList.toggle("hidden", call.status !== "in_progress");
 	} else {
-		$("#call-card").classList.add("hidden");
+		select("#call-card").classList.add("hidden");
 	}
 	if (campaign.jobs.some((job) => job.result)) renderResults(campaign);
 }
 
 function renderResults(campaign) {
-	$("#results-card").classList.remove("hidden");
-	$("#benchmark").innerHTML =
+	select("#results-card").classList.remove("hidden");
+	select("#benchmark").innerHTML =
 		`<strong>Benchmark:</strong> $${campaign.benchmark.low}–$${campaign.benchmark.high}`;
 	const ranking = campaign.ranking;
 	if (ranking.length === 0) {
-		$("#ranking").replaceChildren(
+		select("#ranking").replaceChildren(
 			document.createTextNode("No itemized quotes yet."),
 		);
 		return;
 	}
-	$("#ranking").innerHTML =
+	select("#ranking").innerHTML =
 		`<table><thead><tr><th>Carrier</th><th>Final</th><th>Risk</th><th>Verdict</th></tr></thead><tbody>${ranking.map((row) => `<tr class="${row.recommended ? "recommended" : ""}"><td>${row.carrier_name}</td><td>$${row.final_total}</td><td class="flag">${row.red_flags.join(", ") || "—"}</td><td>${row.recommended ? "✓ Recommended" : ""}</td></tr>`).join("")}</tbody></table>`;
 }
 
@@ -132,10 +132,10 @@ function listen() {
 	});
 }
 
-$("#answer").addEventListener("click", async () => {
+select("#answer").addEventListener("click", async () => {
 	await api(`/api/calls/${currentCallId}/answer`, { method: "POST" });
 	const session = await api(`/api/calls/${currentCallId}/session`);
-	const host = $("#voice-widget");
+	const host = select("#voice-widget");
 	host.replaceChildren();
 	if (session.mode === "live") {
 		const widget = document.createElement("elevenlabs-convai");
@@ -153,17 +153,17 @@ $("#answer").addEventListener("click", async () => {
 	}
 });
 
-$("#decline").addEventListener("click", () =>
+select("#decline").addEventListener("click", () =>
 	api(`/api/calls/${currentCallId}/decline`, { method: "POST" }),
 );
-$("#result-form").addEventListener("submit", async (event) => {
+select("#result-form").addEventListener("submit", async (event) => {
 	event.preventDefault();
 	const form = new FormData(event.currentTarget);
 	let fees;
 	try {
 		fees = JSON.parse(form.get("fees") || "[]");
 	} catch {
-		$("#form-error").textContent = "Fees must be valid JSON";
+		select("#form-error").textContent = "Fees must be valid JSON";
 		return;
 	}
 	const number = (name) =>
@@ -182,7 +182,7 @@ $("#result-form").addEventListener("submit", async (event) => {
 		}),
 	});
 	event.currentTarget.reset();
-	$("#voice-widget").replaceChildren();
+	select("#voice-widget").replaceChildren();
 });
 
 api("/api/state").then(render);

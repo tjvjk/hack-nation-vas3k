@@ -12,6 +12,10 @@ extraPaths = ["orchestrator"]
 typeCheckingMode = "basic"
 reportMissingImports = "warning"
 
+[tool.pytest.ini_options]
+pythonpath = ["orchestrator"]
+testpaths = ["orchestrator/tests"]
+
 [tool.ruff]
 target-version = "py314"
 line-length = 160

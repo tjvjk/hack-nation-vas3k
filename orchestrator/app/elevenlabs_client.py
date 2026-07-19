@@ -1,8 +1,16 @@
 from __future__ import annotations
 
+from typing import Protocol, cast
+
+from elevenlabs.client import ElevenLabs
+from elevenlabs.errors import BadRequestError
 import httpx
 
 from .config import Settings
+
+
+class WebhookVerifier(Protocol):
+    def construct_event(self, **kwargs: str) -> dict: ...
 
 
 class ElevenLabsGateway:
@@ -29,6 +37,8 @@ def verify_webhook(raw_body: bytes, signature: str | None, secret: str) -> dict:
         return json.loads(raw_body)
     if not signature:
         raise ValueError("missing ElevenLabs-Signature")
-    from elevenlabs import webhooks
-
-    return webhooks.construct_event(rawBody=raw_body.decode("utf-8"), sig_header=signature, secret=secret)
+    try:
+        verifier = cast(WebhookVerifier, ElevenLabs().webhooks)
+        return verifier.construct_event(rawBody=raw_body.decode("utf-8"), sig_header=signature, secret=secret)
+    except BadRequestError as exc:
+        raise ValueError("invalid ElevenLabs webhook signature") from exc
