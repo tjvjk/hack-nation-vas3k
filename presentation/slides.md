@@ -1,227 +1,249 @@
 ---
 theme: default
-title: The Negotiator — HackNation pitch
+title: "The Negotiator — LLM Plumbers"
 info: |
-  ## The Negotiator
-  Voice agents that call, compare, and negotiate.
-author: HackNation team
+  HackNation / ElevenLabs
+  LLM Plumbers — The Negotiator
 drawings:
   persist: false
-transition: fade
+transition: slide-left
 mdc: true
-fonts:
-  sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif
+layout: cover
+class: text-left deck-white
 ---
 
+# Let's voice agents<br>works for you
+
+<br>
+
+**LLM Plumbers · The Negotiator**
+
+<div class="problem-note">
+For one identical 45-mile move, Daniel saw prices from <b>$1,158</b> to <b>$6,506</b>.<br>
+The only way to find a fair price is to call 5–8 movers, repeat the same story, compare hidden fees, and negotiate.
+</div>
+
+<!--
+0:00–0:20 — Open with Daniel, not the product. “The price of a move should not depend on who has the time to make eight calls.”
+-->
+
 <style>
-:root { --ink:#000; --muted:#000; --orange:#000; --orange-soft:#fff1e5; --green:#000; --green-soft:#e9f8ef; --red:#000; --red-soft:#fff0ed; --line:#dce2ea; --night:#fff; }
-.slidev-layout { color:var(--ink); background:#fbfcfe; font-size:20px; }
-h1 { font-size:3.1rem; line-height:.98; letter-spacing:-.065em; margin:0; }
-h2 { font-size:2.25rem; letter-spacing:-.052em; margin:0 0 .5rem; }
-h3 { font-size:1.05rem; margin:0; letter-spacing:-.02em; }
-p { line-height:1.35; }
-.eyebrow { color:var(--orange); font-size:.68rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; margin-bottom:1rem; }
-.lede { color:var(--muted); font-size:1.12rem; max-width:800px; }
-.accent { color:var(--orange); }
-.grid { display:grid; gap:16px; }
-.grid-2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
-.grid-3 { grid-template-columns:repeat(3,minmax(0,1fr)); }
-.card { background:white; border:1px solid var(--line); border-radius:18px; padding:18px 20px; box-shadow:0 10px 25px rgba(16,24,39,.045); }
-.metric { font-weight:850; font-size:2.8rem; line-height:1; letter-spacing:-.07em; color:var(--orange); }
-.label { color:var(--muted); font-size:.76rem; line-height:1.3; margin-top:8px; }
-.tag { display:inline-block; border-radius:999px; padding:5px 10px; font-size:.68rem; font-weight:750; background:var(--orange-soft); color:#000; }
-.status { display:inline-block; border-radius:999px; padding:4px 8px; font-size:.62rem; font-weight:800; color:#000; }
-.ok { background:var(--green-soft); }.no { background:var(--red-soft); }.wait { background:#fff4d8; }
-.quote { font-size:1.45rem; line-height:1.2; letter-spacing:-.04em; font-weight:720; }
-.flow { display:flex; align-items:stretch; gap:8px; margin-top:24px; }
-.node { flex:1; border-radius:15px; padding:14px; background:white; border:1px solid var(--line); font-size:.8rem; }
-.node b { display:block; margin-bottom:6px; font-size:.9rem; }.arrow { align-self:center; color:var(--orange); font-size:1.5rem; }
-.table { width:100%; border-collapse:separate; border-spacing:0 7px; font-size:.78rem; }.table th { color:var(--muted); text-align:left; font-size:.64rem; text-transform:uppercase; letter-spacing:.08em; padding:0 10px 3px; }.table td { padding:11px 10px; background:white; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }.table td:first-child { border-left:1px solid var(--line); border-radius:10px 0 0 10px; }.table td:last-child { border-right:1px solid var(--line); border-radius:0 10px 10px 0; }
-.callout { border-left:5px solid var(--orange); background:var(--orange-soft); border-radius:0 16px 16px 0; padding:16px 20px; }
-.dark .slidev-layout { color:#000; background:var(--night); }.dark .lede,.dark .label { color:#000; }.dark .card,.dark .node { color:#000; }.dark .eyebrow { color:#000; }
-.small { font-size:.76rem; }.tiny { font-size:.62rem; color:var(--muted); }.right { text-align:right; }.bottom { position:absolute; bottom:42px; left:56px; right:56px; }.top-space { margin-top:20px; }
+:root { --ink: #000; --paper: #fff; --line: #d9d9d9; --blue: #dcecff; --purple: #eee3ff; --orange: #fff0d7; --green: #e3f5e9; --pink: #ffe4ed; }
+.slidev-layout { color: var(--ink); background: var(--paper); font-size: 1.08em; }
+.slidev-layout h1, .slidev-layout h2, .slidev-layout h3, .slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th, .slidev-layout a { color: #000 !important; }
+.slidev-layout h1 { font-size: 2.05em; line-height: 1.14; letter-spacing: -.035em; }
+.slidev-layout h2 { letter-spacing: -.025em; }
+.deck-white { background: #fff !important; }
+.problem-note { margin-top: 2rem; max-width: 850px; border-left: 7px solid #000; padding: .6rem 0 .6rem 1rem; font-size: .8em; line-height: 1.45; }
+.deck-kicker { font-size: .58em; font-weight: 800; text-transform: uppercase; letter-spacing: .16em; margin-bottom: .6rem; }
+.big-line { font-size: 1.42em; line-height: 1.25; font-weight: 700; max-width: 850px; }
+.caption { font-size: .58em; line-height: 1.35; }
+.pill { display: inline-block; border: 1.5px solid #000; border-radius: 999px; padding: .24rem .6rem; font-size: .54em; font-weight: 700; margin: .12rem; }
+.simple-list { margin: 1.2rem 0 0 1.2rem; font-size: .78em; line-height: 1.65; }
+.simple-list li { padding-left: .25rem; }
+.callout { border: 2px solid #000; border-radius: 14px; padding: .8rem 1rem; font-size: .73em; line-height: 1.35; }
+.soft-blue { background: var(--blue); }.soft-purple { background: var(--purple); }.soft-orange { background: var(--orange); }.soft-green { background: var(--green); }.soft-pink { background: var(--pink); }
+.flow { display: grid; grid-template-columns: repeat(4, 1fr); align-items: stretch; gap: .55rem; margin-top: 1.4rem; }
+.flow > div { border: 2px solid #000; border-radius: 14px; padding: .7rem; font-size: .65em; line-height: 1.25; }.flow b { display: block; font-size: 1.14em; margin-bottom: .4rem; }
+.arrow { display: flex; align-items: center; justify-content: center; font-size: 1.3em; font-weight: 700; }
+.demo-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 1.1rem; align-items: center; }
+.demo-card { border: 2px solid #000; border-radius: 18px; padding: 1.1rem; }.demo-card p { margin: .25rem 0; font-size: .66em; }.demo-step { display: flex; gap: .65rem; align-items: baseline; margin: .5rem 0; }.demo-step b { font-size: .85em; }
+.team-photo { width: 100%; height: 440px; object-fit: cover; object-position: 50% 42%; border: 2px solid #000; border-radius: 16px; display:block; }
+.github-links { margin-top: 1.2rem; font-size: .62em; line-height: 1.65; }.github-links a { text-decoration: underline; }
+.video-wrap { width: 100%; height: 430px; border: 2px solid #000; border-radius: 16px; overflow: hidden; background: #000; }.video-wrap video { width: 100%; height: 100%; object-fit: contain; display:block; }
+.approaches { display:grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: 1.1rem; }.approaches > div { border: 2px solid #000; border-radius: 16px; padding: .85rem; min-height: 215px; }.approaches h3 { margin: .3rem 0 .55rem; font-size: .78em; }.approaches p { margin:0; font-size: .61em; line-height: 1.4; }
+.architecture { display:grid; grid-template-columns: 1fr .25fr 1fr .25fr 1fr .25fr 1fr; align-items:center; gap:.25rem; margin-top:1.5rem; }.architecture .box { border:2px solid #000; border-radius:16px; padding:.8rem; min-height:155px; font-size:.62em; line-height:1.35; }.architecture b { display:block; font-size:1.15em; margin-bottom:.4rem; }.architecture .arr { font-size:1.4em; text-align:center; }
+.mentor-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:1.25rem; align-items:end; margin-top:1rem; }.mentor { text-align:center; }.mentor img { height:265px; max-width:100%; object-fit:contain; display:block; margin:auto; }.mentor b { display:block; margin-top:.25rem; }.qr-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:3rem; max-width:800px; margin:1.25rem auto 0; text-align:center; }.qr-grid img { width:205px; height:205px; image-rendering:auto; border:1px solid #000; }.qr-grid a { display:block; font-size:.61em; margin-top:.35rem; text-decoration:underline; }
 </style>
 
 ---
 layout: center
-class: dark
+class: deck-white
 ---
 
-<div class="eyebrow">HackNation · ElevenLabs track</div>
+## The Problem
 
-<div class="tag" style="margin-bottom:18px">LLM Plumbers</div>
+<div class="big-line" style="margin-top:1.2rem">Moving is hard. You need to call many companies, explain the same move again and again, and compare their prices.</div>
 
-# The <span class="accent">Negotiator</span>
+<ul class="simple-list">
+  <li>Many phone calls</li>
+  <li>The same details again and again</li>
+  <li>Extra fees that are hard to see</li>
+  <li>Prices that are hard to compare</li>
+</ul>
 
-<p class="lede" style="max-width:640px; margin-top:20px">Voice agents that call, compare, and negotiate — so people stop overpaying in markets where the real price lives on the phone.</p>
+## Solution: Burn tokens<br>instead of spending your time.
 
-<div style="margin-top:34px; display:flex; gap:12px; align-items:center"><span class="tag">Moving · live demo</span><span style="font-size:.8rem">Rock Hill → Charlotte · 45 miles</span></div>
-
-<div class="bottom tiny">Pitch: 3 minutes · Working end-to-end flow · Backup video ready before submission</div>
+<p class="caption" style="margin-top:2rem; max-width:760px">An AI agent can make these calls, collect the important details, and ask for a better price. You can spend your time on packing and your new home.</p>
 
 <!--
-0:00–0:08. Hook with the title, then say: “The price of a move should not depend on who has time to make eight phone calls.”
-Do not explain the tech yet.
+0:20–0:30 — One beat of humor. Do not overexplain tokens. Pivot immediately to what agents do better.
 -->
 
 ---
 layout: default
+class: deck-white
 ---
 
-<div class="eyebrow">The problem</div>
+<div class="deck-kicker">The Negotiator</div>
 
-# One move. One job. <span class="accent">5.6×</span> different prices.
-
-<p class="lede">Daniel needs to move a two-bedroom apartment 45 miles. To find a fair price, he must repeat the same story to 5–8 companies, decode fees, and negotiate — while his moving date gets closer.</p>
-
-<div class="grid grid-3 top-space">
-  <div class="card"><div class="metric">$1,158</div><div class="label">lowest observed quote</div></div>
-  <div class="card"><div class="metric">$6,506</div><div class="label">highest observed quote for the same move</div></div>
-  <div class="card"><div class="metric">40%</div><div class="label">more likely to exceed the initial estimate when quoted sight-unseen</div></div>
-</div>
-
-<div class="callout top-space"><b>People do not lack information.</b> They lack the time and stamina to extract it — one phone call at a time.</div>
-
-<!--
-0:08–0:28. Lead with Daniel, not the market size. Pause on “5.6×.”
-Source context: project challenge brief; FMCSA statistic is cited in the challenge materials.
--->
-
----
-layout: default
----
-
-<div class="eyebrow">One-sentence solution</div>
-
-# We help <span class="accent">buyers facing phone-priced purchases</span> find a fair deal by sending honest voice agents to call, compare, and negotiate for them.
+# One confirmed job. Multiple honest calls. One decision.
 
 <div class="flow">
-  <div class="node"><b>1 · Intake</b>Voice or document → one confirmed job spec</div><div class="arrow">→</div>
-  <div class="node"><b>2 · Call</b>Same spec reaches multiple providers</div><div class="arrow">→</div>
-  <div class="node"><b>3 · Negotiate</b>Only real benchmarks and verified quotes</div><div class="arrow">→</div>
-  <div class="node"><b>4 · Recommend</b>Comparable, ranked, evidence-backed result</div>
+  <div class="soft-blue"><b>1. Tell us once</b><br/>Voice interview or document / form submission creates a single, confirmed move spec.</div>
+  <div class="soft-purple"><b>2. Call for you</b><br/>The agent reaches movers with the exact same facts and explicit consent.</div>
+  <div class="soft-orange"><b>3. Negotiate honestly</b><br/>It uses only a real benchmark or a verified competing quote.</div>
+  <div class="soft-green"><b>4. Pick with proof</b><br/>Ranked prices, itemized terms, red flags, transcripts, and recordings.</div>
 </div>
 
-<div class="grid grid-2 top-space">
-  <div class="card"><span class="tag">For the buyer</span><p class="quote" style="margin-top:12px">A fair choice without doing the exhausting work of comparison shopping.</p></div>
-  <div class="card"><span class="tag">For the market</span><p class="quote" style="margin-top:12px">A reusable system for moving, auto repair, medical bills, contractors, freight, and more.</p></div>
-</div>
+<div class="callout soft-pink" style="margin-top:1.2rem"><b>We help people facing phone-priced purchases get a fair deal</b> by sending voice agents to call, compare, and negotiate for them.</div>
 
 <!--
-0:28–0:40. Read the first sentence almost verbatim. This is the frame judges should retain.
+0:30–0:45 — Solution overview. The system is not “a chatbot that recommends”; it completes the tedious loop.
+-->
+
+---
+layout: two-cols
+class: deck-white
+---
+
+# Our Team: LLM Plumbers
+
+<p style="font-size:.72em; max-width:520px">Three people who were tired of plumbing opaque workflows by hand — so we built agents that pick up the phone.</p>
+
+<div class="callout soft-blue" style="margin-top:1.1rem"><b>Built during HackNation</b><br>Product, voice-agent orchestration, backend, and demo — one team, one weekend.</div>
+
+<div style="margin-top:1.1rem; font-size:.75em"><b>LLM Plumbers</b><br><span class="caption">From left to right: Slach · Dmitry · Ramil</span></div>
+
+<div class="github-links">
+  <a href="https://github.com/Slach" target="_blank">github.com/Slach</a><br>
+  <a href="https://github.com/tjvjk" target="_blank">github.com/tjvjk</a><br>
+  <a href="https://github.com/ramilmustafin" target="_blank">github.com/ramilmustafin</a>
+</div>
+
+::right::
+
+<div style="padding-top:.4rem"><img class="team-photo" src="./assets/team_photo.jpg" alt="LLM Plumbers team" /></div>
+
+<!--
+0:45–0:55 — Name the team quickly. The image crop intentionally centers the three faces and the laptop.
 -->
 
 ---
 layout: default
+class: deck-white
 ---
 
-<div class="eyebrow">Live working demo</div>
+<div class="deck-kicker">Live working demo</div>
 
-# The result is not a chatbot answer. It is a <span class="accent">completed negotiation loop.</span>
+# From one move request to a recommendation
 
-<table class="table top-space">
-  <thead><tr><th>Carrier</th><th>What happened on the call</th><th>Structured outcome</th><th>Evidence</th></tr></thead>
-  <tbody>
-    <tr><td><b>Carolina Swift</b><br><span class="tiny">Tough negotiator</span></td><td>$2,950 → <b>$2,780</b><br><span class="tiny">Market benchmark used honestly</span></td><td><span class="status ok">ITEMIZED QUOTE</span></td><td>Call result + itemized terms</td></tr>
-    <tr><td><b>Queen City</b><br><span class="tiny">Stonewaller</span></td><td>Will not quote by phone<br><span class="tiny">Agent does not invent a number</span></td><td><span class="status no">DOCUMENTED DECLINE</span></td><td>Terminal outcome recorded</td></tr>
-    <tr><td><b>Palmetto Moving</b><br><span class="tiny">Cooperative dispatcher</span></td><td>$2,400 → <b>$2,250</b><br><span class="tiny">Verified prior quote used as leverage</span></td><td><span class="status ok">ITEMIZED QUOTE</span></td><td>Leverage source is traceable</td></tr>
-  </tbody>
-</table>
-
-<div class="callout top-space"><b>Live demo cue:</b> show the carrier card changing state immediately after the call — no refresh, no manual data entry.</div>
+<div class="demo-grid" style="margin-top:1.1rem">
+  <div class="demo-card soft-blue">
+    <div class="demo-step"><b>01</b><span><b>Intake</b><br><span class="caption">Rock Hill → Charlotte · 45 miles · 2-bedroom apartment</span></span></div>
+    <div class="demo-step"><b>02</b><span><b>Consent & campaign</b><br><span class="caption">Three carriers, one immutable spec</span></span></div>
+    <div class="demo-step"><b>03</b><span><b>Calls</b><br><span class="caption">Price, terms, and transcript are collected live</span></span></div>
+    <div class="demo-step"><b>04</b><span><b>Recommendation</b><br><span class="caption">Comparable quotes + evidence, not a black box</span></span></div>
+  </div>
+  <div>
+    <div class="callout soft-orange"><b>Demo order</b><br><span class="caption">1. A market benchmark moves a high quote.<br>2. A mover refuses to quote — the agent records the decline, it does not bluff.<br>3. A verified quote becomes leverage and reduces the final price.</span></div>
+    <div class="callout soft-green" style="margin-top:.7rem"><b>What the jury should watch for</b><br><span class="caption">The campaign card changes to a structured terminal result immediately after every call.</span></div>
+  </div>
+</div>
 
 <!--
-0:40–1:35. This is the core demo slide, but switch to the app for the actual calls.
-Show 10–15 seconds each: successful market-range negotiation; honest decline; verified quote lowers final price.
-Keep the dashboard/progress tab visible. Use the recorded 3-minute demo if live audio/network fails.
+0:55–1:35 — This is the live-demo setup. Switch to the open product tabs: intake, campaign, carrier console, and final report.
+The next slide contains the local recorded fallback video.
 -->
 
 ---
 layout: default
+class: deck-white
 ---
 
-<div class="eyebrow">What makes the outcome trustworthy</div>
+<div class="deck-kicker">Recorded demo · fallback for the live flow</div>
 
-# Negotiation is useful only if the <span class="accent">facts stay honest.</span>
+# The Negotiator in action
 
-<div class="grid grid-2 top-space">
-  <div class="card"><h3>One immutable specification</h3><p class="small" style="margin-top:8px">Every carrier receives the same confirmed route, inventory, date, and service needs — making quotes comparable by construction.</p></div>
-  <div class="card"><h3>Real leverage, never a fake bid</h3><p class="small" style="margin-top:8px">The agent can cite a market benchmark or a previously verified quote — not invented urgency or inventory.</p></div>
-  <div class="card"><h3>Separate outreach consent</h3><p class="small" style="margin-top:8px">No call campaign starts until the buyer grants explicit, scoped consent.</p></div>
-  <div class="card"><h3>Lowball ≠ winner</h3><p class="small" style="margin-top:8px">Suspiciously below-market quotes are flagged for review, not automatically recommended.</p></div>
-</div>
+<div class="video-wrap" style="margin-top:.8rem"><video src="/video/demo.mp4" controls preload="metadata" poster="" aria-label="The Negotiator demo video"></video></div>
 
-<div class="top-space" style="display:flex; gap:10px; align-items:center"><span class="status ok">AI DISCLOSURE</span><span class="status ok">TRANSCRIPT / RECORDING</span><span class="status ok">TERMINAL STATES</span><span class="status ok">AUDITABLE RANKING</span></div>
+<p class="caption" style="margin-top:.35rem">52-second recording of the working voice-agent flow. Click play during the pitch if the live session is unavailable.</p>
 
 <!--
-1:35–1:55. This replaces vague “responsible AI” claims with concrete product behavior.
-Use the documented decline as proof: handling “no” correctly is part of trust.
+1:35–2:27 — Play the video. It is intentionally embedded from presentation/public/video/demo.mp4 so the deck remains self-contained after build.
 -->
 
 ---
 layout: default
+class: deck-white
 ---
 
-<div class="eyebrow">The product architecture</div>
+<div class="deck-kicker">Three conversation approaches we tested</div>
 
-# High-level by design: <span class="accent">voice in, verified outcome out.</span>
+# Negotiation means adapting — not reading one script.
 
-<div class="flow" style="margin-top:30px">
-  <div class="node"><b>Estimator agent</b>Voice / document intake<br><span class="tiny">confirmed MoveSpec</span></div><div class="arrow">→</div>
-  <div class="node"><b>Control plane</b>Consent · carrier campaign · benchmark · call scope</div><div class="arrow">→</div>
-  <div class="node"><b>Negotiator agent</b>Browser voice session<br><span class="tiny">carrier-specific, scoped context</span></div><div class="arrow">→</div>
-  <div class="node"><b>Report</b>Ranked quotes · flags · transcript / recording links</div>
-</div>
-
-<div class="grid grid-3 top-space">
- <div class="card"><h3>Safety boundary</h3><p class="small" style="margin-top:8px">Server-side call permissions prevent agents from exceeding their role or campaign scope.</p></div>
- <div class="card"><h3>Reliable state</h3><p class="small" style="margin-top:8px">Each call closes in a structured terminal result; webhooks are verified and idempotent.</p></div>
- <div class="card"><h3>Demo-safe delivery</h3><p class="small" style="margin-top:8px">Human-in-the-loop browser carrier console today; real outbound calling remains off by default.</p></div>
+<div class="approaches">
+  <div class="soft-orange"><span class="pill">01 · benchmark</span><h3>Firm price → market reference</h3><p>Carolina Swift opens at <b>$2,950</b>. The agent cites a real market range; the mover reduces the quote to <b>$2,780</b>.</p></div>
+  <div class="soft-pink"><span class="pill">02 · honest stop</span><h3>No quote → documented decline</h3><p>Queen City refuses a phone quote. The agent thanks them and records <b>documented_decline</b> — no fabricated price, no fake success.</p></div>
+  <div class="soft-green"><span class="pill">03 · verified leverage</span><h3>Prior quote → lower final price</h3><p>Palmetto starts at <b>$2,400</b>. The agent references a verified competing quote, and reaches <b>$2,250</b>.</p></div>
 </div>
 
 <!--
-1:55–2:10. Do not show code, SDK names, or file trees. This answers “how is it real?” in one diagram.
+2:27–2:42 — These are the three call patterns from the demo script. Emphasize causality: the price changes only after real leverage appears.
 -->
 
 ---
 layout: default
+class: deck-white
 ---
 
-<div class="eyebrow">Beyond moving</div>
+<div class="deck-kicker">How it works</div>
 
-# The call pattern stays the same. <span class="accent">The market configuration changes.</span>
+# Voice in. Evidence-backed outcome out.
 
-<div class="grid grid-2 top-space">
- <div class="card"><span class="tag">Moving today</span><h3 style="margin-top:13px">Route · rooms · stairs · inventory</h3><p class="small" style="margin-top:10px">Benchmark: moving-cost range. Red flags: sight-unseen lowball and hidden fees.</p></div>
- <div class="card"><span class="tag">Auto repair next</span><h3 style="margin-top:13px">Vehicle · symptom · mileage · parts</h3><p class="small" style="margin-top:10px">Benchmark: regional repair range. Same call, comparison, consent, and evidence flow.</p></div>
+<div class="architecture">
+  <div class="box soft-blue"><b>Estimator agent</b>Voice or document intake creates the confirmed job specification.</div>
+  <div class="arr">→</div>
+  <div class="box soft-purple"><b>Control plane</b>Consent, benchmark, carrier campaign, and scoped call context.</div>
+  <div class="arr">→</div>
+  <div class="box soft-orange"><b>Negotiator agent</b>Calls through the browser demo session and saves structured outcomes.</div>
+  <div class="arr">→</div>
+  <div class="box soft-green"><b>Decision report</b>Ranked quotes, terms, red flags, transcript, and recording links.</div>
 </div>
 
-<div class="grid grid-3 top-space">
-  <div class="card"><h3>Medical bills</h3><p class="small" style="margin-top:8px">Negotiate balances and payment plans.</p></div>
-  <div class="card"><h3>Contractor bids</h3><p class="small" style="margin-top:8px">Normalize scope and compare exclusions.</p></div>
-  <div class="card"><h3>Freight & rentals</h3><p class="small" style="margin-top:8px">Make opaque phone quotes legible.</p></div>
-</div>
+<div class="callout" style="margin-top:1.15rem"><b>Trust is a product feature:</b> same immutable spec for every provider · separate consent before outreach · real leverage only · suspicious lowballs are flagged, never auto-selected.</div>
 
 <!--
-2:10–2:25. Use the short bonus video clip only if timing permits. Say “same workflow, different taxonomy,” not “we solved every vertical.”
+2:42–2:55 — High-level diagram only. No code, SDK logos, or file tree.
 -->
 
 ---
 layout: center
-class: dark
+class: deck-white
 ---
 
-<div class="eyebrow">Impact</div>
+# Спасибо mentors!
 
-# The fair price already exists.<br>We make it <span class="accent">reachable.</span>
-
-<p class="lede" style="margin-top:22px">The Negotiator turns a task that almost nobody completes — calling, comparing, and haggling across fragmented businesses — into an honest, auditable decision.</p>
-
-<div style="display:flex; gap:12px; margin-top:32px"><span class="tag">More time for people</span><span class="tag">More evidence in every decision</span><span class="tag">One reusable platform</span></div>
-
-<div class="bottom" style="display:flex; justify-content:space-between; font-size:.68rem"><span>Demo tabs: intake · campaign · carrier console · final report</span><span>Fallback: pre-recorded demo video</span></div>
+<div class="mentor-grid">
+  <div class="mentor"><img src="./assets/mentor1.png" alt="Vardineh QR code" /><b>Vardineh</b></div>
+  <div class="mentor"><img src="./assets/mentor2.png" alt="Wolf QR code" /><b>Wolf</b></div>
+  <div class="mentor"><img src="./assets/mentor3.png" alt="Levon QR code" /><b>Levon</b></div>
+</div>
 
 <!--
-2:25–3:00. Close with impact, not a feature list. End with: “The Negotiator makes the fair price reachable.”
-Before pitching: open the four tabs in the footer, start each browser session, and keep the recorded demo locally available.
+2:55–3:00 — Thank mentors briefly. Then advance to the final QR slide for questions/networking.
 -->
+
+---
+layout: end
+class: deck-white
+---
+
+# Try The Negotiator
+
+<div class="qr-grid">
+  <div><a href="http://calls.feedfinch.com" target="_blank"><img src="/qrs/product.png" alt="QR code for calls.feedfinch.com" /></a><b style="display:block; margin-top:.35rem">Live product</b><a href="http://calls.feedfinch.com" target="_blank">calls.feedfinch.com</a></div>
+  <div><a href="https://github.com/tjvjk/hack-nation-vas3k" target="_blank"><img src="/qrs/repository.png" alt="QR code for GitHub repository" /></a><b style="display:block; margin-top:.35rem">Source code</b><a href="https://github.com/tjvjk/hack-nation-vas3k" target="_blank">github.com/tjvjk/hack-nation-vas3k</a></div>
+</div>
+
+<p class="caption" style="margin-top:1rem">LLM Plumbers · The Negotiator · HackNation / ElevenLabs</p>
