@@ -149,7 +149,7 @@ layout: center
 class: deck-white
 ---
 
-# Спасибо mentors!
+# Thanks to mentors!
 
 <div class="mentor-grid" style="display:flex!important; width:100%!important; gap:1rem!important; align-items:flex-start!important; justify-content:center!important">
   <div class="mentor" style="flex:1 1 0!important; min-width:0!important"><img style="width:100%!important; height:230px!important; object-fit:contain!important" src="./assets/mentor1.png" alt="Vardineh QR code" /><b>Vardineh</b></div>
