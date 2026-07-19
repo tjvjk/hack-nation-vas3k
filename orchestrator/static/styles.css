@@ -35,6 +35,13 @@ main {
   padding: 60px 24px 80px;
 }
 
+body.campaign-started main {
+  height: 100dvh;
+  gap: 14px;
+  padding: 18px 24px;
+  overflow: hidden;
+}
+
 .hidden {
   display: none !important;
 }
@@ -331,6 +338,102 @@ button {
   box-shadow: var(--shadow);
 }
 
+body.campaign-started #campaign-card {
+  flex: 0 0 auto;
+}
+
+body.campaign-started .card,
+body.campaign-started .call-card {
+  width: min(70vw, 1080px);
+}
+
+body.campaign-started .jobs {
+  gap: 6px;
+  padding: 10px 20px;
+}
+
+body.campaign-started .job {
+  min-height: 42px;
+  padding: 6px 14px;
+}
+
+body.campaign-started .job small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.campaign-started .call-card {
+  flex: 1 1 auto;
+  min-height: 0;
+  gap: 8px;
+  padding: 12px 32px;
+  overflow: hidden;
+}
+
+body.campaign-started .ring-orbit {
+  width: 128px;
+  height: 128px;
+  background: radial-gradient(circle, var(--primary) 0 25px, #ff840018 26px 36px, #ff840010 37px 49px, #ff840008 50px 64px);
+}
+
+body.campaign-started .ring-orbit div {
+  width: 52px;
+  height: 52px;
+  font-size: 22px;
+}
+
+body.campaign-started .call-card:has(#answer:not(.hidden)) {
+  justify-content: space-between;
+  padding-block: 10px;
+}
+
+body.campaign-started .call-card:has(#answer:not(.hidden)) .ring-orbit {
+  width: 108px;
+  height: 108px;
+  background: radial-gradient(circle, var(--primary) 0 21px, #ff840018 22px 31px, #ff840010 32px 42px, #ff840008 43px 54px);
+}
+
+body.campaign-started .call-card:has(#answer:not(.hidden)) .ring-orbit div {
+  width: 46px;
+  height: 46px;
+  font-size: 19px;
+}
+
+body.campaign-started .call-card:has(#answer:not(.hidden)) .persona {
+  max-height: 76px;
+  padding: 10px 16px;
+  overflow: hidden;
+}
+
+body.campaign-started .call-card:has(#answer:not(.hidden)) .persona p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+body.campaign-started .top-bar {
+  padding-block: 10px;
+}
+
+body.campaign-started .call-progress {
+  padding-block: 7px;
+}
+
+body.campaign-started .call-heading {
+  gap: 4px;
+}
+
+body.campaign-started .call-heading p {
+  font-size: 16px;
+}
+
+body.campaign-started .call-heading h2 {
+  font-size: 24px;
+}
+
 .call-progress {
   justify-content: center;
   gap: 8px;
@@ -399,6 +502,14 @@ button {
   background: var(--primary);
   color: #ffffff;
   font-size: 26px;
+}
+
+.call-card.in-call .ring-orbit {
+  animation: call-orbit 1s ease-in-out infinite;
+}
+
+.call-card.in-call .ring-orbit div {
+  animation: call-button 850ms ease-in-out infinite;
 }
 
 .call-meta {
@@ -648,6 +759,15 @@ label {
   padding-top: 28px;
 }
 
+#call-results pre {
+  max-height: 260px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #111111;
+  color: #ffffff;
+  line-height: 1.45;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -683,13 +803,13 @@ pre {
 }
 
 .incoming-answer {
-  animation: pulse-answer 900ms ease-in-out 2;
+  animation: pulse-answer 900ms ease-in-out infinite;
 }
 
 @keyframes pulse-answer {
   50% {
-    transform: scale(1.03);
-    box-shadow: 0 0 0 8px #ff840024;
+    transform: scale(1.06);
+    box-shadow: 0 0 0 12px #ff840038, 0 16px 32px #ff84004d;
   }
 }
 
@@ -699,7 +819,67 @@ pre {
   }
 }
 
+@keyframes call-orbit {
+  50% {
+    transform: scale(1.04);
+    border-color: #ff840070;
+    box-shadow: 0 0 0 18px #ff84001f, 0 0 36px #ff84003d;
+  }
+}
+
+@keyframes call-button {
+  50% {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 12px #ff840038, 0 0 28px #ff84005c;
+  }
+}
+
+@media (max-height: 820px) and (min-width: 721px) {
+  body.campaign-started main {
+    gap: 10px;
+    padding-block: 10px;
+  }
+
+  body.campaign-started .top-bar {
+    padding-block: 10px;
+  }
+
+  body.campaign-started .jobs {
+    padding-block: 10px;
+  }
+
+  body.campaign-started .call-card {
+    gap: 10px;
+    padding-block: 14px;
+  }
+
+  body.campaign-started .call-progress {
+    padding-block: 7px;
+  }
+
+  body.campaign-started .call-heading {
+    gap: 4px;
+  }
+
+  body.campaign-started .call-heading p {
+    font-size: 16px;
+  }
+
+  body.campaign-started .call-heading h2 {
+    font-size: 24px;
+  }
+
+  body.campaign-started .persona {
+    padding: 12px 16px;
+  }
+}
+
 @media (max-width: 720px) {
+  body.campaign-started .card,
+  body.campaign-started .call-card {
+    width: 100%;
+  }
+
   main {
     padding: 20px 14px 48px;
   }

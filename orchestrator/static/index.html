@@ -45,6 +45,7 @@ Boxes,24,false</textarea></label><label>Constraints and notes<textarea name="not
       <div class="persona" id="persona"></div>
       <div class="actions"><button class="answer" id="answer">Answer</button><button class="decline" id="decline">Decline</button></div>
       <div id="voice-session" class="voice-session hidden" role="status" aria-live="polite"><span class="connection-dot"></span><span id="voice-status">Connecting…</span><button class="decline hidden" id="hang-up" type="button">Hang up</button></div>
+      <div id="post-call-processing" class="post-call-processing hidden" role="status" aria-live="polite"><span class="spinner"></span><span>Saving and structuring the call result…</span></div>
       <form id="result-form" class="result-form hidden">
         <h3>Structured result</h3>
         <div class="grid three"><label>Outcome<select name="outcome"><option value="itemized_quote">Itemized quote</option><option value="callback_commitment">Callback</option><option value="documented_decline">Decline</option><option value="technical_failure">Technical failure</option></select></label><label>Initial total<input name="initial_total" type="number" min="0" step="0.01"></label><label>Final total<input name="final_total" type="number" min="0" step="0.01"></label></div>

@@ -9,6 +9,7 @@ let resultSaved = false;
 let animatedOfferId = null;
 let lastRenderedCallId = null;
 let campaignStartedThisPage = false;
+let declining = false;
 
 function clearCallEndTimer() {
 	if (callEndTimer !== null) window.clearTimeout(callEndTimer);
@@ -49,19 +50,16 @@ function isFarewell(message) {
 }
 
 function animateIncomingAnswer(call, isNextCarrier) {
-	if (
-		!isNextCarrier ||
-		call.status !== "offered_to_widget" ||
-		animatedOfferId === call.id
-	)
-		return;
+	if (call.status !== "offered_to_widget" || animatedOfferId === call.id) return;
 	const answer = select("#answer");
 	animatedOfferId = call.id;
 	answer.classList.remove("incoming-answer");
 	void answer.offsetWidth;
 	answer.classList.add("incoming-answer");
-	answer.scrollIntoView({ behavior: "smooth", block: "center" });
-	answer.focus({ preventScroll: true });
+	if (isNextCarrier) {
+		answer.scrollIntoView({ behavior: "smooth", block: "center" });
+		answer.focus({ preventScroll: true });
+	}
 }
 
 function inventoryFrom(text) {
@@ -198,12 +196,13 @@ function render(state) {
 	const active = campaign.jobs.find((job) => job.status === "in_progress");
 	const call = offered || claimed || active;
 	if (call) {
+		const callCard = select("#call-card");
 		const isNextCarrier =
 			campaignStartedThisPage &&
 			lastRenderedCallId !== null &&
 			lastRenderedCallId !== call.id;
 		currentCallId = call.id;
-		select("#call-card").classList.remove("hidden");
+		callCard.classList.remove("hidden");
 		select("#caller-name").textContent = "Incoming call from The Negotiator";
 		select("#caller-style").textContent =
 			"AI assistant calling on behalf of a customer";
@@ -221,7 +220,14 @@ function render(state) {
 			"hidden",
 			call.status !== "offered_to_widget",
 		);
-		select("#result-form").classList.toggle("hidden", call.status !== "in_progress");
+		if (call.status === "offered_to_widget" && !declining) {
+			select("#decline").disabled = false;
+			select("#decline").textContent = "Decline";
+		}
+		select("#result-form").classList.toggle(
+			"hidden",
+			call.status !== "in_progress" || activeConversation !== null || callCard.classList.contains("call-ended"),
+		);
 	} else {
 		select("#call-card").classList.add("hidden");
 	}
@@ -300,6 +306,9 @@ select("#answer").addEventListener("click", async () => {
 	let pendingConversation = null;
 	answer.disabled = true;
 	answer.textContent = "Answering…";
+	select("#call-card").classList.remove("call-ended");
+	select("#call-card").classList.add("in-call");
+	select("#post-call-processing").classList.add("hidden");
 	select("#form-error").textContent = "";
 	voiceSession.classList.remove("hidden");
 	select("#voice-status").textContent = "Requesting microphone access…";
@@ -339,6 +348,7 @@ select("#answer").addEventListener("click", async () => {
 			onConnect: () => {
 				select("#voice-status").textContent = "Connected to The Negotiator";
 				select("#hang-up").classList.remove("hidden");
+				select("#call-card").classList.add("in-call");
 			},
 			onMessage: (message) => {
 				if (!resultSaved && isFarewell(message)) {
@@ -358,6 +368,10 @@ select("#answer").addEventListener("click", async () => {
 				voiceSession.classList.add("hidden");
 				answer.disabled = false;
 				answer.textContent = "Answer";
+				select("#call-card").classList.remove("in-call");
+				select("#call-card").classList.add("call-ended");
+				select("#result-form").classList.add("hidden");
+				select("#post-call-processing").classList.remove("hidden");
 				activeConversation = null;
 				clearCallEndTimer();
 				farewellPending = false;
@@ -387,6 +401,9 @@ select("#answer").addEventListener("click", async () => {
 			}
 		}
 		activeConversation = null;
+		select("#call-card").classList.remove("in-call");
+		select("#call-card").classList.remove("call-ended");
+		select("#post-call-processing").classList.add("hidden");
 		clearCallEndTimer();
 		farewellPending = false;
 		resultSaved = false;
@@ -411,9 +428,22 @@ select("#hang-up").addEventListener("click", async () => {
 	if (activeConversation) await activeConversation.endSession();
 });
 
-select("#decline").addEventListener("click", () =>
-	api(`/api/calls/${currentCallId}/decline`, { method: "POST" }),
-);
+select("#decline").addEventListener("click", async () => {
+	if (declining || !currentCallId) return;
+	const decline = select("#decline");
+	declining = true;
+	decline.disabled = true;
+	decline.textContent = "Declining…";
+	try {
+		await api(`/api/calls/${currentCallId}/decline`, { method: "POST" });
+	} catch (error) {
+		select("#form-error").textContent = `Could not decline call: ${error.message || error}`;
+		decline.disabled = false;
+		decline.textContent = "Decline";
+	} finally {
+		declining = false;
+	}
+});
 select("#result-form").addEventListener("submit", async (event) => {
 	event.preventDefault();
 	const form = new FormData(event.currentTarget);

@@ -447,14 +447,23 @@ def test_browser_demo_models_one_click_incoming_answer():
     assert "enforceCallLimit" in javascript
     assert "180000" in javascript
     assert "animateIncomingAnswer" in javascript
+    assert 'call.status !== "offered_to_widget" || animatedOfferId === call.id' in javascript
     assert "answer.scrollIntoView" in javascript
     assert "answer.focus" in javascript
     assert "lastRenderedCallId" in javascript
     assert "campaignStartedThisPage" in javascript
+    assert 'classList.add("in-call")' in javascript
+    assert 'classList.remove("in-call")' in javascript
+    assert "let declining = false" in javascript
+    assert 'decline.textContent = "Declining…"' in javascript
     styles = (static_dir / "styles.css").read_text()
     assert ".agent-card," in styles
     assert ".call-card" in styles
     assert "incoming-answer" in (static_dir / "styles.css").read_text()
+    assert "call-button" in styles
+    assert "#call-results pre" in styles
+    assert "background: #111111" in styles
+    assert "text-overflow: ellipsis" in styles
     assert "Structured call records" in javascript
     assert 'id="call-results"' in html
     assert "/reconcile" in javascript
