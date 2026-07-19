@@ -44,6 +44,36 @@ function messageText(message) {
 	);
 }
 
+function clearSubtitles() {
+	select("#subtitles-list").innerHTML = '<p class="empty-subtitles">Subtitles will appear after you answer.</p>';
+}
+
+function setPostCallProcessing(visible) {
+	select("#post-call-processing").classList.toggle("hidden", !visible);
+}
+
+function scrollSubtitlesToBottom() {
+	const list = select("#subtitles-list");
+	requestAnimationFrame(() => {
+		list.scrollTop = list.scrollHeight;
+	});
+}
+
+function appendSubtitle(message) {
+	const text = messageText(message).trim();
+	if (!text) return;
+	const list = select("#subtitles-list");
+	list.querySelector(".empty-subtitles")?.remove();
+	const row = document.createElement("p");
+	const speaker = message?.source === "user" || message?.role === "user" ? "You" : "Agent";
+	const label = document.createElement("strong");
+	label.textContent = speaker;
+	row.append(label, text);
+	list.append(row);
+	while (list.children.length > 12) list.firstElementChild.remove();
+	scrollSubtitlesToBottom();
+}
+
 function isFarewell(message) {
 	return /\b(goodbye|bye-bye|have a great day|end the call now)\b/i.test(messageText(message));
 }
@@ -205,8 +235,6 @@ function render(state) {
 		select("#caller-style").textContent = call.carrier.carrier_name;
 		select("#answering-as").textContent =
 			`You are answering as ${call.carrier.carrier_name}`;
-		select("#persona").innerHTML =
-			`<strong>${call.carrier.headline}</strong><p>${call.carrier.private_brief}</p>`;
 		select("#answer").classList.toggle(
 			"hidden",
 			call.status !== "offered_to_widget",
@@ -217,7 +245,6 @@ function render(state) {
 			"hidden",
 			call.status !== "offered_to_widget",
 		);
-		select("#result-form").classList.toggle("hidden", call.status !== "in_progress");
 	} else {
 		select("#call-card").classList.add("hidden");
 	}
@@ -225,6 +252,7 @@ function render(state) {
 }
 
 function renderResults(campaign) {
+	setPostCallProcessing(false);
 	select("#results-card").classList.remove("hidden");
 	select("#benchmark").innerHTML =
 		`<strong>Benchmark:</strong> $${campaign.benchmark.low}–$${campaign.benchmark.high}`;
@@ -292,6 +320,8 @@ select("#answer").addEventListener("click", async () => {
 	const callId = currentCallId;
 	let claimToken = null;
 	let pendingConversation = null;
+	clearSubtitles();
+	setPostCallProcessing(false);
 	answer.disabled = true;
 	answer.textContent = "Answering...";
 	select("#form-error").textContent = "";
@@ -333,6 +363,7 @@ select("#answer").addEventListener("click", async () => {
 				select("#hang-up").classList.remove("hidden");
 			},
 			onMessage: (message) => {
+				appendSubtitle(message);
 				if (!resultSaved && isFarewell(message)) {
 					farewellPending = true;
 					endConversationSoon(activeConversation || pendingConversation, 15000);
@@ -348,6 +379,7 @@ select("#answer").addEventListener("click", async () => {
 				select("#voice-status").textContent = "Call ended";
 				select("#hang-up").classList.add("hidden");
 				voiceSession.classList.add("hidden");
+				setPostCallProcessing(true);
 				answer.disabled = false;
 				answer.textContent = "Answer";
 				activeConversation = null;
@@ -406,32 +438,3 @@ select("#hang-up").addEventListener("click", async () => {
 select("#decline").addEventListener("click", () =>
 	api(`/api/calls/${currentCallId}/decline`, { method: "POST" }),
 );
-select("#result-form").addEventListener("submit", async (event) => {
-	event.preventDefault();
-	const form = new FormData(event.currentTarget);
-	let fees;
-	try {
-		fees = JSON.parse(form.get("fees") || "[]");
-	} catch {
-		select("#form-error").textContent = "Fees must be valid JSON";
-		return;
-	}
-	const number = (name) =>
-		form.get(name) === "" ? null : Number(form.get(name));
-	await api(`/api/calls/${currentCallId}/result`, {
-		method: "POST",
-		body: JSON.stringify({
-			outcome: form.get("outcome"),
-			initial_total: number("initial_total"),
-			final_total: number("final_total"),
-			fees,
-			notes: form.get("result_notes"),
-			included_services: [],
-			excluded_services: [],
-			binding: "unknown",
-		}),
-	});
-	event.currentTarget.reset();
-	if (activeConversation) await activeConversation.endSession();
-	select("#voice-session").classList.add("hidden");
-});

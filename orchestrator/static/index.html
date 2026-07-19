@@ -41,20 +41,20 @@
       <div class="company-dots" aria-hidden="true"><span class="done"></span><span class="active"></span><span></span><span></span></div>
       <div class="ring-orbit"><div>Call</div></div>
       <p class="call-meta" id="answering-as"></p>
-      <div class="persona" id="persona"></div>
+      <div class="subtitles" aria-live="polite">
+        <h3>Live Subtitles</h3>
+        <div id="subtitles-list" class="subtitles-list"><p class="empty-subtitles">Subtitles will appear after you answer.</p></div>
+      </div>
       <div class="actions"><button class="answer" id="answer">Answer</button><button class="decline" id="decline">Decline</button></div>
       <div id="voice-session" class="voice-session hidden" role="status" aria-live="polite">
         <span class="connection-dot"></span>
         <span id="voice-status">Connecting...</span>
         <button class="decline hidden" id="hang-up" type="button">Hang up</button>
       </div>
-      <form id="result-form" class="result-form hidden">
-        <h3>Call result</h3>
-        <div class="grid three"><label>Outcome<select name="outcome"><option value="itemized_quote">Itemized quote</option><option value="callback_commitment">Callback</option><option value="documented_decline">Decline</option><option value="technical_failure">Technical failure</option></select></label><label>Initial total<input name="initial_total" type="number" min="0" step="0.01"></label><label>Final total<input name="final_total" type="number" min="0" step="0.01"></label></div>
-        <label>Fees <small>JSON array</small><textarea name="fees" rows="2">[]</textarea></label>
-        <label>Notes<textarea name="result_notes" rows="2"></textarea></label>
-        <button class="primary" type="submit">Complete call</button>
-      </form>
+      <div id="post-call-processing" class="post-call-processing hidden" role="status" aria-live="polite">
+        <span class="spinner" aria-hidden="true"></span>
+        <span>Preparing call summary...</span>
+      </div>
     </section>
 
     <section class="card hidden" id="results-card">

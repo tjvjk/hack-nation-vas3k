@@ -21,7 +21,7 @@ PERSONAS = [
         "carrier_id": "budget-hidden",
         "carrier_name": "Budget Hidden Fee Moving",
         "style": "hidden_fee_lowballer",
-        "headline": "Hidden-fee lowballer",
+        "headline": "Low initial quote",
         "private_brief": "Quote $1,100, then add $350 stairs, $250 fuel, and $300 long-carry fees. Resist itemizing until pressed.",
     },
     {
