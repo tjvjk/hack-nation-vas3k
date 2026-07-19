@@ -426,6 +426,9 @@ def test_browser_demo_models_one_click_incoming_answer():
     assert "clientTools:" in javascript
     assert "save_quote_progress" in javascript
     assert "save_negotiation_result" in javascript
+    assert "resultSaved = true" in javascript
+    assert "!resultSaved && isFarewell(message)" in javascript
+    assert "endConversationSoon(activeConversation || pendingConversation);" not in javascript
     assert "isFarewell" in javascript
     assert "onMessage:" in javascript
     assert "enforceCallLimit" in javascript
@@ -561,6 +564,7 @@ def test_agent_negotiator_is_created_then_reconfigured_from_sqlite():
     result_tool = next(tool for tool in tools.remote.values() if tool.tool_config.name == "save_negotiation_result")
     assert result_tool.tool_config.execution_mode == "post_tool_speech"
     assert remote["prompt"]["built_in_tools"]["end_call"]["name"] == "end_call"
+    assert remote["prompt"]["built_in_tools"]["end_call"]["pre_tool_speech"] == "force"
 
     updated = provision_agent_negotiator(store=store, config=config, client=client)
     assert updated.action == "updated"

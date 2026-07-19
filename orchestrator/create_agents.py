@@ -84,7 +84,10 @@ CLIENT_TOOL_DEFINITIONS = {
     },
 }
 
-END_CALL_DESCRIPTION = "End the call after a farewell, a completed quote, or an explicit request to stop."
+END_CALL_DESCRIPTION = (
+    "End the call after a completed quote or an explicit request to stop. "
+    "This tool alone delivers the single final farewell."
+)
 
 
 @dataclass(frozen=True)

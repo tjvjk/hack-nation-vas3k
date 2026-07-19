@@ -5,6 +5,7 @@ let currentCallId = null;
 let activeConversation = null;
 let callEndTimer = null;
 let farewellPending = false;
+let resultSaved = false;
 let animatedOfferId = null;
 let lastRenderedCallId = null;
 let campaignStartedThisPage = false;
@@ -24,6 +25,7 @@ function endConversationSoon(conversation, delay = 1200) {
 function enforceCallLimit(conversation) {
 	clearCallEndTimer();
 	farewellPending = false;
+	resultSaved = false;
 	callEndTimer = window.setTimeout(() => {
 		select("#voice-status").textContent = "Call time limit reached; ending…";
 		void conversation?.endSession();
@@ -328,7 +330,7 @@ select("#answer").addEventListener("click", async () => {
 						method: "POST",
 						body: JSON.stringify(structuredResult(params)),
 					});
-					endConversationSoon(activeConversation || pendingConversation);
+					resultSaved = true;
 					return saved;
 				},
 			},
@@ -337,7 +339,7 @@ select("#answer").addEventListener("click", async () => {
 				select("#hang-up").classList.remove("hidden");
 			},
 			onMessage: (message) => {
-				if (isFarewell(message)) {
+				if (!resultSaved && isFarewell(message)) {
 					farewellPending = true;
 					endConversationSoon(activeConversation || pendingConversation, 15000);
 				}
@@ -357,6 +359,7 @@ select("#answer").addEventListener("click", async () => {
 				activeConversation = null;
 				clearCallEndTimer();
 				farewellPending = false;
+				resultSaved = false;
 				void reconcileUntilSettled(callId);
 			},
 			onError: (error) => {
@@ -384,6 +387,7 @@ select("#answer").addEventListener("click", async () => {
 		activeConversation = null;
 		clearCallEndTimer();
 		farewellPending = false;
+		resultSaved = false;
 		if (claimToken) {
 			try {
 				await api(`/api/calls/${callId}/release`, {

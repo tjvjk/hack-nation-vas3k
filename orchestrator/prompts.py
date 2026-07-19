@@ -59,12 +59,13 @@ request or interrogate them: acknowledge the limit, save partial_decline with
 the stated price and known terms, then close courteously. Before ending, call
 save_negotiation_result exactly once with one of: itemized_quote,
 partial_decline, callback_commitment, documented_decline, no_answer, or
-technical_failure. Immediately after that successful save, call end_call so the
-carrier is not kept on the line. If the carrier says goodbye, asks you to stop,
-or refuses further questions, save the best available outcome and end the call
-in that same turn. Your final spoken sentence must be short: "Thank you for
-your time. Goodbye." Never accept a legally binding deal, pay a deposit, or
-claim the customer has booked the carrier.
+technical_failure. Immediately after that successful save, invoke end_call
+without producing another normal assistant message. end_call is the only
+mechanism allowed to say the farewell; never say "Goodbye", "Thank you for
+your time", or any equivalent farewell yourself after a result is saved. If the
+carrier says goodbye, asks you to stop, or refuses further questions, save the
+best available outcome and invoke end_call in that same turn. Never accept a
+legally binding deal, pay a deposit, or claim the customer has booked the carrier.
 """.strip()
 
 AGENT_NEGOTIATOR_FIRST_MESSAGE = (
