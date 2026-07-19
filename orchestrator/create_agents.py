@@ -35,8 +35,21 @@ AGENT_NAME = "The Negotiator — Agent Negotiator"
 
 
 CLIENT_TOOL_DEFINITIONS = {
+    "get_movebuddha_benchmark": {
+        "description": "REQUIRED immediately after the carrier's first price and before any counteroffer. Get the current moveBuddha professional-mover market range for this confirmed move. This is a market benchmark, never a competing quote.",
+        "tool_options": {
+            "pre_tool_speech": "off",
+            "interruption_mode": "disable_during_tool_and_turn",
+        },
+        "required": [],
+        "properties": {},
+    },
     "save_quote_progress": {
-        "description": "Save an initial carrier price or meaningful fee details while the call is active.",
+        "description": "REQUIRED immediately when the carrier first states a price or fee. Call before asking another question or speaking a counteroffer.",
+        "tool_options": {
+            "pre_tool_speech": "off",
+            "interruption_mode": "disable_during_tool_and_turn",
+        },
         "required": [],
         "properties": {
             "initial_total": {"type": "number", "description": "Initial quoted total in USD."},

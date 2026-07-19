@@ -16,6 +16,9 @@ class Settings:
     public_base_url: str
     call_transport: str
     carrier_data_path: Path
+    movebuddha_api_url: str
+    movebuddha_api_token: str
+    google_maps_api_key: str
 
     @property
     def live_agent_enabled(self) -> bool:
@@ -37,13 +40,16 @@ def load_settings() -> Settings:
         database_path=database_path,
         static_dir=package_root / "static",
         elevenlabs_api_key=os.getenv("ELEVENLABS_API_KEY", ""),
-        elevenlabs_agent_negotiator_llm=os.getenv("ELEVENLABS_AGENT_NEGOTIATOR_LLM", "gpt-4o-mini"),
+        elevenlabs_agent_negotiator_llm=os.getenv("ELEVENLABS_AGENT_NEGOTIATOR_LLM", "gpt-5.2"),
         elevenlabs_webhook_secret=os.getenv("ELEVENLABS_WEBHOOK_SECRET", ""),
         public_base_url=os.getenv("PUBLIC_BASE_URL", "http://localhost:8000"),
         call_transport=os.getenv("CALL_TRANSPORT", "widget"),
         carrier_data_path=Path(
             os.getenv("CARRIERS_DATA_FILE", package_root / "seed" / "fmcsa_carriers.json")
         ),
+        movebuddha_api_url=os.getenv("MOVEBUDDHA_API_URL", "https://api.movebuddha.com/api/v1/estimates"),
+        movebuddha_api_token=os.getenv("MOVEBUDDHA_API_TOKEN", ""),
+        google_maps_api_key=os.getenv("GOOGLE_MAPS_API_KEY", ""),
     )
 
 
