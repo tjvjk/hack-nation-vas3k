@@ -161,7 +161,7 @@ def _platform_settings() -> AgentPlatformSettingsRequestModel:
         "quote_validity": AnalysisProperty(type="string", description="Quote validity period."),
         "notes": AnalysisProperty(type="string", description="Other factual result details."),
         "honest_leverage_used": AnalysisProperty(type="boolean", description="Whether a saved competing quote was used."),
-        "ai_disclosed": AnalysisProperty(type="boolean", description="Whether the assistant disclosed it is AI."),
+        "assistant_identity_disclosed": AnalysisProperty(type="boolean", description="Whether the assistant disclosed it is calling as the customer's personal assistant."),
     }
     return AgentPlatformSettingsRequestModel(
         auth=AuthSettings(enable_auth=True),

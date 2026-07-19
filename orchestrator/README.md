@@ -72,3 +72,7 @@ Open <http://localhost:8000>. Provisioning failure is fail-fast: MCP is not expo
 - Agent Negotiator deployment contract: `GET /api/agent_negotiator/config`
 
 The canonical system prompt, first message, and analysis schema live only in `prompts.py`. Configure Agent Negotiator MCP tools with `call_id` and `call_capability` dynamic variables. The carrier widget is a browser demo session; it is not Twilio/SIP/PSTN transport.
+
+## TODO
+
+- Parse the large free-text request on the fly into structured move/call data before submitting it to the orchestrator API.

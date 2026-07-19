@@ -21,21 +21,28 @@ from prompts import AGENT_NEGOTIATOR_FIRST_MESSAGE, AGENT_NEGOTIATOR_SYSTEM_PROM
 
 def payload(**overrides):
     data = {
-        "origin": "San Francisco, CA 94110",
-        "destination": "San Jose, CA 95113",
+        "origin": "Rock Hill, SC",
+        "destination": "Charlotte, NC",
         "move_date": "2026-08-01",
-        "budget_min": 1600,
-        "budget_max": 2600,
+        "budget_min": 1500,
+        "budget_max": 2800,
         "service_type": "truck_and_movers",
         "bedrooms": 2,
         "movers_count": 2,
         "origin_floor": 2,
-        "destination_floor": 1,
+        "destination_floor": 2,
         "origin_elevator": False,
-        "destination_elevator": True,
+        "destination_elevator": False,
         "long_carry": False,
         "parking_constraints": "",
-        "inventory": [{"name": "Sofa", "quantity": 1, "large": True}],
+        "inventory": [
+            {"name": "Sofa", "quantity": 1, "large": True},
+            {"name": "Queen bed and mattress", "quantity": 1, "large": True},
+            {"name": "Refrigerator", "quantity": 1, "large": True},
+            {"name": "Washing machine", "quantity": 1, "large": True},
+            {"name": "Dining table for 4", "quantity": 1, "large": True},
+            {"name": "Boxes", "quantity": 15, "large": False},
+        ],
         "notes": "",
         "confirmed": True,
         "outreach_consent": True,
@@ -138,10 +145,10 @@ def test_second_carrier_receives_first_verified_quote_as_honest_leverage():
 
     context = json.loads(store.session_variables(second["id"], claim["claim_token"])["move_context"])
 
-    assert context["move_spec"]["budget_max"] == 2600
+    assert context["move_spec"]["budget_max"] == 2800
     assert context["verified_quotes"] == [
         {
-            "carrier_name": "DIXIE MOVING & STORAGE CO INC",
+            "carrier_name": "Carolina Swift Movers",
             "quote_quality": "itemized",
             "initial_total": 2350.0,
             "final_total": 2050.0,
@@ -158,15 +165,16 @@ def test_second_carrier_receives_first_verified_quote_as_honest_leverage():
     ]
 
 
-def test_campaign_uses_active_fmcsa_directory_records():
+def test_campaign_uses_demo_video_script_companies():
     store = fresh_store()
     move = store.create_move(MoveCreate.model_validate(payload()).model_dump(mode="json"))
 
     carriers = [job["carrier"] for job in store.start_campaign(move["id"])["jobs"]]
 
-    assert [carrier["dot_number"] for carrier in carriers] == ["285683", "300453", "302292"]
-    assert all(carrier["source"] == "FMCSA Company Census" for carrier in carriers)
-    assert all("simulated counterparty" in carrier["headline"] for carrier in carriers)
+    assert [carrier["carrier_id"] for carrier in carriers] == ["carolina-swift", "queen-city-relocation", "palmetto-moving"]
+    assert [carrier["carrier_name"] for carrier in carriers] == ["Carolina Swift Movers", "Queen City Relocation", "Palmetto Moving Co."]
+    assert [carrier["headline"] for carrier in carriers] == ["Tough negotiator", "Hard-sell / stonewaller", "Cooperative busy dispatcher"]
+    assert all(carrier["source"] == "Negotiator demo script" for carrier in carriers)
 
 
 def test_partial_decline_price_is_available_as_preliminary_leverage():
@@ -343,7 +351,8 @@ def test_client_tool_progress_and_result_advance_campaign(monkeypatch, client):
             "outcome": "itemized_quote",
             "initial_total": 2300,
             "final_total": 2050,
-            "fees": [{"name": "fuel", "amount": 100}],
+            "fees_json": '[{"name":"fuel","amount":100}]',
+            "included_services_json": '["truck","labor"]',
             "binding": "non_binding",
         },
     )
@@ -353,6 +362,8 @@ def test_client_tool_progress_and_result_advance_campaign(monkeypatch, client):
     jobs = store.snapshot()["campaigns"][0]["jobs"]
     assert jobs[0]["status"] == "completed"
     assert jobs[0]["result"]["final_total"] == 2050
+    assert jobs[0]["result"]["fees"] == [{"name": "fuel", "amount": 100}]
+    assert jobs[0]["result"]["included_services"] == ["truck", "labor"]
     assert jobs[1]["status"] == "offered_to_widget"
 
 
@@ -428,7 +439,8 @@ def test_browser_demo_models_one_click_incoming_answer():
     html = (static_dir / "index.html").read_text()
     javascript = (static_dir / "app.js").read_text()
 
-    assert "Incoming call from The Negotiator" in html
+    assert 'id="call-card"' in html
+    assert "Calling on your behalf..." in html
     assert "You are answering as" in javascript
     assert "Conversation.startSession" in javascript
     assert "/started" in javascript
@@ -445,15 +457,17 @@ def test_browser_demo_models_one_click_incoming_answer():
     assert "isFarewell" in javascript
     assert "onMessage:" in javascript
     assert "enforceCallLimit" in javascript
+    assert "startCallDurationTimer" in javascript
+    assert 'id="call-timer"' in html
     assert "180000" in javascript
     assert "animateIncomingAnswer" in javascript
     assert "answer.scrollIntoView" in javascript
     assert "answer.focus" in javascript
     assert "lastRenderedCallId" in javascript
     assert "campaignStartedThisPage" in javascript
-    assert "campaign-started .hero" in (static_dir / "styles.css").read_text()
+    assert ".agent-card" in (static_dir / "styles.css").read_text()
     assert "incoming-answer" in (static_dir / "styles.css").read_text()
-    assert "Structured call records" in javascript
+    assert "Call results" in javascript
     assert 'id="call-results"' in html
     assert "/reconcile" in javascript
     assert "answer.disabled = false" in javascript

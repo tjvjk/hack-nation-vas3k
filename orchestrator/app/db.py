@@ -9,10 +9,19 @@ import threading
 from typing import Any
 import uuid
 
-SIMULATION_SCENARIOS = [
-    ("Tough negotiator", "Start at $2,450. Your floor is $2,050. Concede only after a concrete benchmark or a verified competing quote."),
-    ("Hidden-fee lowballer", "Quote $1,100, then add $350 stairs, $250 fuel, and $300 long-carry fees. Resist itemizing until pressed."),
-    ("Hard sell / stonewall", "Start at $2,300 and demand a deposit. Your floor is $1,900, or offer free packing when shown strong verified leverage."),
+DEFAULT_SIMULATION_SCENARIOS = [
+    {
+        "headline": "Tough negotiator",
+        "private_brief": "Initial quote: $2,950 all-in. Floor: $2,700. Concede only when the agent explicitly cites the market range.",
+    },
+    {
+        "headline": "Hard-sell / stonewaller",
+        "private_brief": "Do not quote a price by phone. Say an in-home estimate is required; if pressed, end the call.",
+    },
+    {
+        "headline": "Cooperative busy dispatcher",
+        "private_brief": "Initial quote: $2,400 including movers and fuel. Concede to $2,250 when the agent references the verified Carolina Swift quote.",
+    },
 ]
 
 TERMINAL_STATUSES = {"completed", "declined", "failed", "no_answer"}
@@ -40,14 +49,14 @@ class Store:
             raise ValueError("carrier directory does not contain enough records")
         carriers = []
         for index, record in enumerate(records[:limit]):
-            headline, private_brief = SIMULATION_SCENARIOS[index % len(SIMULATION_SCENARIOS)]
+            scenario = DEFAULT_SIMULATION_SCENARIOS[index % len(DEFAULT_SIMULATION_SCENARIOS)]
             carriers.append(
                 {
-                    "carrier_id": f"fmcsa-{record['dot_number']}",
+                    "carrier_id": record.get("carrier_id", f"fmcsa-{record['dot_number']}"),
                     "carrier_name": record["legal_name"],
-                    "headline": f"{headline} · simulated counterparty",
-                    "private_brief": private_brief,
-                    "source": "FMCSA Company Census",
+                    "headline": record.get("headline", scenario["headline"]),
+                    "private_brief": record.get("private_brief", scenario["private_brief"]),
+                    "source": record.get("source", "FMCSA Company Census"),
                     "dot_number": record["dot_number"],
                     "phone": record["phone"],
                     "location": f"{record['phy_city']}, {record['phy_state']} {record.get('phy_zip', '')}".strip(),
@@ -377,7 +386,7 @@ class Store:
             "carrier": public_carrier,
             "benchmark": {"low": campaign["benchmark_low"], "high": campaign["benchmark_high"], "currency": "USD"},
             "verified_quotes": verified_quotes,
-            "honesty_rules": ["Disclose that you are an AI assistant", "Never invent inventory or competing offers", "Do not book or pay a deposit"],
+            "honesty_rules": ["Introduce yourself as the customer's personal assistant", "Never invent inventory or competing offers", "Do not book or pay a deposit"],
         }
 
     def session_variables(self, call_id: str, claim_token: str) -> dict[str, Any]:

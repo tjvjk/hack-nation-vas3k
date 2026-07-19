@@ -4,6 +4,8 @@ const select = (selector) => document.querySelector(selector);
 let currentCallId = null;
 let activeConversation = null;
 let callEndTimer = null;
+let callDurationTimer = null;
+let callStartedAt = null;
 let farewellPending = false;
 let resultSaved = false;
 let animatedOfferId = null;
@@ -13,6 +15,37 @@ let campaignStartedThisPage = false;
 function clearCallEndTimer() {
 	if (callEndTimer !== null) window.clearTimeout(callEndTimer);
 	callEndTimer = null;
+}
+
+function formatCallDuration(totalSeconds) {
+	const minutes = Math.floor(totalSeconds / 60);
+	const seconds = totalSeconds % 60;
+	return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function updateCallDuration() {
+	const elapsedSeconds = callStartedAt
+		? Math.floor((Date.now() - callStartedAt) / 1000)
+		: 0;
+	select("#call-timer").textContent = formatCallDuration(elapsedSeconds);
+}
+
+function startCallDurationTimer() {
+	if (callDurationTimer !== null) window.clearInterval(callDurationTimer);
+	callStartedAt = Date.now();
+	updateCallDuration();
+	callDurationTimer = window.setInterval(updateCallDuration, 1000);
+}
+
+function stopCallDurationTimer() {
+	if (callDurationTimer !== null) window.clearInterval(callDurationTimer);
+	callDurationTimer = null;
+	callStartedAt = null;
+}
+
+function resetCallDurationTimer() {
+	stopCallDurationTimer();
+	select("#call-timer").textContent = "00:00";
 }
 
 function endConversationSoon(conversation, delay = 1200) {
@@ -27,7 +60,7 @@ function enforceCallLimit(conversation) {
 	farewellPending = false;
 	resultSaved = false;
 	callEndTimer = window.setTimeout(() => {
-		select("#voice-status").textContent = "Call time limit reached; ending…";
+		select("#voice-status").textContent = "Call time limit reached; ending...";
 		void conversation?.endSession();
 	}, 180000);
 }
@@ -42,6 +75,36 @@ function messageText(message) {
 		message.text ||
 		""
 	);
+}
+
+function clearSubtitles() {
+	select("#subtitles-list").innerHTML = '<p class="empty-subtitles">Subtitles will appear after you answer.</p>';
+}
+
+function setPostCallProcessing(visible) {
+	select("#post-call-processing").classList.toggle("hidden", !visible);
+}
+
+function scrollSubtitlesToBottom() {
+	const list = select("#subtitles-list");
+	requestAnimationFrame(() => {
+		list.scrollTop = list.scrollHeight;
+	});
+}
+
+function appendSubtitle(message) {
+	const text = messageText(message).trim();
+	if (!text) return;
+	const list = select("#subtitles-list");
+	list.querySelector(".empty-subtitles")?.remove();
+	const row = document.createElement("p");
+	const speaker = message?.source === "user" || message?.role === "user" ? "You" : "Agent";
+	const label = document.createElement("strong");
+	label.textContent = speaker;
+	row.append(label, text);
+	list.append(row);
+	while (list.children.length > 12) list.firstElementChild.remove();
+	scrollSubtitlesToBottom();
 }
 
 function isFarewell(message) {
@@ -64,20 +127,41 @@ function animateIncomingAnswer(call, isNextCarrier) {
 	answer.focus({ preventScroll: true });
 }
 
-function inventoryFrom(text) {
-	return text
-		.split("\n")
-		.filter(Boolean)
-		.map((line) => {
-			const [name, quantity = "1", large = "false"] = line
-				.split(",")
-				.map((part) => part.trim());
-			return {
-				name,
-				quantity: Number(quantity),
-				large: large.toLowerCase() === "true",
-			};
-		});
+function saturdayThreeWeeksFromNow() {
+	const date = new Date(Date.now() + 21 * 86400000);
+	date.setDate(date.getDate() + ((6 - date.getDay() + 7) % 7));
+	return date.toISOString().slice(0, 10);
+}
+
+function requestPayloadFromText(requestText) {
+	return {
+		origin: "Rock Hill, SC",
+		destination: "Charlotte, NC",
+		move_date: saturdayThreeWeeksFromNow(),
+		budget_min: 1500,
+		budget_max: 2800,
+		service_type: "truck_and_movers",
+		bedrooms: 2,
+		movers_count: 2,
+		origin_floor: 2,
+		destination_floor: 2,
+		origin_elevator: false,
+		destination_elevator: false,
+		long_carry: false,
+		parking_constraints: "Standard stairs at both buildings",
+		inventory: [
+			{ name: "Sofa", quantity: 1, large: true },
+			{ name: "Queen bed and mattress", quantity: 1, large: true },
+			{ name: "Refrigerator", quantity: 1, large: true },
+			{ name: "Washing machine", quantity: 1, large: true },
+			{ name: "Dining table for 4", quantity: 1, large: true },
+			{ name: "Boxes", quantity: 15, large: false },
+		],
+		notes: requestText,
+		confirmed: true,
+		outreach_consent: true,
+		max_carriers: 3,
+	};
 }
 
 async function api(url, options = {}) {
@@ -137,44 +221,27 @@ async function reconcileUntilSettled(callId, attempts = 8) {
 	}
 }
 
-select("#move-form [name=move_date]").valueAsDate = new Date(
-	Date.now() + 14 * 86400000,
-);
 select("#move-form").addEventListener("submit", async (event) => {
 	event.preventDefault();
 	select("#form-error").textContent = "";
 	const form = new FormData(event.currentTarget);
-	const bool = (name) => form.get(name) === "on";
-	const payload = {
-		origin: form.get("origin"),
-		destination: form.get("destination"),
-		move_date: form.get("move_date"),
-		budget_min: Number(form.get("budget_min")),
-		budget_max: Number(form.get("budget_max")),
-		service_type: form.get("service_type"),
-		bedrooms: Number(form.get("bedrooms")),
-		movers_count: Number(form.get("movers_count")),
-		origin_floor: Number(form.get("origin_floor")),
-		destination_floor: Number(form.get("destination_floor")),
-		origin_elevator: bool("origin_elevator"),
-		destination_elevator: bool("destination_elevator"),
-		long_carry: bool("long_carry"),
-		parking_constraints: "",
-		inventory: inventoryFrom(form.get("inventory")),
-		notes: form.get("notes"),
-		confirmed: bool("confirmed"),
-		outreach_consent: bool("outreach_consent"),
-		max_carriers: 3,
-	};
+	const requestText = String(form.get("request_text") || "").trim();
+	if (!requestText) {
+		select("#form-error").textContent = "Describe what the agent should handle.";
+		return;
+	}
+	const payload = requestPayloadFromText(requestText);
 	try {
 		const move = await api("/api/moves", {
 			method: "POST",
 			body: JSON.stringify(payload),
 		});
-		await api(`/api/moves/${move.id}/campaign`, { method: "POST" });
+		const campaign = await api(`/api/moves/${move.id}/campaign`, { method: "POST" });
 		campaignStartedThisPage = true;
 		document.body.classList.add("campaign-started");
-		select("#intake-card").classList.add("hidden");
+		render({ campaigns: [campaign] });
+		select("#call-card").scrollIntoView({ behavior: "smooth", block: "center" });
+		select("#call-card").focus({ preventScroll: true });
 		listen();
 	} catch (error) {
 		select("#form-error").textContent = error.message;
@@ -204,13 +271,11 @@ function render(state) {
 			lastRenderedCallId !== call.id;
 		currentCallId = call.id;
 		select("#call-card").classList.remove("hidden");
-		select("#caller-name").textContent = "Incoming call from The Negotiator";
-		select("#caller-style").textContent =
-			"AI assistant calling on behalf of a customer";
+		select("#call-progress-text").textContent = `Call ${call.sequence_no} of ${campaign.jobs.length} companies`;
+		select("#caller-name").textContent = "Calling on your behalf...";
+		select("#caller-style").textContent = call.carrier.carrier_name;
 		select("#answering-as").textContent =
-			`You are answering as ${call.carrier.carrier_name} · ${call.carrier.headline}`;
-		select("#persona").innerHTML =
-			`<strong>Private operator card</strong><p>${call.carrier.private_brief}</p>`;
+			`You are answering as ${call.carrier.carrier_name}`;
 		select("#answer").classList.toggle(
 			"hidden",
 			call.status !== "offered_to_widget",
@@ -221,7 +286,6 @@ function render(state) {
 			"hidden",
 			call.status !== "offered_to_widget",
 		);
-		select("#result-form").classList.toggle("hidden", call.status !== "in_progress");
 	} else {
 		select("#call-card").classList.add("hidden");
 	}
@@ -229,6 +293,7 @@ function render(state) {
 }
 
 function renderResults(campaign) {
+	setPostCallProcessing(false);
 	select("#results-card").classList.remove("hidden");
 	select("#benchmark").innerHTML =
 		`<strong>Benchmark:</strong> $${campaign.benchmark.low}–$${campaign.benchmark.high}`;
@@ -250,32 +315,30 @@ function renderCallResults(campaign) {
 	const completed = campaign.jobs.filter((job) => job.result);
 	if (completed.length === 0) return;
 	const title = document.createElement("h3");
-	title.textContent = "Structured call records";
+	title.textContent = "Call results";
 	container.append(title);
 	for (const job of completed) {
 		const result = job.result;
 		const record = document.createElement("article");
-		record.className = "persona";
+		record.className = "persona result-summary";
 		const heading = document.createElement("strong");
-		heading.textContent = `${job.carrier.carrier_name} · ${result.outcome}`;
-		const details = document.createElement("pre");
-		details.textContent = JSON.stringify(
-			{
-				initial_total: result.initial_total,
-				final_total: result.final_total,
-				fees: result.fees,
-				included_services: result.included_services,
-				excluded_services: result.excluded_services,
-				binding: result.binding,
-				availability: result.availability,
-				deposit_terms: result.deposit_terms,
-				cancellation_terms: result.cancellation_terms,
-				quote_validity: result.quote_validity,
-				notes: result.notes,
-			},
-			null,
-			2,
-		);
+		heading.textContent = job.carrier.carrier_name;
+		const details = document.createElement("p");
+		const lines = [
+			`Outcome: ${result.outcome.replaceAll("_", " ")}.`,
+			result.final_total != null ? `Final total: $${result.final_total}.` : "",
+			result.initial_total != null ? `Initial total: $${result.initial_total}.` : "",
+			result.included_services?.length ? `Included: ${result.included_services.join(", ")}.` : "",
+			result.excluded_services?.length ? `Excluded: ${result.excluded_services.join(", ")}.` : "",
+			result.fees?.length ? `Fees: ${result.fees.map((fee) => fee.name || JSON.stringify(fee)).join(", ")}.` : "",
+			result.binding && result.binding !== "unknown" ? `Binding: ${result.binding}.` : "",
+			result.availability ? `Availability: ${result.availability}.` : "",
+			result.deposit_terms ? `Deposit: ${result.deposit_terms}.` : "",
+			result.cancellation_terms ? `Cancellation: ${result.cancellation_terms}.` : "",
+			result.quote_validity ? `Quote valid: ${result.quote_validity}.` : "",
+			result.notes ? `Notes: ${result.notes}` : "",
+		].filter(Boolean);
+		details.textContent = lines.join(" ");
 		record.append(heading, details);
 		container.append(record);
 	}
@@ -298,11 +361,14 @@ select("#answer").addEventListener("click", async () => {
 	const callId = currentCallId;
 	let claimToken = null;
 	let pendingConversation = null;
+	clearSubtitles();
+	resetCallDurationTimer();
+	setPostCallProcessing(false);
 	answer.disabled = true;
-	answer.textContent = "Answering…";
+	answer.textContent = "Answering...";
 	select("#form-error").textContent = "";
 	voiceSession.classList.remove("hidden");
-	select("#voice-status").textContent = "Requesting microphone access…";
+	select("#voice-status").textContent = "Requesting microphone access...";
 
 	try {
 		const permissionStream = await navigator.mediaDevices.getUserMedia({
@@ -311,7 +377,7 @@ select("#answer").addEventListener("click", async () => {
 		permissionStream.getTracks().forEach((track) => track.stop());
 		const session = await api(`/api/calls/${callId}/answer`, { method: "POST" });
 		claimToken = session.claim_token;
-		select("#voice-status").textContent = "Connecting…";
+		select("#voice-status").textContent = "Connecting...";
 		pendingConversation = await Conversation.startSession({
 			signedUrl: session.signed_url,
 			dynamicVariables: session.dynamic_variables,
@@ -337,10 +403,12 @@ select("#answer").addEventListener("click", async () => {
 				},
 			},
 			onConnect: () => {
-				select("#voice-status").textContent = "Connected to The Negotiator";
+				select("#voice-status").textContent = "Connected to Call Assistant";
+				startCallDurationTimer();
 				select("#hang-up").classList.remove("hidden");
 			},
 			onMessage: (message) => {
+				appendSubtitle(message);
 				if (!resultSaved && isFarewell(message)) {
 					farewellPending = true;
 					endConversationSoon(activeConversation || pendingConversation, 15000);
@@ -356,6 +424,8 @@ select("#answer").addEventListener("click", async () => {
 				select("#voice-status").textContent = "Call ended";
 				select("#hang-up").classList.add("hidden");
 				voiceSession.classList.add("hidden");
+				stopCallDurationTimer();
+				setPostCallProcessing(true);
 				answer.disabled = false;
 				answer.textContent = "Answer";
 				activeConversation = null;
@@ -388,6 +458,7 @@ select("#answer").addEventListener("click", async () => {
 		}
 		activeConversation = null;
 		clearCallEndTimer();
+		resetCallDurationTimer();
 		farewellPending = false;
 		resultSaved = false;
 		if (claimToken) {
@@ -414,34 +485,3 @@ select("#hang-up").addEventListener("click", async () => {
 select("#decline").addEventListener("click", () =>
 	api(`/api/calls/${currentCallId}/decline`, { method: "POST" }),
 );
-select("#result-form").addEventListener("submit", async (event) => {
-	event.preventDefault();
-	const form = new FormData(event.currentTarget);
-	let fees;
-	try {
-		fees = JSON.parse(form.get("fees") || "[]");
-	} catch {
-		select("#form-error").textContent = "Fees must be valid JSON";
-		return;
-	}
-	const number = (name) =>
-		form.get(name) === "" ? null : Number(form.get(name));
-	await api(`/api/calls/${currentCallId}/result`, {
-		method: "POST",
-		body: JSON.stringify({
-			outcome: form.get("outcome"),
-			initial_total: number("initial_total"),
-			final_total: number("final_total"),
-			fees,
-			notes: form.get("result_notes"),
-			included_services: [],
-			excluded_services: [],
-			binding: "unknown",
-		}),
-	});
-	event.currentTarget.reset();
-	if (activeConversation) await activeConversation.endSession();
-	select("#voice-session").classList.add("hidden");
-});
-
-api("/api/state").then(render);

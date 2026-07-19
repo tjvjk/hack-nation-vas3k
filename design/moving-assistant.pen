@@ -1,0 +1,2789 @@
+{
+  "version": "2.14",
+  "children": [
+    {
+      "type": "frame",
+      "id": "j7Kmdi",
+      "x": 1100,
+      "y": 0,
+      "name": "Agent - Input Form",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "#FFFFFF",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "NYXTJ",
+          "x": 360,
+          "y": 60,
+          "name": "Dialog Card",
+          "width": 720,
+          "fill": "$--card",
+          "cornerRadius": 24,
+          "effect": [
+            {
+              "type": "shadow",
+              "shadowType": "outer",
+              "color": "#00000010",
+              "offset": {
+                "x": 0,
+                "y": 4
+              },
+              "blur": 24
+            },
+            {
+              "type": "shadow",
+              "shadowType": "outer",
+              "color": "#00000008",
+              "offset": {
+                "x": 0,
+                "y": 16
+              },
+              "blur": 64
+            }
+          ],
+          "layout": "vertical",
+          "gap": 28,
+          "padding": 48,
+          "children": [
+            {
+              "type": "frame",
+              "id": "RMHW3",
+              "name": "Header",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "vlgcC",
+                  "name": "Title Row",
+                  "gap": 14,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "fK7Yd",
+                      "name": "Truck Icon",
+                      "width": 40,
+                      "height": 40,
+                      "icon": "truck",
+                      "library": "lucide",
+                      "fill": "$--primary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "x9gib9",
+                      "name": "Title",
+                      "fill": "$--foreground",
+                      "content": "Call Assistant",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 36,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "A38Jh2",
+                  "name": "Subtitle",
+                  "fill": "$--muted-foreground",
+                  "content": "Describe what you need handled",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Lq3P4",
+              "name": "Text Input Area",
+              "width": "fill_container",
+              "height": 200,
+              "fill": "#F8F8F6",
+              "cornerRadius": 16,
+              "stroke": "$--border",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "qQWZX",
+                  "name": "Placeholder Text",
+                  "fill": "$--muted-foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Moving from Brooklyn, NY (2nd floor walk-up, 1BR apartment) to Austin, TX (single-story house). Furniture: queen bed frame, sectional couch (needs disassembly), bookshelf, desk, TV stand. Around 30 boxes including kitchen stuff and fragile electronics. Preferred date: August 2nd.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 18,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "nx50W",
+              "name": "Hint Box",
+              "width": "fill_container",
+              "fill": "#FFF8F0",
+              "cornerRadius": 12,
+              "gap": 12,
+              "padding": [
+                16,
+                20
+              ],
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "VQJau",
+                  "name": "Info Icon",
+                  "width": 20,
+                  "height": 20,
+                  "icon": "info",
+                  "library": "lucide",
+                  "fill": "$--primary"
+                },
+                {
+                  "type": "text",
+                  "id": "g8maYu",
+                  "name": "Hint Text",
+                  "fill": "$--muted-foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Include: who to call, what needs to be resolved, key details, preferred timing, budget or constraints, and any special requirements",
+                  "lineHeight": 1.5,
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "cIxaH",
+              "name": "Call Button",
+              "width": "fill_container",
+              "height": 68,
+              "fill": "$--primary",
+              "cornerRadius": 16,
+              "gap": 12,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "w3Ro2v",
+                  "name": "Phone Icon",
+                  "width": 24,
+                  "height": 24,
+                  "icon": "phone",
+                  "library": "lucide",
+                  "fill": "$--white"
+                },
+                {
+                  "type": "text",
+                  "id": "bpjAc",
+                  "name": "Call Label",
+                  "fill": "$--white",
+                  "content": "Call Agent",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 22,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "S8GCBs",
+      "x": 2620,
+      "y": 0,
+      "name": "Agent - Active Call",
+      "clip": true,
+      "width": 1440,
+      "height": 1100,
+      "fill": "#FFFFFF",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "wDRdT",
+          "x": 360,
+          "y": 40,
+          "name": "Call Dialog",
+          "width": 720,
+          "height": 1020,
+          "fill": "#FFFFFF",
+          "cornerRadius": 24,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000012",
+            "offset": {
+              "x": 0,
+              "y": 8
+            },
+            "blur": 40
+          },
+          "layout": "vertical",
+          "gap": 32,
+          "padding": [
+            48,
+            48,
+            40,
+            48
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "YIhWB",
+              "name": "Call Progress",
+              "width": "fill_container",
+              "fill": "#F2F3F0",
+              "cornerRadius": 12,
+              "gap": 8,
+              "padding": [
+                10,
+                20
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "gCGch",
+                  "name": "Progress Icon",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "building-2",
+                  "library": "lucide",
+                  "fill": "$--muted-foreground"
+                },
+                {
+                  "type": "text",
+                  "id": "AOQPu",
+                  "name": "Progress Text",
+                  "fill": "$--muted-foreground",
+                  "content": "Call 2 of 4 companies",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "iUYlS",
+              "name": "Call Header",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "vtVrC",
+                  "name": "Call Status Label",
+                  "fill": "$--muted-foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Calling on your behalf...",
+                  "textAlign": "center",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 20,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "zOZZO",
+                  "name": "Call Target",
+                  "fill": "$--foreground",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Allied Van Lines",
+                  "textAlign": "center",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 32,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "PfULc",
+              "name": "Company Dots",
+              "gap": 10,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 999,
+                  "id": "yJdjP",
+                  "name": "Dot Done",
+                  "fill": "#2E7D32",
+                  "width": 12,
+                  "height": 12
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 999,
+                  "id": "wP6cN",
+                  "name": "Dot Active",
+                  "fill": "$--primary",
+                  "width": 12,
+                  "height": 12
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 999,
+                  "id": "xs9xW",
+                  "name": "Dot Pending 1",
+                  "fill": "$--border",
+                  "width": 12,
+                  "height": 12
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 999,
+                  "id": "sx4Vz",
+                  "name": "Dot Pending 2",
+                  "fill": "$--border",
+                  "width": 12,
+                  "height": 12
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wbmFu",
+              "name": "Call Animation",
+              "width": 160,
+              "height": 160,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "ellipse",
+                  "id": "kXaeQ",
+                  "x": 0,
+                  "y": 0,
+                  "name": "Ring 4",
+                  "fill": "#FF840008",
+                  "width": 160,
+                  "height": 160,
+                  "stroke": "#FF840015",
+                  "strokeWidth": 2
+                },
+                {
+                  "type": "ellipse",
+                  "id": "cUKQt",
+                  "x": 20,
+                  "y": 20,
+                  "name": "Ring 3",
+                  "fill": "#FF840010",
+                  "width": 120,
+                  "height": 120,
+                  "stroke": "#FF840025",
+                  "strokeWidth": 2
+                },
+                {
+                  "type": "ellipse",
+                  "id": "kpSKt",
+                  "x": 40,
+                  "y": 40,
+                  "name": "Ring 2",
+                  "fill": "#FF840018",
+                  "width": 80,
+                  "height": 80,
+                  "stroke": "#FF840040",
+                  "strokeWidth": 2
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 999,
+                  "id": "k745Ct",
+                  "x": 50,
+                  "y": 50,
+                  "name": "Ring 1",
+                  "fill": "$--primary",
+                  "width": 60,
+                  "height": 60
+                },
+                {
+                  "type": "icon",
+                  "id": "fSbdl",
+                  "x": 64,
+                  "y": 64,
+                  "name": "Phone Icon",
+                  "width": 32,
+                  "height": 32,
+                  "icon": "phone",
+                  "library": "lucide",
+                  "fill": "#FFFFFF"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "VtUrF",
+              "name": "Call Timer",
+              "fill": "$--foreground",
+              "content": "02:34",
+              "fontFamily": "$--font-primary",
+              "fontSize": 48,
+              "fontWeight": "500"
+            },
+            {
+              "type": "frame",
+              "id": "QomWw",
+              "name": "Subtitles Section",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "COdkN",
+                  "name": "Subtitles Label",
+                  "fill": "$--muted-foreground",
+                  "content": "Live Subtitles",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "Fpa7m",
+                  "name": "Subtitles Box",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "#F8F8F6",
+                  "cornerRadius": 16,
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "zjUD2",
+                      "name": "Line Agent 1",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ixCIn",
+                          "name": "Speaker Агент",
+                          "fill": "$--primary",
+                          "content": "Agent",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "u0Yz0B",
+                          "name": "Text Агент",
+                          "fill": "$--foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Hi, I'm calling about a long-distance move from Brooklyn, New York to Austin, Texas, scheduled for August 2nd. It's a one-bedroom apartment, 2nd floor walk-up.",
+                          "lineHeight": 1.4,
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 20,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XXzD0",
+                      "name": "Line You",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ZaIr1",
+                          "name": "Speaker Вы",
+                          "fill": "$--foreground",
+                          "content": "FastMove Rep",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "IR184",
+                          "name": "Text Вы",
+                          "fill": "$--foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Got it, what furniture and how many boxes are we looking at?",
+                          "lineHeight": 1.4,
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 20,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "shKp3",
+                      "name": "Line Agent 2",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "HXB1J",
+                          "name": "Speaker Агент",
+                          "fill": "$--primary",
+                          "content": "Agent",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "HadEK",
+                          "name": "Text Агент",
+                          "fill": "$--foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "A queen bed frame, sectional couch that needs disassembly, bookshelf, desk, TV stand, and about 30 boxes including fragile electronics.",
+                          "lineHeight": 1.4,
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 20,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "O1T74E",
+              "name": "End Call Button",
+              "width": "fill_container",
+              "height": 64,
+              "fill": "$--destructive",
+              "cornerRadius": 16,
+              "gap": 12,
+              "padding": [
+                0,
+                32
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "ufw68",
+                  "name": "End Call Icon",
+                  "width": 28,
+                  "height": 28,
+                  "icon": "phone-off",
+                  "library": "lucide",
+                  "fill": "#FFFFFF"
+                },
+                {
+                  "type": "text",
+                  "id": "IAzlw",
+                  "name": "End Call Label",
+                  "fill": "#FFFFFF",
+                  "content": "End Call",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 22,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "BE4Mx",
+      "x": 5660,
+      "y": 0,
+      "name": "Agent - Call Summary",
+      "clip": true,
+      "width": 1440,
+      "height": 1300,
+      "fill": "#FFFFFF",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "xLvmx",
+          "x": 360,
+          "y": 40,
+          "name": "Chat Dialog",
+          "clip": true,
+          "width": 720,
+          "fill": "#FFFFFF",
+          "cornerRadius": 24,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000012",
+            "offset": {
+              "x": 0,
+              "y": 8
+            },
+            "blur": 40
+          },
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "zHns0",
+              "name": "Top Bar",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "stroke": "$--border",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "gap": 12,
+              "padding": [
+                16,
+                24
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "XbKlG",
+                  "name": "Bot Icon",
+                  "width": 28,
+                  "height": 28,
+                  "icon": "bot",
+                  "library": "lucide",
+                  "fill": "$--primary"
+                },
+                {
+                  "type": "text",
+                  "id": "W4xeh3",
+                  "name": "Top Title",
+                  "fill": "$--foreground",
+                  "content": "Call Assistant",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 22,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "pP560",
+                  "layoutPosition": "absolute",
+                  "x": 540,
+                  "y": 14,
+                  "name": "Status Badge",
+                  "fill": "#E8F5E9",
+                  "cornerRadius": 999,
+                  "gap": 6,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "cornerRadius": 999,
+                      "id": "X5MGQ",
+                      "name": "Status Dot",
+                      "fill": "#2E7D32",
+                      "width": 8,
+                      "height": 8
+                    },
+                    {
+                      "type": "text",
+                      "id": "C7aEw",
+                      "name": "Status Text",
+                      "fill": "#2E7D32",
+                      "content": "Call completed",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 14,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ZeTSL",
+              "name": "Chat Messages",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                28,
+                28,
+                20,
+                28
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "K95CD",
+                  "name": "User Message",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "t9QgvE",
+                      "name": "User Label",
+                      "fill": "$--muted-foreground",
+                      "content": "You",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "hbZtv",
+                      "name": "User Bubble",
+                      "width": "fill_container",
+                      "fill": "$--primary",
+                      "cornerRadius": [
+                        16,
+                        4,
+                        16,
+                        16
+                      ],
+                      "layout": "vertical",
+                      "padding": [
+                        16,
+                        20
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ad1qf",
+                          "name": "User Task Text",
+                          "fill": "#FFFFFF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Moving from Brooklyn, NY (2nd floor walk-up, 1BR apartment) to Austin, TX (single-story house). Furniture: queen bed frame, sectional couch (needs disassembly), bookshelf, desk, TV stand. Around 30 boxes including kitchen stuff and fragile electronics. Preferred date: August 2nd.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 18,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "V8Ufgw",
+                      "name": "User Time",
+                      "fill": "$--muted-foreground",
+                      "content": "10:24 AM",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "TVfFN",
+                  "name": "Call Divider",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    8,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "bZOFc",
+                      "name": "Div Line L",
+                      "fill": "$--border",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "viGqP",
+                      "name": "Call Badge",
+                      "fill": "#F2F3F0",
+                      "cornerRadius": 999,
+                      "gap": 6,
+                      "padding": [
+                        6,
+                        14
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "FKcpi",
+                          "name": "Phone Badge Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "phone",
+                          "library": "lucide",
+                          "fill": "$--muted-foreground"
+                        },
+                        {
+                          "type": "text",
+                          "id": "LVI7f",
+                          "name": "Call Badge Text",
+                          "fill": "$--muted-foreground",
+                          "content": "4 calls completed · 22m total",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "GCziT",
+                      "name": "Div Line R",
+                      "fill": "$--border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "sXkVp",
+                  "name": "Agent Summary Message",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ppcrr",
+                      "name": "Agent Label",
+                      "fill": "$--primary",
+                      "content": "Call Agent",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "rTBGn",
+                      "name": "Agent Bubble",
+                      "width": "fill_container",
+                      "fill": "#F8F8F6",
+                      "cornerRadius": [
+                        4,
+                        16,
+                        16,
+                        16
+                      ],
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": [
+                        20,
+                        24
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "PoWeF",
+                          "name": "Summary Intro",
+                          "fill": "$--foreground",
+                          "content": "I called 4 moving companies for you. Here are the quotes:",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 20,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "V75YDj",
+                          "name": "Quotes List",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "m7NeK9",
+                              "name": "Quote FastMove Logistics",
+                              "width": "fill_container",
+                              "fill": "#FFF8F0",
+                              "cornerRadius": 12,
+                              "stroke": "$--primary",
+                              "strokeWidth": 2,
+                              "gap": 12,
+                              "padding": [
+                                14,
+                                18
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ZFEl1",
+                                  "name": "Info FastMove Logistics",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 3,
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "aSFOk",
+                                      "name": "Name Row FastMove Logistics",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "d33J2",
+                                          "name": "Company Name FastMove Logistics",
+                                          "fill": "$--foreground",
+                                          "content": "Allied Van Lines",
+                                          "fontFamily": "$--font-secondary",
+                                          "fontSize": 17,
+                                          "fontWeight": "600"
+                                        },
+                                        {
+                                          "type": "frame",
+                                          "id": "V37Me0",
+                                          "name": "Best Badge",
+                                          "fill": "$--primary",
+                                          "cornerRadius": 6,
+                                          "padding": [
+                                            3,
+                                            8
+                                          ],
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "irTv7",
+                                              "name": "Best Text",
+                                              "fill": "#FFFFFF",
+                                              "content": "BEST",
+                                              "fontFamily": "$--font-secondary",
+                                              "fontSize": 11,
+                                              "fontWeight": "700"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "bVChu",
+                                      "name": "Note FastMove Logistics",
+                                      "fill": "$--muted-foreground",
+                                      "content": "Best rate, full packing & disassembly included",
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 14,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "NO3Xt",
+                                  "name": "Price FastMove Logistics",
+                                  "fill": "$--primary",
+                                  "content": "$3,200",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 24,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "B3ItwF",
+                              "name": "Quote CityMovers Pro",
+                              "width": "fill_container",
+                              "fill": "#FFFFFF",
+                              "cornerRadius": 12,
+                              "stroke": "$--border",
+                              "strokeWidth": 1,
+                              "gap": 12,
+                              "padding": [
+                                14,
+                                18
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "c5zlv",
+                                  "name": "Info CityMovers Pro",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 3,
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "m0DPGw",
+                                      "name": "Name Row CityMovers Pro",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "xOyE1",
+                                          "name": "Company Name CityMovers Pro",
+                                          "fill": "$--foreground",
+                                          "content": "Two Men and a Truck",
+                                          "fontFamily": "$--font-secondary",
+                                          "fontSize": 17,
+                                          "fontWeight": "600"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "gnsen",
+                                      "name": "Note CityMovers Pro",
+                                      "fill": "$--muted-foreground",
+                                      "content": "Premium white-glove service, insured",
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 14,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "kdowZ",
+                                  "name": "Price CityMovers Pro",
+                                  "fill": "$--foreground",
+                                  "content": "$3,850",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 24,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "e05CK",
+                              "name": "Quote EasyHaul",
+                              "width": "fill_container",
+                              "fill": "#FFFFFF",
+                              "cornerRadius": 12,
+                              "stroke": "$--border",
+                              "strokeWidth": 1,
+                              "gap": 12,
+                              "padding": [
+                                14,
+                                18
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "NEy0R",
+                                  "name": "Info EasyHaul",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 3,
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "QtfKm",
+                                      "name": "Name Row EasyHaul",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "PE3HD",
+                                          "name": "Company Name EasyHaul",
+                                          "fill": "$--foreground",
+                                          "content": "U-Pack",
+                                          "fontFamily": "$--font-secondary",
+                                          "fontSize": 17,
+                                          "fontWeight": "600"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "VhVZk",
+                                      "name": "Note EasyHaul",
+                                      "fill": "$--muted-foreground",
+                                      "content": "Hybrid option — you pack, they drive",
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 14,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "hnkg0",
+                                  "name": "Price EasyHaul",
+                                  "fill": "$--foreground",
+                                  "content": "$2,400",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 24,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "wIvKy",
+                              "name": "Quote QuickShift",
+                              "width": "fill_container",
+                              "fill": "#FFFFFF",
+                              "cornerRadius": 12,
+                              "stroke": "$--border",
+                              "strokeWidth": 1,
+                              "gap": 12,
+                              "padding": [
+                                14,
+                                18
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "aGbKy",
+                                  "name": "Info QuickShift",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 3,
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "zZSOQ",
+                                      "name": "Name Row QuickShift",
+                                      "gap": 8,
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "text",
+                                          "id": "hAZCI",
+                                          "name": "Company Name QuickShift",
+                                          "fill": "$--foreground",
+                                          "content": "Mayflower",
+                                          "fontFamily": "$--font-secondary",
+                                          "fontSize": 17,
+                                          "fontWeight": "600"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "e8ZEL",
+                                      "name": "Note QuickShift",
+                                      "fill": "$--muted-foreground",
+                                      "content": "Flexible dates, storage available",
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 14,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "HgoSs",
+                                  "name": "Price QuickShift",
+                                  "fill": "$--foreground",
+                                  "content": "$4,100",
+                                  "fontFamily": "$--font-secondary",
+                                  "fontSize": 24,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "eLWLG",
+                          "name": "Next Steps",
+                          "fill": "$--foreground",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Allied Van Lines offers the best full-service rate at $3,200 including packing and furniture disassembly. U-Pack is cheaper at $2,400 but you'd need to pack yourself. Want me to book Allied?",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 17,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "o1C8r",
+                      "name": "Agent Time",
+                      "fill": "$--muted-foreground",
+                      "content": "10:28 AM",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Q6BaEz",
+              "name": "Action Bar",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "stroke": "$--border",
+              "strokeWidth": {
+                "top": 1
+              },
+              "gap": 12,
+              "padding": [
+                16,
+                24
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "JrqTi",
+                  "name": "Reply Input",
+                  "width": "fill_container",
+                  "height": 52,
+                  "fill": "#F8F8F6",
+                  "cornerRadius": 14,
+                  "padding": [
+                    0,
+                    18
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ChwuG",
+                      "name": "Reply Placeholder",
+                      "fill": "$--muted-foreground",
+                      "content": "Type a message...",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 17,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YXHab",
+                  "name": "Send Button",
+                  "width": 52,
+                  "height": 52,
+                  "fill": "$--primary",
+                  "cornerRadius": 14,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "DcSRt",
+                      "name": "Send Icon",
+                      "width": 22,
+                      "height": 22,
+                      "icon": "send",
+                      "library": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "I1NWzR",
+                  "name": "Call Again Button",
+                  "width": 52,
+                  "height": 52,
+                  "fill": "$--secondary",
+                  "cornerRadius": 14,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "I3w0yX",
+                      "name": "Call Again Icon",
+                      "width": 22,
+                      "height": 22,
+                      "icon": "phone",
+                      "library": "lucide",
+                      "fill": "$--foreground"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "fzYvN",
+      "x": 4140,
+      "y": 0,
+      "name": "Agent - Single Call Summary",
+      "clip": true,
+      "width": 1440,
+      "height": 1300,
+      "fill": "#FFFFFF",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "PSUqE",
+          "x": 360,
+          "y": 40,
+          "name": "Single Summary Dialog",
+          "clip": true,
+          "width": 720,
+          "fill": "#FFFFFF",
+          "cornerRadius": 24,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000012",
+            "offset": {
+              "x": 0,
+              "y": 8
+            },
+            "blur": 40
+          },
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "l0qoW",
+              "name": "Top Bar",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "stroke": "$--border",
+              "strokeWidth": {
+                "bottom": 1
+              },
+              "gap": 12,
+              "padding": [
+                16,
+                24
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "vvbVk",
+                  "name": "Bot Icon",
+                  "width": 28,
+                  "height": 28,
+                  "icon": "bot",
+                  "library": "lucide",
+                  "fill": "$--primary"
+                },
+                {
+                  "type": "text",
+                  "id": "tT07d",
+                  "name": "Top Title",
+                  "fill": "$--foreground",
+                  "content": "Call Assistant",
+                  "fontFamily": "$--font-secondary",
+                  "fontSize": 22,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "dgTwz",
+                  "layoutPosition": "absolute",
+                  "x": 500,
+                  "y": 14,
+                  "name": "Progress Badge",
+                  "fill": "#FFF3E0",
+                  "cornerRadius": 999,
+                  "gap": 6,
+                  "padding": [
+                    6,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "fkJZA",
+                      "name": "Progress Icon",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "loader",
+                      "library": "lucide",
+                      "fill": "$--primary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "P3uw8",
+                      "name": "Progress Text",
+                      "fill": "$--primary",
+                      "content": "1 of 4 calls done",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 14,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "q42gzk",
+              "name": "Chat Messages",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 20,
+              "padding": [
+                28,
+                28,
+                20,
+                28
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "QeQlO",
+                  "name": "User Message",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "alignItems": "end",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Bqs3x",
+                      "name": "User Label",
+                      "fill": "$--muted-foreground",
+                      "content": "You",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "z807t",
+                      "name": "User Bubble",
+                      "width": "fill_container",
+                      "fill": "$--primary",
+                      "cornerRadius": [
+                        16,
+                        4,
+                        16,
+                        16
+                      ],
+                      "layout": "vertical",
+                      "padding": [
+                        16,
+                        20
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "YMfKi",
+                          "name": "User Text",
+                          "fill": "#FFFFFF",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Moving from Brooklyn, NY (2nd floor walk-up, 1BR apartment) to Austin, TX (single-story house). Furniture: queen bed frame, sectional couch (needs disassembly), bookshelf, desk, TV stand. Around 30 boxes including kitchen stuff and fragile electronics. Preferred date: August 2nd.",
+                          "lineHeight": 1.5,
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 18,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "jRcea",
+                      "name": "User Time",
+                      "fill": "$--muted-foreground",
+                      "content": "10:24 AM",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ZVqMV",
+                  "name": "Call 1 Divider",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    4,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "G9iABr",
+                      "name": "Div L",
+                      "fill": "$--border",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n6VXt",
+                      "name": "Call 1 Badge",
+                      "fill": "#E8F5E9",
+                      "cornerRadius": 999,
+                      "gap": 6,
+                      "padding": [
+                        6,
+                        14
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "EfueW",
+                          "name": "Check Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "check",
+                          "library": "lucide",
+                          "fill": "#2E7D32"
+                        },
+                        {
+                          "type": "text",
+                          "id": "onjtn",
+                          "name": "Call 1 Text",
+                          "fill": "#2E7D32",
+                          "content": "Allied Van Lines · 5m 32s",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "g93XX2",
+                      "name": "Div R",
+                      "fill": "$--border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HpzXt",
+                  "name": "Agent Message 1",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "uNBmu",
+                      "name": "Agent Label",
+                      "fill": "$--primary",
+                      "content": "Call Agent",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "A17mZ",
+                      "name": "Agent Bubble 1",
+                      "width": "fill_container",
+                      "fill": "#F8F8F6",
+                      "cornerRadius": [
+                        4,
+                        16,
+                        16,
+                        16
+                      ],
+                      "layout": "vertical",
+                      "gap": 16,
+                      "padding": [
+                        20,
+                        24
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Bfmr1",
+                          "name": "Call Result Intro",
+                          "fill": "$--foreground",
+                          "content": "Allied Van Lines — Call Summary",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 18,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "XrjMc",
+                          "name": "Call Details",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "jNvI8",
+                              "name": "Detail Quote",
+                              "width": "fill_container",
+                              "gap": 12,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "V83ws",
+                                  "name": "Icon Quote",
+                                  "width": 32,
+                                  "height": 32,
+                                  "fill": "#FFF3E0",
+                                  "cornerRadius": 8,
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "nxQnz",
+                                      "name": "Ico Quote",
+                                      "width": 18,
+                                      "height": 18,
+                                      "icon": "dollar-sign",
+                                      "library": "lucide",
+                                      "fill": "$--primary"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "n8iqPy",
+                                  "name": "Text Quote",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "q1VhN",
+                                      "name": "Label Quote",
+                                      "fill": "$--foreground",
+                                      "content": "Quote",
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 14,
+                                      "fontWeight": "700"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "tZqd0",
+                                      "name": "Value Quote",
+                                      "fill": "$--foreground",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "$3,200 for full-service move",
+                                      "lineHeight": 1.4,
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 17,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "bO1Pl",
+                              "name": "Detail Availability",
+                              "width": "fill_container",
+                              "gap": 12,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "wMo7X",
+                                  "name": "Icon Availability",
+                                  "width": 32,
+                                  "height": 32,
+                                  "fill": "#FFF3E0",
+                                  "cornerRadius": 8,
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "hlIRB",
+                                      "name": "Ico Availability",
+                                      "width": 18,
+                                      "height": 18,
+                                      "icon": "calendar",
+                                      "library": "lucide",
+                                      "fill": "$--primary"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "S47Qv",
+                                  "name": "Text Availability",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "eFlln",
+                                      "name": "Label Availability",
+                                      "fill": "$--foreground",
+                                      "content": "Availability",
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 14,
+                                      "fontWeight": "700"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "tOu5e",
+                                      "name": "Value Availability",
+                                      "fill": "$--foreground",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "August 2nd confirmed, pickup 8–10 AM",
+                                      "lineHeight": 1.4,
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 17,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "l2MGs",
+                              "name": "Detail Includes",
+                              "width": "fill_container",
+                              "gap": 12,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "OsMSI",
+                                  "name": "Icon Includes",
+                                  "width": 32,
+                                  "height": 32,
+                                  "fill": "#FFF3E0",
+                                  "cornerRadius": 8,
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "tIiX8",
+                                      "name": "Ico Includes",
+                                      "width": 18,
+                                      "height": 18,
+                                      "icon": "package",
+                                      "library": "lucide",
+                                      "fill": "$--primary"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "u15Z8b",
+                                  "name": "Text Includes",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "nwWWM",
+                                      "name": "Label Includes",
+                                      "fill": "$--foreground",
+                                      "content": "Includes",
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 14,
+                                      "fontWeight": "700"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "GpLD6",
+                                      "name": "Value Includes",
+                                      "fill": "$--foreground",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Packing materials, furniture disassembly & reassembly, blanket wrapping",
+                                      "lineHeight": 1.4,
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 17,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "XDiRt",
+                              "name": "Detail Insurance",
+                              "width": "fill_container",
+                              "gap": 12,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "JOHNo",
+                                  "name": "Icon Insurance",
+                                  "width": 32,
+                                  "height": 32,
+                                  "fill": "#FFF3E0",
+                                  "cornerRadius": 8,
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "j7XOSM",
+                                      "name": "Ico Insurance",
+                                      "width": 18,
+                                      "height": 18,
+                                      "icon": "shield",
+                                      "library": "lucide",
+                                      "fill": "$--primary"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "CkXc0",
+                                  "name": "Text Insurance",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "pLFVs",
+                                      "name": "Label Insurance",
+                                      "fill": "$--foreground",
+                                      "content": "Insurance",
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 14,
+                                      "fontWeight": "700"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "Awz5V",
+                                      "name": "Value Insurance",
+                                      "fill": "$--foreground",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "Basic coverage included, full replacement available for +$180",
+                                      "lineHeight": 1.4,
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 17,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "MpbQd",
+                              "name": "Detail Timeline",
+                              "width": "fill_container",
+                              "gap": 12,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "uB9in",
+                                  "name": "Icon Timeline",
+                                  "width": 32,
+                                  "height": 32,
+                                  "fill": "#FFF3E0",
+                                  "cornerRadius": 8,
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "pLw4h",
+                                      "name": "Ico Timeline",
+                                      "width": 18,
+                                      "height": 18,
+                                      "icon": "truck",
+                                      "library": "lucide",
+                                      "fill": "$--primary"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "qqPc6",
+                                  "name": "Text Timeline",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "d9O0q0",
+                                      "name": "Label Timeline",
+                                      "fill": "$--foreground",
+                                      "content": "Timeline",
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 14,
+                                      "fontWeight": "700"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "xO143",
+                                      "name": "Value Timeline",
+                                      "fill": "$--foreground",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "3–5 business days, dedicated truck (no shared loads)",
+                                      "lineHeight": 1.4,
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 17,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "yo8w9",
+                              "name": "Detail Payment",
+                              "width": "fill_container",
+                              "gap": 12,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "Z2dEA",
+                                  "name": "Icon Payment",
+                                  "width": 32,
+                                  "height": 32,
+                                  "fill": "#FFF3E0",
+                                  "cornerRadius": 8,
+                                  "justifyContent": "center",
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon",
+                                      "id": "Iv8cu",
+                                      "name": "Ico Payment",
+                                      "width": 18,
+                                      "height": 18,
+                                      "icon": "credit-card",
+                                      "library": "lucide",
+                                      "fill": "$--primary"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "jQuQI",
+                                  "name": "Text Payment",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 2,
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "HYKu7",
+                                      "name": "Label Payment",
+                                      "fill": "$--foreground",
+                                      "content": "Payment",
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 14,
+                                      "fontWeight": "700"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "ERhgU",
+                                      "name": "Value Payment",
+                                      "fill": "$--foreground",
+                                      "textGrowth": "fixed-width",
+                                      "width": "fill_container",
+                                      "content": "$500 deposit, remainder on delivery",
+                                      "lineHeight": 1.4,
+                                      "fontFamily": "$--font-secondary",
+                                      "fontSize": 17,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "v98oxn",
+                      "name": "Agent Time 1",
+                      "fill": "$--muted-foreground",
+                      "content": "10:30 AM",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "m3n7Ta",
+                  "name": "Call 2 Divider",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "padding": [
+                    4,
+                    0
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "LzwMJ",
+                      "name": "Div 2L",
+                      "fill": "$--border",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "eivZO",
+                      "name": "Call 2 Badge",
+                      "fill": "#FFF3E0",
+                      "cornerRadius": 999,
+                      "gap": 6,
+                      "padding": [
+                        6,
+                        14
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "B9WCI",
+                          "name": "Phone Icon 2",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "phone-outgoing",
+                          "library": "lucide",
+                          "fill": "$--primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "kEY0k",
+                          "name": "Call 2 Text",
+                          "fill": "$--primary",
+                          "content": "Calling Two Men and a Truck...",
+                          "fontFamily": "$--font-secondary",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "i5LuL",
+                      "name": "Div 2R",
+                      "fill": "$--border",
+                      "width": "fill_container",
+                      "height": 1
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "XFCVh",
+                  "name": "Agent Typing",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "v0wPs",
+                      "name": "Agent Label 2",
+                      "fill": "$--primary",
+                      "content": "Call Agent",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "wbFYY",
+                      "name": "Typing Bubble",
+                      "fill": "#F8F8F6",
+                      "cornerRadius": [
+                        4,
+                        16,
+                        16,
+                        16
+                      ],
+                      "gap": 8,
+                      "padding": [
+                        16,
+                        20
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 999,
+                          "id": "b1gxPv",
+                          "name": "Dot 0",
+                          "fill": "$--muted-foreground",
+                          "width": 10,
+                          "height": 10
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 999,
+                          "id": "qJ7a8",
+                          "name": "Dot 1",
+                          "opacity": 0.6,
+                          "fill": "$--muted-foreground",
+                          "width": 10,
+                          "height": 10
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 999,
+                          "id": "HdpOY",
+                          "name": "Dot 2",
+                          "opacity": 0.3,
+                          "fill": "$--muted-foreground",
+                          "width": 10,
+                          "height": 10
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "C5eB8P",
+              "name": "Action Bar",
+              "width": "fill_container",
+              "fill": "#FFFFFF",
+              "stroke": "$--border",
+              "strokeWidth": {
+                "top": 1
+              },
+              "gap": 12,
+              "padding": [
+                16,
+                24
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "IUhWD",
+                  "name": "Reply Input",
+                  "width": "fill_container",
+                  "height": 52,
+                  "fill": "#F8F8F6",
+                  "cornerRadius": 14,
+                  "padding": [
+                    0,
+                    18
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "gfzkL",
+                      "name": "Reply Placeholder",
+                      "fill": "$--muted-foreground",
+                      "content": "Type a message...",
+                      "fontFamily": "$--font-secondary",
+                      "fontSize": 17,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "PEcVM",
+                  "name": "Send Button",
+                  "width": 52,
+                  "height": 52,
+                  "fill": "$--primary",
+                  "cornerRadius": 14,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "G4puwr",
+                      "name": "Send Icon",
+                      "width": 22,
+                      "height": 22,
+                      "icon": "send",
+                      "library": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "themes": {
+    "Mode": [
+      "Light",
+      "Dark"
+    ]
+  },
+  "variables": {
+    "--sidebar": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#E7E8E5"
+        },
+        {
+          "value": "#18181b",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#666666"
+        },
+        {
+          "value": "#fafafa",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-primary": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#18181b"
+        },
+        {
+          "value": "#18181b",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-primary-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#fafafa"
+        },
+        {
+          "value": "#fafafa",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-border": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#CBCCC9"
+        },
+        {
+          "value": "#ffffff1a",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-accent": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#CBCCC9"
+        },
+        {
+          "value": "#2a2a30",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-accent-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#18181b"
+        },
+        {
+          "value": "#fafafa",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-ring": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#71717a"
+        },
+        {
+          "value": "#71717a",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--background": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#F2F3F0"
+        },
+        {
+          "value": "#111111",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#FFFFFF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--card": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#FFFFFF"
+        },
+        {
+          "value": "#1A1A1A",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--card-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#FFFFFF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--popover": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#FFFFFF"
+        },
+        {
+          "value": "#1A1A1A",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--popover-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#FFFFFF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--primary": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#FF8400"
+        },
+        {
+          "value": "#FF8400",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--primary-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#111111",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--secondary": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#E7E8E5"
+        },
+        {
+          "value": "#2E2E2E",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--secondary-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#FFFFFF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--muted": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#F2F3F0"
+        },
+        {
+          "value": "#2E2E2E",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--muted-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#666666"
+        },
+        {
+          "value": "#B8B9B6",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--accent": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#F2F3F0"
+        },
+        {
+          "value": "#111111",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--accent-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#F2F3F0",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--destructive": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#D93C15"
+        },
+        {
+          "value": "#FF5C33",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--border": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#CBCCC9"
+        },
+        {
+          "value": "#2E2E2E",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--input": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#CBCCC9"
+        },
+        {
+          "value": "#2E2E2E",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--ring": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#666666"
+        },
+        {
+          "value": "#666666",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--white": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "--black": {
+      "type": "color",
+      "value": "#000000"
+    },
+    "--font-primary": {
+      "type": "string",
+      "value": "JetBrains Mono"
+    },
+    "--font-secondary": {
+      "type": "string",
+      "value": "Geist"
+    },
+    "--radius-none": {
+      "type": "number",
+      "value": 0
+    },
+    "--radius-pill": {
+      "type": "number",
+      "value": 999
+    },
+    "--color-success": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#DFE6E1"
+        },
+        {
+          "value": "#222924",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-success-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#004D1A"
+        },
+        {
+          "value": "#B6FFCE",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-warning": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#E9E3D8"
+        },
+        {
+          "value": "#291C0F",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-warning-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#804200"
+        },
+        {
+          "value": "#FF8400",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-error": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#E5DCDA"
+        },
+        {
+          "value": "#24100B",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-error-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#8C1C00"
+        },
+        {
+          "value": "#FF5C33",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-info": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#DFDFE6"
+        },
+        {
+          "value": "#222229",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-info-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#000066"
+        },
+        {
+          "value": "#B2B2FF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--radius-m": {
+      "type": "number",
+      "value": 16
+    }
+  },
+  "fileToken": "57a6cb71-4fa4-4971-9fc8-125cc868dc18"
+}
