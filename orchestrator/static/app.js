@@ -27,7 +27,7 @@ function enforceCallLimit(conversation) {
 	farewellPending = false;
 	resultSaved = false;
 	callEndTimer = window.setTimeout(() => {
-		select("#voice-status").textContent = "Call time limit reached; ending…";
+		select("#voice-status").textContent = "Call time limit reached; ending...";
 		void conversation?.endSession();
 	}, 180000);
 }
@@ -64,20 +64,33 @@ function animateIncomingAnswer(call, isNextCarrier) {
 	answer.focus({ preventScroll: true });
 }
 
-function inventoryFrom(text) {
-	return text
-		.split("\n")
-		.filter(Boolean)
-		.map((line) => {
-			const [name, quantity = "1", large = "false"] = line
-				.split(",")
-				.map((part) => part.trim());
-			return {
-				name,
-				quantity: Number(quantity),
-				large: large.toLowerCase() === "true",
-			};
-		});
+function dateTwoWeeksFromNow() {
+	const date = new Date(Date.now() + 14 * 86400000);
+	return date.toISOString().slice(0, 10);
+}
+
+function requestPayloadFromText(requestText) {
+	return {
+		origin: "See request details",
+		destination: "See request details",
+		move_date: dateTwoWeeksFromNow(),
+		budget_min: 0,
+		budget_max: 10000,
+		service_type: "truck_and_movers",
+		bedrooms: 1,
+		movers_count: 2,
+		origin_floor: 0,
+		destination_floor: 0,
+		origin_elevator: false,
+		destination_elevator: false,
+		long_carry: false,
+		parking_constraints: "See request details",
+		inventory: [{ name: "See request details", quantity: 1, large: false }],
+		notes: requestText,
+		confirmed: true,
+		outreach_consent: true,
+		max_carriers: 3,
+	};
 }
 
 async function api(url, options = {}) {
@@ -137,44 +150,27 @@ async function reconcileUntilSettled(callId, attempts = 8) {
 	}
 }
 
-select("#move-form [name=move_date]").valueAsDate = new Date(
-	Date.now() + 14 * 86400000,
-);
 select("#move-form").addEventListener("submit", async (event) => {
 	event.preventDefault();
 	select("#form-error").textContent = "";
 	const form = new FormData(event.currentTarget);
-	const bool = (name) => form.get(name) === "on";
-	const payload = {
-		origin: form.get("origin"),
-		destination: form.get("destination"),
-		move_date: form.get("move_date"),
-		budget_min: Number(form.get("budget_min")),
-		budget_max: Number(form.get("budget_max")),
-		service_type: form.get("service_type"),
-		bedrooms: Number(form.get("bedrooms")),
-		movers_count: Number(form.get("movers_count")),
-		origin_floor: Number(form.get("origin_floor")),
-		destination_floor: Number(form.get("destination_floor")),
-		origin_elevator: bool("origin_elevator"),
-		destination_elevator: bool("destination_elevator"),
-		long_carry: bool("long_carry"),
-		parking_constraints: "",
-		inventory: inventoryFrom(form.get("inventory")),
-		notes: form.get("notes"),
-		confirmed: bool("confirmed"),
-		outreach_consent: bool("outreach_consent"),
-		max_carriers: 3,
-	};
+	const requestText = String(form.get("request_text") || "").trim();
+	if (!requestText) {
+		select("#form-error").textContent = "Describe what the agent should handle.";
+		return;
+	}
+	const payload = requestPayloadFromText(requestText);
 	try {
 		const move = await api("/api/moves", {
 			method: "POST",
 			body: JSON.stringify(payload),
 		});
-		await api(`/api/moves/${move.id}/campaign`, { method: "POST" });
+		const campaign = await api(`/api/moves/${move.id}/campaign`, { method: "POST" });
 		campaignStartedThisPage = true;
 		document.body.classList.add("campaign-started");
-		select("#intake-card").classList.add("hidden");
+		render({ campaigns: [campaign] });
+		select("#call-card").scrollIntoView({ behavior: "smooth", block: "center" });
+		select("#call-card").focus({ preventScroll: true });
 		listen();
 	} catch (error) {
 		select("#form-error").textContent = error.message;
@@ -204,13 +200,13 @@ function render(state) {
 			lastRenderedCallId !== call.id;
 		currentCallId = call.id;
 		select("#call-card").classList.remove("hidden");
-		select("#caller-name").textContent = "Incoming call from The Negotiator";
-		select("#caller-style").textContent =
-			"AI assistant calling on behalf of a customer";
+		select("#call-progress-text").textContent = `Call ${call.sequence_no} of ${campaign.jobs.length} companies`;
+		select("#caller-name").textContent = "Calling on your behalf...";
+		select("#caller-style").textContent = call.carrier.carrier_name;
 		select("#answering-as").textContent =
-			`You are answering as ${call.carrier.carrier_name} · ${call.carrier.headline}`;
+			`You are answering as ${call.carrier.carrier_name}`;
 		select("#persona").innerHTML =
-			`<strong>Private operator card</strong><p>${call.carrier.private_brief}</p>`;
+			`<strong>${call.carrier.headline}</strong><p>${call.carrier.private_brief}</p>`;
 		select("#answer").classList.toggle(
 			"hidden",
 			call.status !== "offered_to_widget",
@@ -250,32 +246,30 @@ function renderCallResults(campaign) {
 	const completed = campaign.jobs.filter((job) => job.result);
 	if (completed.length === 0) return;
 	const title = document.createElement("h3");
-	title.textContent = "Structured call records";
+	title.textContent = "Call results";
 	container.append(title);
 	for (const job of completed) {
 		const result = job.result;
 		const record = document.createElement("article");
-		record.className = "persona";
+		record.className = "persona result-summary";
 		const heading = document.createElement("strong");
-		heading.textContent = `${job.carrier.carrier_name} · ${result.outcome}`;
-		const details = document.createElement("pre");
-		details.textContent = JSON.stringify(
-			{
-				initial_total: result.initial_total,
-				final_total: result.final_total,
-				fees: result.fees,
-				included_services: result.included_services,
-				excluded_services: result.excluded_services,
-				binding: result.binding,
-				availability: result.availability,
-				deposit_terms: result.deposit_terms,
-				cancellation_terms: result.cancellation_terms,
-				quote_validity: result.quote_validity,
-				notes: result.notes,
-			},
-			null,
-			2,
-		);
+		heading.textContent = job.carrier.carrier_name;
+		const details = document.createElement("p");
+		const lines = [
+			`Outcome: ${result.outcome.replaceAll("_", " ")}.`,
+			result.final_total != null ? `Final total: $${result.final_total}.` : "",
+			result.initial_total != null ? `Initial total: $${result.initial_total}.` : "",
+			result.included_services?.length ? `Included: ${result.included_services.join(", ")}.` : "",
+			result.excluded_services?.length ? `Excluded: ${result.excluded_services.join(", ")}.` : "",
+			result.fees?.length ? `Fees: ${result.fees.map((fee) => fee.name || JSON.stringify(fee)).join(", ")}.` : "",
+			result.binding && result.binding !== "unknown" ? `Binding: ${result.binding}.` : "",
+			result.availability ? `Availability: ${result.availability}.` : "",
+			result.deposit_terms ? `Deposit: ${result.deposit_terms}.` : "",
+			result.cancellation_terms ? `Cancellation: ${result.cancellation_terms}.` : "",
+			result.quote_validity ? `Quote valid: ${result.quote_validity}.` : "",
+			result.notes ? `Notes: ${result.notes}` : "",
+		].filter(Boolean);
+		details.textContent = lines.join(" ");
 		record.append(heading, details);
 		container.append(record);
 	}
@@ -299,10 +293,10 @@ select("#answer").addEventListener("click", async () => {
 	let claimToken = null;
 	let pendingConversation = null;
 	answer.disabled = true;
-	answer.textContent = "Answering…";
+	answer.textContent = "Answering...";
 	select("#form-error").textContent = "";
 	voiceSession.classList.remove("hidden");
-	select("#voice-status").textContent = "Requesting microphone access…";
+	select("#voice-status").textContent = "Requesting microphone access...";
 
 	try {
 		const permissionStream = await navigator.mediaDevices.getUserMedia({
@@ -311,7 +305,7 @@ select("#answer").addEventListener("click", async () => {
 		permissionStream.getTracks().forEach((track) => track.stop());
 		const session = await api(`/api/calls/${callId}/answer`, { method: "POST" });
 		claimToken = session.claim_token;
-		select("#voice-status").textContent = "Connecting…";
+		select("#voice-status").textContent = "Connecting...";
 		pendingConversation = await Conversation.startSession({
 			signedUrl: session.signed_url,
 			dynamicVariables: session.dynamic_variables,
@@ -335,7 +329,7 @@ select("#answer").addEventListener("click", async () => {
 				},
 			},
 			onConnect: () => {
-				select("#voice-status").textContent = "Connected to The Negotiator";
+				select("#voice-status").textContent = "Connected to Call Assistant";
 				select("#hang-up").classList.remove("hidden");
 			},
 			onMessage: (message) => {
@@ -441,5 +435,3 @@ select("#result-form").addEventListener("submit", async (event) => {
 	if (activeConversation) await activeConversation.endSession();
 	select("#voice-session").classList.add("hidden");
 });
-
-api("/api/state").then(render);
