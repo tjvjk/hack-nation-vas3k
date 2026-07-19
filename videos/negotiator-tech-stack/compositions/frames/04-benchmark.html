@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="UTF-8" /></head>
+  <body>
+    <template>
+      <style>
+        #root { position:absolute; inset:0; width:1920px; height:1080px; overflow:hidden; container-type:size; color:#111111; font-family:sans-serif; }
+        .clip { position:absolute; inset:0; overflow:hidden; }
+        .f04-benchmark-ground { background:#FFF8F0; }
+        .f04-benchmark-grid { position:absolute; inset:0; opacity:.5; background-image:linear-gradient(rgba(200,74,0,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(200,74,0,.10) 1px,transparent 1px); background-size:64px 64px; }
+        .f04-benchmark-header { position:absolute; top:76px; left:96px; right:96px; display:flex; align-items:center; justify-content:space-between; }
+        .f04-benchmark-eyebrow { color:#C84A00; font-size:18px; font-weight:700; letter-spacing:.12em; }
+        .f04-benchmark-tag { padding:12px 22px; border:1.5px solid rgba(200,74,0,.2); border-radius:100px; background:rgba(200,74,0,.08); color:#C84A00; font-size:15px; font-weight:700; letter-spacing:.07em; }
+        .f04-benchmark-view { position:absolute; left:0; right:0; top:148px; height:720px; overflow:hidden; }
+        .f04-benchmark-camera { position:absolute; left:0; top:0; width:1920px; height:720px; transform-origin:50% 50%; will-change:transform; }
+        .f04-benchmark-world { position:absolute; left:0; top:0; width:3460px; height:720px; will-change:transform; }
+        .f04-benchmark-route { position:absolute; left:270px; top:350px; width:2100px; height:210px; overflow:visible; pointer-events:none; }
+        .f04-benchmark-route path { fill:none; stroke:#C84A00; stroke-width:5; stroke-linecap:round; stroke-dasharray:12 17; opacity:.75; }
+        .f04-benchmark-station { position:absolute; box-sizing:border-box; width:310px; text-align:center; }
+        .f04-benchmark-pin { width:92px; height:92px; margin:0 auto; border:2px solid #C84A00; border-radius:50% 50% 50% 12px; background:rgba(200,74,0,.12); display:grid; place-items:center; color:#111111; font-size:35px; font-weight:800; }
+        .f04-benchmark-station-title { margin-top:22px; font-size:28px; font-weight:700; letter-spacing:-.025em; }
+        .f04-benchmark-station-note { margin-top:9px; color:#5B4637; font-size:17px; font-weight:600; letter-spacing:.06em; }
+        .f04-benchmark-origin { left:360px; top:175px; }
+        .f04-benchmark-destination { left:1080px; top:365px; }
+        .f04-benchmark-server { position:absolute; left:1770px; top:126px; width:490px; height:430px; box-sizing:border-box; padding:34px; border:1.5px solid rgba(200,74,0,.2); border-radius:14px; background:rgba(200,74,0,.04); }
+        .f04-benchmark-server-top { display:flex; justify-content:space-between; align-items:center; }
+        .f04-benchmark-server-title { font-size:29px; font-weight:700; letter-spacing:-.025em; }
+        .f04-benchmark-server-lock { width:47px; height:47px; display:grid; place-items:center; border-radius:50%; background:#C84A00; color:#FFF8F0; font-size:24px; font-weight:800; }
+        .f04-benchmark-terminal { margin-top:32px; padding:22px; border:1px solid rgba(200,74,0,.2); border-radius:10px; background:#FFF8F0; color:#111111; font-family:monospace; font-size:18px; line-height:1.6; }
+        .f04-benchmark-terminal-kicker { color:#5B4637; font-size:13px; font-weight:700; letter-spacing:.08em; }
+        .f04-benchmark-terminal-state { display:block; min-height:30px; color:#111111; font-weight:700; }
+        .f04-benchmark-place-row { margin-top:14px; padding-top:15px; border-top:1px solid rgba(200,74,0,.2); display:flex; justify-content:space-between; color:#5B4637; font-size:14px; font-weight:700; letter-spacing:.07em; }
+        .f04-benchmark-place-row strong { color:#C84A00; font-size:15px; }
+        .f04-benchmark-range-card { position:absolute; left:2590px; top:116px; width:620px; height:448px; box-sizing:border-box; padding:40px; border:1.5px solid rgba(200,74,0,.2); border-radius:14px; background:rgba(200,74,0,.04); overflow:hidden; }
+        .f04-benchmark-range-top { display:flex; align-items:flex-start; justify-content:space-between; }
+        .f04-benchmark-source { color:#C84A00; font-size:16px; font-weight:700; letter-spacing:.1em; }
+        .f04-benchmark-range-title { margin-top:15px; font-size:42px; font-weight:700; letter-spacing:-.04em; }
+        .f04-benchmark-range-value { margin-top:28px; color:#C84A00; font-size:70px; line-height:1; font-weight:700; letter-spacing:-.055em; font-variant-numeric:tabular-nums; }
+        .f04-benchmark-range-label { margin-top:10px; color:#5B4637; font-size:18px; font-weight:600; }
+        .f04-benchmark-bars { position:absolute; right:38px; bottom:44px; height:136px; display:flex; align-items:flex-end; gap:12px; }
+        .f04-benchmark-bar { width:34px; border-radius:6px 6px 0 0; background:rgba(200,74,0,.18); transform-origin:bottom center; }
+        .f04-benchmark-bar:last-child { background:#C84A00; }
+        .f04-benchmark-progress { position:absolute; left:40px; bottom:42px; width:300px; height:12px; overflow:hidden; border-radius:6px; background:rgba(200,74,0,.15); }
+        .f04-benchmark-progress-fill { width:100%; height:100%; border-radius:6px; background:#C84A00; transform-origin:left center; }
+        .f04-benchmark-guardrail { position:absolute; left:2638px; top:190px; width:524px; height:300px; box-sizing:border-box; padding:48px 46px; border:1.5px solid rgba(200,74,0,.2); border-radius:14px; background:#FFF8F0; opacity:0; }
+        .f04-benchmark-guard-kicker { color:#C84A00; font-size:16px; font-weight:700; letter-spacing:.11em; }
+        .f04-benchmark-guard-title { margin-top:22px; color:#111111; font-size:47px; font-weight:700; line-height:1.04; letter-spacing:-.045em; }
+        .f04-benchmark-guard-title span { display:block; }
+        .f04-benchmark-guard-arrow { margin-top:26px; width:100%; height:4px; border-radius:2px; background:#C84A00; transform-origin:left center; }
+        .f04-benchmark-progress-strip { position:absolute; left:96px; bottom:74px; width:1728px; height:4px; background:rgba(200,74,0,.14); }
+        .f04-benchmark-progress-strip > div { width:80%; height:100%; background:#C84A00; }
+      </style>
+
+      <div id="root" data-composition-id="04-benchmark" data-start="0" data-duration="10.5" data-width="1920" data-height="1080">
+        <div class="clip f04-benchmark-ground" data-start="0" data-duration="10.5" data-track-index="0"><div class="f04-benchmark-grid"></div></div>
+        <div class="f04-benchmark-header"><div class="f04-benchmark-eyebrow">LIVE BENCHMARK LOOP</div><div class="f04-benchmark-tag">SERVER-SIDE ONLY</div></div>
+        <div class="f04-benchmark-view">
+          <div class="f04-benchmark-camera" id="f04-benchmark-camera"><div class="f04-benchmark-world" id="f04-benchmark-world">
+            <svg class="f04-benchmark-route" viewBox="0 0 2100 210" aria-hidden="true"><path id="f04-benchmark-route-path" d="M 20 45 C 340 45, 440 184, 780 184 S 1290 36, 1620 36 S 1850 92, 2070 92" /></svg>
+            <div class="f04-benchmark-station f04-benchmark-origin" id="f04-benchmark-origin"><div class="f04-benchmark-pin">A</div><div class="f04-benchmark-station-title">ORIGIN</div><div class="f04-benchmark-station-note">LOCATION CONFIRMED</div></div>
+            <div class="f04-benchmark-station f04-benchmark-destination" id="f04-benchmark-destination"><div class="f04-benchmark-pin">B</div><div class="f04-benchmark-station-title">DESTINATION</div><div class="f04-benchmark-station-note">LOCATION CONFIRMED</div></div>
+            <section class="f04-benchmark-server" id="f04-benchmark-server"><div class="f04-benchmark-server-top"><div class="f04-benchmark-server-title">GEOCODING GATE</div><div class="f04-benchmark-server-lock">⌁</div></div><div class="f04-benchmark-terminal"><div class="f04-benchmark-terminal-kicker">SECURE REQUEST</div><span class="f04-benchmark-terminal-state" id="f04-benchmark-terminal-state">awaiting pins</span></div><div class="f04-benchmark-place-row"><span>ORIGIN</span><strong>PLACE ID</strong></div><div class="f04-benchmark-place-row"><span>DESTINATION</span><strong>PLACE ID</strong></div></section>
+            <section class="f04-benchmark-range-card" id="f04-benchmark-range-card"><div class="f04-benchmark-range-top"><div><div class="f04-benchmark-source">MOVEBUDDHA</div><div class="f04-benchmark-range-title">PRO MOVER RANGE</div></div></div><div class="f04-benchmark-range-value">$4K—$7K</div><div class="f04-benchmark-range-label">MARKET BENCHMARK</div><div class="f04-benchmark-progress"><div class="f04-benchmark-progress-fill" id="f04-benchmark-progress-fill"></div></div><div class="f04-benchmark-bars"><div class="f04-benchmark-bar" style="height:54px"></div><div class="f04-benchmark-bar" style="height:84px"></div><div class="f04-benchmark-bar" style="height:112px"></div><div class="f04-benchmark-bar" style="height:136px"></div></div></section>
+            <section class="f04-benchmark-guardrail" id="f04-benchmark-guardrail"><div class="f04-benchmark-guard-kicker">NEGOTIATION GUARDRAIL</div><div class="f04-benchmark-guard-title"><span>BENCHMARK</span><span>→ COUNTEROFFER</span></div><div class="f04-benchmark-guard-arrow" id="f04-benchmark-guard-arrow"></div></section>
+          </div></div>
+        </div>
+        <div class="f04-benchmark-progress-strip"><div></div></div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        const route = document.getElementById('f04-benchmark-route-path');
+        const routeLength = route.getTotalLength();
+        route.style.strokeDasharray = routeLength;
+        route.style.strokeDashoffset = routeLength;
+        const terminalStates = [
+          { t: 2.0, text: 'validating locations' },
+          { t: 2.7, text: 'requesting geocode' },
+          { t: 3.5, text: 'place IDs resolved ✓' },
+          { t: 4.35, text: 'benchmark ready ✓' }
+        ];
+        const terminal = document.getElementById('f04-benchmark-terminal-state');
+        const driver = { t: 0 };
+        let lastTerminal = '';
+        tl.to(driver, { t: 10, duration: 10, ease: 'none', onUpdate: () => {
+          let next = 'awaiting pins';
+          for (let i = terminalStates.length - 1; i >= 0; i--) if (driver.t >= terminalStates[i].t) { next = terminalStates[i].text; break; }
+          if (next !== lastTerminal) { terminal.textContent = next; lastTerminal = next; }
+        } }, 0);
+
+        // Scene 1: two coordinate stations arrive, then the camera pans to the destination.
+        tl.fromTo('#f04-benchmark-origin', { opacity: 0, scale: .58, y: 64 }, { opacity: 1, scale: 1, y: 0, duration: .62, ease: 'back.out(1.5)' }, .16);
+        tl.fromTo('#f04-benchmark-destination', { opacity: 0, scale: .58, y: 64 }, { opacity: 1, scale: 1, y: 0, duration: .62, ease: 'back.out(1.5)' }, .78);
+        tl.to('#f04-benchmark-world', { x: -395, duration: .9, ease: 'power3.inOut' }, 1.12);
+        tl.to('#f04-benchmark-camera', { scale: 1.08, duration: .9, ease: 'power3.inOut' }, 1.12);
+
+        // Scene 2: the station pan lands on the secure geocoding gate; the text swaps at discrete thresholds.
+        tl.to('#f04-benchmark-world', { x: -1430, duration: 1.15, ease: 'power3.inOut' }, 2.0);
+        tl.to('#f04-benchmark-camera', { scale: 1, duration: 1.15, ease: 'power3.inOut' }, 2.0);
+        tl.fromTo('#f04-benchmark-server', { opacity: 0, y: 56, scale: .9 }, { opacity: 1, y: 0, scale: 1, duration: .72, ease: 'power3.out' }, 2.35);
+        tl.fromTo('.f04-benchmark-place-row', { opacity: 0, x: 34 }, { opacity: 1, x: 0, duration: .42, stagger: .18, ease: 'expo.out' }, 3.35);
+
+        // Scene 3: an SVG route writes on as the camera reaches the benchmark station; bars grow from their baseline.
+        tl.to(route, { strokeDashoffset: 0, duration: 1.15, ease: 'power2.out' }, 4.75);
+        tl.to('#f04-benchmark-world', { x: -2360, duration: 1.25, ease: 'power3.inOut' }, 4.8);
+        tl.fromTo('#f04-benchmark-range-card', { opacity: 0, y: 48, scale: .9 }, { opacity: 1, y: 0, scale: 1, duration: .72, ease: 'power3.out' }, 5.35);
+        tl.fromTo('.f04-benchmark-bar', { scaleY: 0, opacity: 0 }, { scaleY: 1, opacity: 1, duration: .58, stagger: .09, ease: 'power3.out' }, 6.02);
+        tl.fromTo('#f04-benchmark-progress-fill', { scaleX: 0 }, { scaleX: .78, duration: .86, ease: 'power2.out' }, 6.15);
+
+        // Scene 4: the range panel itself morphs into the counteroffer guardrail, then the final phrase slams on the shared beat.
+        tl.to('#f04-benchmark-range-card', { width: 524, height: 300, borderRadius: 14, opacity: .14, duration: .74, ease: 'power2.inOut' }, 7.62);
+        tl.fromTo('#f04-benchmark-guardrail', { opacity: 0, scale: .84, y: 22 }, { opacity: 1, scale: 1, y: 0, duration: .62, ease: 'power4.out' }, 7.92);
+        const BEATS = [8.12, 8.5, 8.88];
+        tl.fromTo('.f04-benchmark-guard-kicker', { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: .36, ease: 'expo.out' }, BEATS[0]);
+        tl.fromTo('.f04-benchmark-guard-title', { opacity: 0, scale: 1.24, filter: 'blur(10px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: .5, ease: 'power4.out' }, BEATS[1]);
+        tl.fromTo('#f04-benchmark-guard-arrow', { opacity: 0, scaleX: 0 }, { opacity: 1, scaleX: 1, duration: .42, ease: 'circ.out' }, BEATS[2]);
+        window.__timelines['04-benchmark'] = tl;
+      </script>
+    </template>
+  </body>
+</html>

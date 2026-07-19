@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1920px;
+          height: 1080px;
+          overflow: hidden;
+          container-type: size;
+          color: #111111;
+          font-family: sans-serif;
+        }
+        .intro-ground { position: absolute; inset: 0; background: #fff8f0; }
+        .intro-panel {
+          position: absolute; top: -110px; left: -140px; width: 865px; height: 980px;
+          background: #111111; transform: skewX(-14deg); transform-origin: center;
+        }
+        .intro-panel-edge { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+        .intro-panel-edge path { fill: none; stroke: #c84a00; stroke-width: 3; stroke-linecap: round; }
+        .intro-dots { position: absolute; top: 126px; right: 144px; display: grid; grid-template-columns: repeat(3, 11px); gap: 16px; }
+        .intro-dots i { width: 11px; height: 11px; background: #c84a00; border-radius: 50%; display: block; }
+        .intro-rule { position: absolute; top: 218px; left: 170px; width: 60px; height: 4px; }
+        .intro-rule-mark { display: block; width: 60px; height: 4px; border-radius: 2px; background: #c84a00; transform-origin: left center; }
+        .intro-eyebrow { position: absolute; top: 250px; left: 170px; }
+        .intro-eyebrow-copy { display: block; color: #c84a00; font-size: 18px; font-weight: 700; letter-spacing: .14em; }
+        .intro-title { position: absolute; top: 295px; left: 164px; width: 770px; font-size: 110px; font-weight: 700; letter-spacing: -.055em; line-height: .9; color: #fff8f0; }
+        .intro-title span { display: block; }
+        .intro-title .intro-accent { color: #c84a00; }
+        .intro-beatbar { position: absolute; top: 540px; left: 170px; display: flex; gap: 12px; }
+        .intro-beatbar i { display: block; width: 38px; height: 4px; border-radius: 3px; background: #c84a00; opacity: .25; }
+        .intro-intake { position: absolute; top: 250px; left: 1030px; width: 610px; height: 330px; }
+        .intro-intake-inner {
+          width: 610px; height: 330px; padding: 35px;
+          border: 1.5px solid rgba(200,74,0,.2); border-radius: 14px; background: rgba(200,74,0,.04);
+        }
+        .intro-intake-head { color: #111111; font-size: 17px; font-weight: 700; letter-spacing: .1em; }
+        .intro-intake-sub { margin-top: 14px; color: #5b4637; font-size: 18px; }
+        .intro-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 39px; }
+        .intro-field { height: 74px; padding: 17px; border: 1px solid rgba(200,74,0,.2); border-radius: 10px; background: rgba(200,74,0,.08); }
+        .intro-field b { display: block; color: #111111; font-size: 14px; letter-spacing: .07em; }
+        .intro-field small { display: block; margin-top: 8px; color: #5b4637; font-size: 14px; }
+        .intro-submit { position: absolute; right: 35px; bottom: 32px; padding: 12px 20px; border-radius: 100px; background: #c84a00; color: #111111; font-size: 14px; font-weight: 700; letter-spacing: .06em; }
+        .intro-route { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+        .intro-route path { fill: none; stroke: #c84a00; stroke-width: 3; stroke-linecap: round; }
+        .intro-chip { position: absolute; top: 730px; left: 50%; width: 235px; height: 76px; margin: 0; }
+        .intro-chip-inner {
+          position: absolute; top: 50%; left: 50%; width: 235px; height: 76px;
+          display: grid; place-items: center; border: 1.5px solid rgba(200,74,0,.2); border-radius: 100px;
+          background: rgba(200,74,0,.08); color: #111111; font-size: 17px; font-weight: 700; letter-spacing: .075em;
+          will-change: transform, opacity;
+        }
+        .intro-chip-a .intro-chip-inner { border-color: #c84a00; }
+        .intro-chip-c .intro-chip-inner { background: #c84a00; }
+        .intro-progress { position: absolute; left: 0; top: 874px; height: 3px; width: 270px; }
+        .intro-progress-mark { display: block; height: 3px; width: 270px; background: #c84a00; transform-origin: left center; }
+      </style>
+
+      <div id="root" data-composition-id="01-intro" data-start="0" data-duration="6.5" data-width="1920" data-height="1080">
+        <div class="clip intro-ground" data-start="0" data-duration="6.5" data-track-index="0"></div>
+        <div class="clip intro-panel" data-start="0" data-duration="6.5" data-track-index="1"></div>
+        <svg class="clip intro-panel-edge" data-start="0" data-duration="6.5" data-track-index="2" viewBox="0 0 1920 1080" aria-hidden="true">
+          <path id="f01-intro-panel-path" d="M 555 0 L 755 0 L 450 850" />
+        </svg>
+        <div class="clip intro-dots" data-start="0" data-duration="6.5" data-track-index="3" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+        <div class="clip intro-rule" data-start="1.2" data-duration="5.3" data-track-index="4"><span class="intro-rule-mark"></span></div>
+        <div class="clip intro-eyebrow" data-start="1.2" data-duration="5.3" data-track-index="5"><span class="intro-eyebrow-copy">AI-ASSISTED MOVING</span></div>
+        <div class="clip intro-title" data-start="1.2" data-duration="5.3" data-track-index="6"><span id="f01-intro-title-a">THE</span><span id="f01-intro-title-b" class="intro-accent">NEGOTIATOR</span></div>
+        <div class="clip intro-beatbar" data-start="1.2" data-duration="5.3" data-track-index="7" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+
+        <div class="clip intro-intake" data-start="1.2" data-duration="5.3" data-track-index="8"><div class="intro-intake-inner">
+          <div class="intro-intake-head">MOVE INTAKE</div><div class="intro-intake-sub">Tell us the route. Keep control.</div>
+          <div class="intro-fields"><div class="intro-field"><b>FROM</b><small>Origin</small></div><div class="intro-field"><b>TO</b><small>Destination</small></div></div>
+          <div class="intro-submit">START PLAN</div></div>
+        </div>
+
+        <svg class="clip intro-route" data-start="3.4" data-duration="3.1" data-track-index="9" viewBox="0 0 1920 1080" aria-hidden="true">
+          <path id="f01-intro-route-path" d="M 515 768 C 750 672, 976 852, 1204 768 S 1496 720, 1574 768" />
+        </svg>
+        <div class="clip intro-chip intro-chip-a" data-start="3.4" data-duration="3.1" data-track-index="10"><div id="f01-intro-chip-a" class="intro-chip-inner" data-target-x="-610" data-target-y="0">MOVE INPUT</div></div>
+        <div class="clip intro-chip" data-start="3.4" data-duration="3.1" data-track-index="11"><div id="f01-intro-chip-b" class="intro-chip-inner" data-target-x="0" data-target-y="0">LIVE CALL</div></div>
+        <div class="clip intro-chip intro-chip-c" data-start="3.4" data-duration="3.1" data-track-index="12"><div id="f01-intro-chip-c" class="intro-chip-inner" data-target-x="610" data-target-y="0">RANKED QUOTES</div></div>
+        <div class="clip intro-progress" data-start="0" data-duration="6.5" data-track-index="13"><span class="intro-progress-mark"></span></div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        const pathSetup = (selector) => {
+          const path = document.querySelector(selector); const length = path.getTotalLength();
+          path.style.strokeDasharray = String(length); path.style.strokeDashoffset = String(length);
+        };
+        pathSetup("#f01-intro-panel-path"); pathSetup("#f01-intro-route-path");
+        tl.to("#f01-intro-panel-path", { strokeDashoffset: 0, duration: .72, ease: "power2.out" }, .06);
+        tl.fromTo(".intro-dots i", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: .28, stagger: .055, ease: "back.out(2)" }, .24);
+
+        const BEATS = [1.25, 1.95, 3.45, 4.12, 4.79];
+        tl.fromTo(".intro-rule-mark", { scaleX: 0 }, { scaleX: 1, duration: .38, ease: "power4.out" }, BEATS[0]);
+        tl.fromTo("#f01-intro-title-a", { scale: 1.45, opacity: 0 }, { scale: 1, opacity: 1, duration: .48, ease: "power4.out" }, BEATS[0]);
+        tl.fromTo("#f01-intro-title-b", { x: -220, opacity: 0 }, { x: 0, opacity: 1, duration: .48, ease: "expo.out" }, BEATS[1]);
+        tl.fromTo(".intro-eyebrow-copy", { y: 34, rotation: -3, opacity: 0 }, { y: 0, rotation: 0, opacity: 1, duration: .42, ease: "circ.out" }, BEATS[1]);
+        tl.fromTo(".intro-intake-inner", { x: 110, opacity: 0 }, { x: 0, opacity: 1, duration: .62, ease: "expo.out" }, 2.38);
+        tl.fromTo(".intro-intake .intro-field", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: .38, stagger: .1, ease: "power3.out" }, 2.72);
+        tl.fromTo(".intro-submit", { scale: .7, opacity: 0 }, { scale: 1, opacity: 1, duration: .34, ease: "back.out(2)" }, 3.08);
+        tl.to("#f01-intro-route-path", { strokeDashoffset: 0, duration: 1.35, ease: "power2.out" }, BEATS[2]);
+        const chips = ["#f01-intro-chip-a", "#f01-intro-chip-b", "#f01-intro-chip-c"];
+        chips.forEach((selector, index) => {
+          const chip = document.querySelector(selector);
+          tl.fromTo(chip, { xPercent: -50, yPercent: -50, x: 0, y: 0, scale: .6, opacity: 0 }, { x: Number(chip.dataset.targetX), y: Number(chip.dataset.targetY), scale: 1, opacity: 1, duration: .85, ease: "power3.out" }, BEATS[index + 2]);
+        });
+        gsap.utils.toArray(".intro-beatbar i").forEach((tick, index) => { tl.to(tick, { opacity: 1, duration: .08, ease: "none" }, BEATS[index]); tl.to(tick, { opacity: .25, duration: .08, ease: "none" }, BEATS[index] + .08); });
+        tl.fromTo(".intro-progress-mark", { scaleX: 0 }, { scaleX: 1, duration: 5.5, ease: "none" }, .1);
+        window.__timelines["01-intro"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,126 @@
+<template>
+  <style>
+    #root {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      container-type: size;
+      color: #111111;
+      font-family: sans-serif;
+    }
+    .clip { position: absolute; inset: 0; overflow: hidden; }
+    .\30 5-outcome-bg { background: #FFF8F0; }
+    .\30 5-outcome-bg::before {
+      content: ""; position: absolute; inset: 0; opacity: .48;
+      background-image: linear-gradient(rgba(200,74,0,.11) 1px, transparent 1px), linear-gradient(90deg, rgba(200,74,0,.11) 1px, transparent 1px);
+      background-size: 72px 72px;
+    }
+    .\30 5-outcome-bg::after { content: ""; position: absolute; width: 960px; height: 960px; top: -470px; right: -290px; border: 1px solid rgba(200,74,0,.22); border-radius: 50%; }
+    .\30 5-outcome-header { position: absolute; top: 74px; left: 96px; right: 96px; display: flex; align-items: center; justify-content: space-between; }
+    .\30 5-outcome-eyebrow { color: #C84A00; font-size: 18px; font-weight: 700; letter-spacing: .11em; }
+    .\30 5-outcome-tag { padding: 11px 20px; border: 1.5px solid rgba(200,74,0,.2); border-radius: 100px; background: rgba(200,74,0,.08); color: #C84A00; font-size: 15px; font-weight: 700; letter-spacing: .08em; }
+    .\30 5-outcome-stage { position: absolute; inset: 160px 96px 184px; perspective: 1500px; }
+    .\30 5-outcome-record { position: absolute; left: 50%; top: 38px; width: 770px; height: 400px; margin-left: -385px; box-sizing: border-box; padding: 34px 42px; border: 1.5px solid rgba(200,74,0,.2); border-radius: 14px; background: rgba(200,74,0,.04); transform-style: preserve-3d; }
+    .\30 5-outcome-record-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 21px; border-bottom: 1px solid rgba(200,74,0,.2); }
+    .\30 5-outcome-record-title { font-size: 38px; font-weight: 700; letter-spacing: -.03em; }
+    .\30 5-outcome-record-state { padding: 9px 14px; border-radius: 100px; background: rgba(200,74,0,.15); color: #111111; font-size: 14px; font-weight: 800; letter-spacing: .08em; }
+    .\30 5-outcome-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 26px; margin-top: 26px; }
+    .\30 5-outcome-field { display: flex; align-items: end; justify-content: space-between; padding-bottom: 13px; border-bottom: 1px solid rgba(200,74,0,.2); color: #5B4637; font-size: 17px; letter-spacing: .06em; }
+    .\30 5-outcome-field strong { color: #111111; font-size: 23px; letter-spacing: -.02em; }
+    .\30 5-outcome-table { position: absolute; left: 50%; top: 15px; width: 1230px; margin-left: -615px; }
+    .\30 5-outcome-table-head { display: grid; grid-template-columns: 1.65fr 1fr 1fr 1.1fr; gap: 20px; padding: 0 26px 15px; color: #5B4637; font-size: 14px; font-weight: 700; letter-spacing: .09em; }
+    .\30 5-outcome-row { display: grid; grid-template-columns: 1.65fr 1fr 1fr 1.1fr; align-items: center; gap: 20px; height: 94px; margin: 12px 0; padding: 0 26px; box-sizing: border-box; border: 1.5px solid rgba(200,74,0,.2); border-radius: 14px; background: rgba(200,74,0,.04); }
+    .\30 5-outcome-row strong { font-size: 24px; letter-spacing: -.02em; }
+    .\30 5-outcome-row span { color: #5B4637; font-size: 17px; }
+    .\30 5-outcome-bar { height: 9px; margin-top: 8px; overflow: hidden; border-radius: 6px; background: rgba(200,74,0,.08); }
+    .\30 5-outcome-fill { width: 100%; height: 100%; border-radius: 6px; background: #C84A00; transform-origin: left center; }
+    .\30 5-outcome-recommended { display: inline-block; justify-self: end; padding: 10px 14px; border-radius: 100px; background: #C84A00; color: #FFF8F0 !important; font-size: 13px !important; font-weight: 800; letter-spacing: .07em; }
+    .\30 5-outcome-audits { position: absolute; left: 50%; top: 490px; width: 1px; height: 76px; }
+    .\30 5-outcome-audit { position: absolute; top: 0; left: 0; width: 300px; height: 76px; display: grid; place-items: center; box-sizing: border-box; border: 1.5px solid rgba(200,74,0,.2); border-radius: 100px; background: rgba(200,74,0,.04); color: #111111; font-size: 17px; font-weight: 800; letter-spacing: .08em; }
+    .\30 5-outcome-audit svg { position: absolute; left: 22px; top: 24px; width: 26px; height: 26px; }
+    .\30 5-outcome-audit path { fill: none; stroke: #C84A00; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .\30 5-outcome-close { position: absolute; left: 50%; top: 150px; width: 1400px; margin-left: -700px; text-align: center; }
+    .\30 5-outcome-close-eyebrow { margin-bottom: 24px; color: #C84A00; font-size: 18px; font-weight: 700; letter-spacing: .12em; }
+    .\30 5-outcome-close-line { font-size: 90px; font-weight: 700; line-height: 1.03; letter-spacing: -.05em; }
+    .\30 5-outcome-close-accent { color: #C84A00; }
+    .\30 5-outcome-underline { width: 60px; height: 4px; margin: 34px auto 0; border-radius: 2px; background: #C84A00; transform-origin: center; }
+    .\30 5-outcome-cursor { position: absolute; right: 310px; top: 442px; width: 44px; height: 54px; z-index: 4; fill: #111111; stroke: #FFF8F0; stroke-width: 2; }
+    .\30 5-outcome-progress { position: absolute; left: 0; bottom: 0; width: 100%; height: 3px; background: #C84A00; transform-origin: left center; }
+  </style>
+
+  <div id="root" data-composition-id="05-outcome" data-start="0" data-duration="11" data-width="1920" data-height="1080">
+    <div id="05-outcome-ground" class="clip 05-outcome-bg" data-start="0" data-duration="11" data-track-index="0"></div>
+    <div id="05-outcome-content" class="clip" data-start="0" data-duration="11" data-track-index="1">
+      <div class="05-outcome-header"><div class="05-outcome-eyebrow">AUDITABLE OUTCOME</div><div class="05-outcome-tag">HUMAN DECISION</div></div>
+      <div class="05-outcome-stage">
+        <div id="05-outcome-record" class="05-outcome-record">
+          <div class="05-outcome-record-top"><div class="05-outcome-record-title">QUOTE RECORD</div><div class="05-outcome-record-state">RECEIVED</div></div>
+          <div class="05-outcome-fields">
+            <div class="05-outcome-field"><span>PRICE</span><strong>ITEMIZED</strong></div><div class="05-outcome-field"><span>FEES</span><strong>VISIBLE</strong></div>
+            <div class="05-outcome-field"><span>AVAILABILITY</span><strong>CHECKED</strong></div><div class="05-outcome-field"><span>TERMS</span><strong>CAPTURED</strong></div>
+          </div>
+        </div>
+        <div id="05-outcome-table" class="05-outcome-table">
+          <div class="05-outcome-table-head"><div>CARRIER</div><div>PRICE SIGNAL</div><div>TERMS</div><div>DECISION</div></div>
+          <div id="05-outcome-row-a" class="05-outcome-row"><strong>Carrier A</strong><div><span>COMPETITIVE</span><div class="05-outcome-bar"><div class="05-outcome-fill"></div></div></div><span>reviewed</span><span>consider</span></div>
+          <div id="05-outcome-row-b" class="05-outcome-row"><strong>Carrier B</strong><div><span>STRONGEST</span><div class="05-outcome-bar"><div class="05-outcome-fill"></div></div></div><span>reviewed</span><span id="05-outcome-mark" class="05-outcome-recommended">RECOMMENDED</span></div>
+          <div id="05-outcome-row-c" class="05-outcome-row"><strong>Carrier C</strong><div><span>COMPARABLE</span><div class="05-outcome-bar"><div class="05-outcome-fill"></div></div></div><span>reviewed</span><span>consider</span></div>
+        </div>
+        <div id="05-outcome-audits" class="05-outcome-audits">
+          <div class="05-outcome-audit"><svg viewBox="0 0 32 32"><path d="M7 16l6 6 12-13"></path></svg>STRUCTURED</div>
+          <div class="05-outcome-audit"><svg viewBox="0 0 32 32"><path d="M7 16l6 6 12-13"></path></svg>SCOPED</div>
+          <div class="05-outcome-audit"><svg viewBox="0 0 32 32"><path d="M7 16l6 6 12-13"></path></svg>HUMAN REVIEW</div>
+        </div>
+        <div id="05-outcome-close" class="05-outcome-close"><div class="05-outcome-close-eyebrow">DECISION SUPPORT, NOT A PROMISE</div><div id="05-outcome-line-a" class="05-outcome-close-line">AI NEGOTIATION,</div><div id="05-outcome-line-b" class="05-outcome-close-line">WITH <span class="05-outcome-close-accent">RECEIPTS.</span></div><div id="05-outcome-underline" class="05-outcome-underline"></div></div>
+        <svg id="05-outcome-cursor" class="05-outcome-cursor" viewBox="0 0 44 54" aria-hidden="true"><path d="M5 3 L39 23 L25 26 L18 48 Z"></path></svg>
+      </div>
+      <div id="05-outcome-progress" class="05-outcome-progress"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    const byId = (id) => document.getElementById(id);
+    const record = byId('05-outcome-record');
+    const table = byId('05-outcome-table');
+    const audits = byId('05-outcome-audits');
+    const close = byId('05-outcome-close');
+    const cursor = byId('05-outcome-cursor');
+    const fragments = Array.from(document.getElementsByClassName('05-outcome-field'));
+    const golden = Math.PI * (3 - Math.sqrt(5));
+    fragments.forEach((el, i) => {
+      const angle = i * golden;
+      gsap.set(el, { x: Math.cos(angle) * 240, y: Math.sin(angle) * 160, z: 260 - i * 145, rotationX: Math.sin(angle) * 42, rotationY: Math.cos(angle) * 42, opacity: 0 });
+      tl.fromTo(el, { x: Math.cos(angle) * 240, y: Math.sin(angle) * 160, z: 260 - i * 145, rotationX: Math.sin(angle) * 42, rotationY: Math.cos(angle) * 42, opacity: 0 }, { x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, opacity: 1, duration: .82, ease: 'power3.out' }, .42 + i * .22);
+    });
+    tl.fromTo(record, { scale: .78, rotationY: -18, opacity: 0 }, { scale: 1, rotationY: 0, opacity: 1, duration: .8, ease: 'power3.out' }, .12);
+    tl.to(record, { rotationY: 8, duration: 1.85, ease: 'power1.out' }, .12);
+    tl.to(record, { rotationY: 0, duration: .4, ease: 'power2.out' }, 2.0);
+    tl.to(record, { x: -420, opacity: .2, scale: .72, duration: .34, ease: 'power4.in' }, 2.22);
+    tl.fromTo(table, { x: 420, opacity: .35, scale: .82 }, { x: 0, opacity: 1, scale: 1, duration: .52, ease: 'power4.out' }, 2.22);
+    const rows = ['05-outcome-row-a', '05-outcome-row-b', '05-outcome-row-c'].map(byId);
+    rows.forEach((row, i) => tl.fromTo(row, { y: 118, opacity: 0 }, { y: 0, opacity: 1, duration: .5, ease: 'back.out(1.35)' }, 2.62 + i * .55));
+    tl.fromTo(Array.from(document.getElementsByClassName('05-outcome-fill')), { scaleX: 0 }, { scaleX: 1, duration: .76, stagger: .55, ease: 'power2.out' }, 2.76);
+    tl.fromTo(byId('05-outcome-mark'), { scale: .55, opacity: 0 }, { scale: 1, opacity: 1, duration: .42, ease: 'back.out(2)' }, 4.22);
+    const auditItems = Array.from(document.getElementsByClassName('05-outcome-audit'));
+    auditItems.forEach((el, i) => tl.fromTo(el, { xPercent: -50, yPercent: -50, x: 0, y: 0, scale: .55, opacity: 0 }, { xPercent: -50, yPercent: -50, x: (i - 1) * 365, y: 0, scale: 1, opacity: 1, duration: .72, ease: 'power3.out' }, 5.36 + i * .22));
+    const paths = Array.from(document.querySelectorAll('[class~="05-outcome-audit"] path'));
+    paths.forEach((path) => { const length = path.getTotalLength(); path.style.strokeDasharray = length; path.style.strokeDashoffset = length; });
+    paths.forEach((path, i) => tl.to(path, { strokeDashoffset: 0, duration: .34, ease: 'power2.out' }, 6.08 + i * .22));
+    tl.to(table, { x: -230, opacity: .1, scale: .78, duration: .34, ease: 'power4.in' }, 8.0);
+    tl.to(audits, { x: -230, opacity: .1, scale: .78, duration: .34, ease: 'power4.in' }, 8.0);
+    tl.fromTo(close, { x: 230, opacity: .25, scale: .82 }, { x: 0, opacity: 1, scale: 1, duration: .58, ease: 'power4.out' }, 8.0);
+    const beats = [8.36, 9.08];
+    tl.fromTo(byId('05-outcome-line-a'), { scale: 1.35, filter: 'blur(10px)', opacity: 0 }, { scale: 1, filter: 'blur(0px)', opacity: 1, duration: .46, ease: 'power4.out' }, beats[0]);
+    tl.fromTo(byId('05-outcome-line-b'), { y: 78, rotation: 4, opacity: 0 }, { y: 0, rotation: 0, opacity: 1, duration: .54, ease: 'circ.out' }, beats[1]);
+    tl.fromTo(byId('05-outcome-underline'), { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: .36, ease: 'expo.out' }, 9.68);
+    tl.fromTo(cursor, { x: 180, y: 120, opacity: 0, scale: .8 }, { x: 0, y: 0, opacity: 1, scale: 1, duration: .64, ease: 'power2.inOut' }, 9.28);
+    tl.to([close, cursor], { scale: .91, duration: .14, ease: 'power1.in' }, 9.92);
+    tl.to([close, cursor], { scale: 1, duration: .34, ease: 'back.out(1.8)' }, 10.06);
+    tl.fromTo(byId('05-outcome-progress'), { scaleX: 0 }, { scaleX: 1, duration: 11, ease: 'none' }, 0);
+    window.__timelines['05-outcome'] = tl;
+  </script>
+</template>

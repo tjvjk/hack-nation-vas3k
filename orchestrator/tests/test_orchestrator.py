@@ -451,7 +451,9 @@ def test_browser_demo_models_one_click_incoming_answer():
     assert "answer.focus" in javascript
     assert "lastRenderedCallId" in javascript
     assert "campaignStartedThisPage" in javascript
-    assert "campaign-started .hero" in (static_dir / "styles.css").read_text()
+    styles = (static_dir / "styles.css").read_text()
+    assert ".agent-card," in styles
+    assert ".call-card" in styles
     assert "incoming-answer" in (static_dir / "styles.css").read_text()
     assert "Structured call records" in javascript
     assert 'id="call-results"' in html

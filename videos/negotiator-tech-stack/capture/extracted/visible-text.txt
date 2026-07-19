@@ -1,0 +1,7 @@
+The Negotiator is a Python control plane for a human-in-the-loop moving negotiation demo.
+Docker Compose launches the orchestrator service on localhost:8000.
+The frontend is a JavaScript browser widget that uses the ElevenLabs client SDK.
+The backend is Starlette with FastMCP and exposes streamable HTTP MCP at /mcp.
+ElevenLabs Agents receives scoped call_id and capability variables and persists structured quote results.
+The moveBuddha client retrieves moving-cost benchmarks after resolving origin and destination to Google Place IDs.
+Google Maps Geocoding API resolves those Place IDs server-side.

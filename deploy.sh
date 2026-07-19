@@ -53,6 +53,8 @@ rsync \
 	--exclude=__pycache__/ \
 	--exclude=.pytest_cache/ \
 	--exclude=.ruff_cache/ \
+	--exclude=videos/ \
+	--exclude=.agents/ \
 	--exclude='*.db' \
 	--exclude='*.db-shm' \
 	--exclude='*.db-wal' \
