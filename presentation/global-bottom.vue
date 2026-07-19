@@ -6,8 +6,8 @@
 
 <style>
 .slidev-layout {
-  color: #000 !important;
-  background: #fff !important;
+  color: #fff !important;
+  background: #000 !important;
 }
 
 .slidev-layout h1,
@@ -18,7 +18,7 @@
 .slidev-layout td,
 .slidev-layout th,
 .slidev-layout a {
-  color: #000 !important;
+  color: #fff !important;
 }
 
 .slide-counter {
@@ -26,7 +26,7 @@
   right: 1.5rem;
   bottom: 1rem;
   font-size: 0.75rem;
-  color: #000;
+  color: #fff;
   z-index: 100;
 }
 </style>

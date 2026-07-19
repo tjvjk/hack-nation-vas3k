@@ -28,32 +28,33 @@ The only way to find a fair price is to call 5–8 movers, repeat the same story
 -->
 
 <style>
-:root { --ink: #000; --paper: #fff; --line: #d9d9d9; --blue: #dcecff; --purple: #eee3ff; --orange: #fff0d7; --green: #e3f5e9; --pink: #ffe4ed; }
+:root { --ink: #fff; --paper: #000; --line: #555; --blue: #14243b; --purple: #291a3d; --orange: #3a2715; --green: #173526; --pink: #3b1928; }
 .slidev-layout { color: var(--ink); background: var(--paper); font-size: 1.08em; }
-.slidev-layout h1, .slidev-layout h2, .slidev-layout h3, .slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th, .slidev-layout a { color: #000 !important; }
+.slidev-layout h1, .slidev-layout h2, .slidev-layout h3, .slidev-layout p, .slidev-layout li, .slidev-layout td, .slidev-layout th, .slidev-layout a { color: #fff !important; }
 .slidev-layout h1 { font-size: 2.05em; line-height: 1.14; letter-spacing: -.035em; }
 .slidev-layout h2 { letter-spacing: -.025em; }
-.deck-white { background: #fff !important; }
-.problem-note { margin-top: 2rem; max-width: 850px; border-left: 7px solid #000; padding: .6rem 0 .6rem 1rem; font-size: .8em; line-height: 1.45; }
+.deck-white { background: #000 !important; }
+:global(.slidev-layout.deck-dark) { background: #000 !important; color: #fff !important; }:global(.slidev-layout.deck-dark h1), :global(.slidev-layout.deck-dark h2), :global(.slidev-layout.deck-dark h3), :global(.slidev-layout.deck-dark p), :global(.slidev-layout.deck-dark li), :global(.slidev-layout.deck-dark td), :global(.slidev-layout.deck-dark th), :global(.slidev-layout.deck-dark a), :global(.slidev-layout.deck-dark .deck-kicker) { color: #fff !important; }:global(.slidev-layout.deck-dark .pill) { color:#fff !important; border-color:#fff !important; }
+.problem-note { margin-top: 2rem; max-width: 850px; border-left: 7px solid #fff; padding: .6rem 0 .6rem 1rem; font-size: .8em; line-height: 1.45; }
 .deck-kicker { font-size: .58em; font-weight: 800; text-transform: uppercase; letter-spacing: .16em; margin-bottom: .6rem; }
 .big-line { font-size: 1.42em; line-height: 1.25; font-weight: 700; max-width: 850px; }
 .caption { font-size: .58em; line-height: 1.35; }
-.pill { display: inline-block; border: 1.5px solid #000; border-radius: 999px; padding: .24rem .6rem; font-size: .54em; font-weight: 700; margin: .12rem; }
+.pill { display: inline-block; border: 1.5px solid #fff; border-radius: 999px; padding: .24rem .6rem; font-size: .54em; font-weight: 700; margin: .12rem; }
 .simple-list { margin: 1.2rem 0 0 1.2rem; font-size: .78em; line-height: 1.65; }
 .simple-list li { padding-left: .25rem; }
-.callout { border: 2px solid #000; border-radius: 14px; padding: .8rem 1rem; font-size: .73em; line-height: 1.35; }
+.callout { border: 2px solid #fff; border-radius: 14px; padding: .8rem 1rem; font-size: .73em; line-height: 1.35; }
 .soft-blue { background: var(--blue); }.soft-purple { background: var(--purple); }.soft-orange { background: var(--orange); }.soft-green { background: var(--green); }.soft-pink { background: var(--pink); }
 .flow { display: grid; grid-template-columns: repeat(4, 1fr); align-items: stretch; gap: .55rem; margin-top: 1.4rem; }
-.flow > div { border: 2px solid #000; border-radius: 14px; padding: .7rem; font-size: .65em; line-height: 1.25; }.flow b { display: block; font-size: 1.14em; margin-bottom: .4rem; }
+.flow > div { border: 2px solid #fff; border-radius: 14px; padding: .7rem; font-size: .65em; line-height: 1.25; }.flow b { display: block; font-size: 1.14em; margin-bottom: .4rem; }
 .arrow { display: flex; align-items: center; justify-content: center; font-size: 1.3em; font-weight: 700; }
 .demo-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 1.1rem; align-items: center; }
-.demo-card { border: 2px solid #000; border-radius: 18px; padding: 1.1rem; }.demo-card p { margin: .25rem 0; font-size: .66em; }.demo-step { display: flex; gap: .65rem; align-items: baseline; margin: .5rem 0; }.demo-step b { font-size: .85em; }
-.team-photo { width: 100%; height: 440px; object-fit: cover; object-position: 50% 42%; border: 2px solid #000; border-radius: 16px; display:block; }
+.demo-card { border: 2px solid #fff; border-radius: 18px; padding: 1.1rem; }.demo-card p { margin: .25rem 0; font-size: .66em; }.demo-step { display: flex; gap: .65rem; align-items: baseline; margin: .5rem 0; }.demo-step b { font-size: .85em; }
+.team-photo { width: 100%; height: 440px; object-fit: cover; object-position: 50% 42%; border: 2px solid #fff; border-radius: 16px; display:block; }
 .github-links { margin-top: 1.2rem; font-size: .62em; line-height: 1.65; }.github-links a { text-decoration: underline; }
-.video-wrap { border: 2px solid #000; border-radius: 16px; overflow: hidden; background: #000; }.video-wrap video { width: 100%; height: 100%; object-fit: contain; display:block; }
-.approaches { display:grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: 1.1rem; }.approaches > div { border: 2px solid #000; border-radius: 16px; padding: .85rem; min-height: 215px; }.approaches h3 { margin: .3rem 0 .55rem; font-size: .78em; }.approaches p { margin:0; font-size: .61em; line-height: 1.4; }
-.architecture { display:grid; grid-template-columns: 1fr .25fr 1fr .25fr 1fr .25fr 1fr; align-items:center; gap:.25rem; margin-top:1.5rem; }.architecture .box { border:2px solid #000; border-radius:16px; padding:.8rem; min-height:155px; font-size:.62em; line-height:1.35; }.architecture b { display:block; font-size:1.15em; margin-bottom:.4rem; }.architecture .arr { font-size:1.4em; text-align:center; }
-.mentor-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:1.25rem; align-items:end; margin-top:1rem; }.mentor { text-align:center; }.mentor img { height:265px; max-width:100%; object-fit:contain; display:block; margin:auto; }.mentor b { display:block; margin-top:.25rem; }.qr-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:3rem; max-width:800px; margin:1.25rem auto 0; text-align:center; }.qr-grid img { width:205px; height:205px; image-rendering:auto; border:1px solid #000; }.qr-grid a { display:block; font-size:.61em; margin-top:.35rem; text-decoration:underline; }
+.video-wrap { border: 2px solid #fff; border-radius: 16px; overflow: hidden; background: #000; }.video-wrap video { width: 100%; height: 100%; object-fit: contain; display:block; }
+.approaches { display:grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: 1.1rem; }.approaches > div { border: 2px solid #fff; border-radius: 16px; padding: .85rem; min-height: 215px; }.approaches h3 { margin: .3rem 0 .55rem; font-size: .78em; }.approaches p { margin:0; font-size: .61em; line-height: 1.4; }
+.architecture { display:grid; grid-template-columns: 1fr .25fr 1fr .25fr 1fr .25fr 1fr; align-items:center; gap:.25rem; margin-top:1.5rem; }.architecture .box { border:2px solid #fff; border-radius:16px; padding:.8rem; min-height:155px; font-size:.62em; line-height:1.35; }.architecture b { display:block; font-size:1.15em; margin-bottom:.4rem; }.architecture .arr { font-size:1.4em; text-align:center; }
+.mentor-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:1.25rem; align-items:end; margin-top:1rem; }.mentor { text-align:center; }.mentor img { height:265px; max-width:100%; object-fit:contain; display:block; margin:auto; }.mentor b { display:block; margin-top:.25rem; }.qr-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:3rem; max-width:800px; margin:1.25rem auto 0; text-align:center; }.qr-grid img { width:205px; height:205px; image-rendering:auto; border:1px solid #fff; }.qr-grid a { display:block; font-size:.61em; margin-top:.35rem; text-decoration:underline; }
 </style>
 
 ---
@@ -162,6 +163,54 @@ class: deck-white
 -->
 
 ---
+layout: default
+class: deck-white
+---
+
+<div class="deck-kicker">Live system architecture</div>
+
+# One voice workflow. One control plane.
+
+<div style="display:flex!important; align-items:center!important; gap:.35rem!important; margin-top:1.4rem!important">
+  <div style="flex:1 1 0!important; min-width:0!important; height:108px!important; box-sizing:border-box!important; overflow:hidden!important; border:2px solid #000!important; border-radius:16px!important; background:#eee3ff!important; padding:16px 8px!important; text-align:center!important; color:#000!important"><b style="color:#000!important">ElevenLabs</b><br><span style="color:#000!important; font-size:.53em!important; line-height:1.2!important">Agents · voice runtime</span></div>
+  <div style="flex:0 0 auto!important; font-size:1.35em!important">⇄</div>
+  <div style="flex:1 1 0!important; min-width:0!important; height:108px!important; box-sizing:border-box!important; overflow:hidden!important; border:2px solid #000!important; border-radius:16px!important; background:#dcecff!important; padding:16px 8px!important; text-align:center!important; color:#000!important"><b style="color:#000!important">Widget</b><br><span style="color:#000!important; font-size:.53em!important; line-height:1.2!important">Browser voice session</span></div>
+  <div style="flex:0 0 auto!important; font-size:1.35em!important">⇄</div>
+  <div style="flex:1 1 0!important; min-width:0!important; height:108px!important; box-sizing:border-box!important; overflow:hidden!important; border:2px solid #000!important; border-radius:16px!important; background:#fff0d7!important; padding:16px 8px!important; text-align:center!important; color:#000!important"><b style="color:#000!important">Backend</b><br><span style="color:#000!important; font-size:.53em!important; line-height:1.2!important">REST · MCP · webhooks</span></div>
+  <div style="flex:0 0 auto!important; font-size:1.35em!important">⇄</div>
+  <div style="flex:1 1 0!important; min-width:0!important; height:108px!important; box-sizing:border-box!important; overflow:hidden!important; border:2px solid #000!important; border-radius:16px!important; background:#e3f5e9!important; padding:16px 8px!important; text-align:center!important; color:#000!important"><b style="color:#000!important">Data APIs</b><br><span style="color:#000!important; font-size:.53em!important; line-height:1.2!important">Google Maps · MovingBuddha</span></div>
+</div>
+
+<div class="callout soft-pink" style="margin:1rem auto 0!important; max-width:650px!important; text-align:center!important"><b>Google Maps:</b> address → Place ID &nbsp;·&nbsp; <b>MovingBuddha:</b> market benchmark</div>
+
+<p class="caption" style="margin-top:1rem; text-align:center"><b>Data stays server-side:</b> API keys and ElevenLabs credentials never enter the browser.</p>
+
+---
+layout: default
+class: deck-dark
+clicks: 2
+---
+
+<div style="position:absolute!important; inset:0!important; background:#000!important; z-index:0!important"></div>
+<div style="position:relative!important; z-index:1!important">
+<div class="deck-kicker" style="color:#fff!important">Product walkthrough · click to advance</div>
+
+<h1 style="color:#fff!important">From intake to a live call</h1>
+
+<div style="position:relative!important; height:400px!important; margin-top:.35rem!important; overflow:hidden!important">
+  <div style="position:absolute!important; inset:0!important; display:flex!important; align-items:center!important; justify-content:center!important"><img style="max-width:100%!important; max-height:100%!important; object-fit:contain!important" src="./assets/intake_1.png" alt="Move request intake screen" /></div>
+  <div v-click style="position:absolute!important; inset:0!important; display:flex!important; align-items:center!important; justify-content:center!important"><img style="max-width:100%!important; max-height:100%!important; object-fit:contain!important" src="./assets/extraction_1.png" alt="Extracted move details screen" /></div>
+  <div v-click style="position:absolute!important; inset:0!important; display:flex!important; align-items:center!important; justify-content:center!important"><img style="max-width:100%!important; max-height:100%!important; object-fit:contain!important" src="./assets/answer_1.png" alt="Live carrier call screen" /></div>
+</div>
+
+<div style="display:flex!important; justify-content:center!important; gap:.5rem!important; margin-top:.6rem!important; font-size:.63em!important; font-weight:700!important; color:#fff!important">
+  <span class="pill" style="color:#fff!important; border-color:#fff!important">01 · intake</span>
+  <span class="pill" style="color:#fff!important; border-color:#fff!important">02 · extraction</span>
+  <span class="pill" style="color:#fff!important; border-color:#fff!important">03 · live call</span>
+</div>
+</div>
+
+---
 layout: end
 class: deck-white
 ---
@@ -174,54 +223,3 @@ class: deck-white
 </div>
 
 <p class="caption" style="margin-top:1rem">LLM Plumbers · The Negotiator · HackNation / ElevenLabs</p>
-
----
-layout: default
-class: deck-white
----
-
-<div class="deck-kicker">Live system architecture</div>
-
-# One voice workflow. One control plane.
-
-<div style="display:flex!important; align-items:stretch!important; justify-content:center!important; gap:.45rem!important; margin-top:1.25rem!important">
-  <div class="callout soft-purple" style="width:27%!important; margin:0!important; text-align:center!important"><b>ElevenLabs Agents</b><br><span class="caption">Voice reasoning<br>Conversation runtime</span></div>
-  <div style="display:flex!important; align-items:center!important; font-size:1.5em!important">↔</div>
-  <div class="callout soft-blue" style="width:27%!important; margin:0!important; text-align:center!important"><b>Orchestrator widget</b><br><span class="caption">Browser voice session<br>Carrier demo console</span></div>
-  <div style="display:flex!important; align-items:center!important; font-size:1.5em!important">↔</div>
-  <div class="callout soft-orange" style="width:27%!important; margin:0!important; text-align:center!important"><b>Orchestrator backend</b><br><span class="caption">REST state · MCP tools<br>Signed URLs · webhooks</span></div>
-</div>
-
-<div style="display:flex!important; justify-content:flex-end!important; gap:.6rem!important; margin-top:1rem!important; padding-right:2.5%!important">
-  <div style="font-size:1.4em!important; line-height:1!important">↙</div>
-  <div style="font-size:1.4em!important; line-height:1!important">↘</div>
-</div>
-
-<div style="display:flex!important; justify-content:flex-end!important; gap:.8rem!important">
-  <div class="callout soft-green" style="width:27%!important; margin:0!important; text-align:center!important"><b>Google Maps API</b><br><span class="caption">Origin / destination → Place IDs</span></div>
-  <div class="callout soft-pink" style="width:27%!important; margin:0!important; text-align:center!important"><b>MovingBuddha API</b><br><span class="caption">Market benchmark range</span></div>
-</div>
-
-<p class="caption" style="margin-top:1rem; text-align:center"><b>Data stays server-side:</b> API keys and ElevenLabs credentials never enter the browser.</p>
-
----
-layout: default
-class: deck-white
-clicks: 3
----
-
-<div class="deck-kicker">Product walkthrough · click to advance</div>
-
-# From intake to a live call
-
-<div style="position:relative!important; height:355px!important; margin-top:.8rem!important; border:2px solid #000!important; border-radius:16px!important; overflow:hidden!important; background:#f7f7f7!important">
-  <div v-click="[0, 0]" style="position:absolute!important; inset:0!important; display:flex!important; align-items:center!important; justify-content:center!important; padding:12px!important"><img style="max-width:100%!important; max-height:100%!important; object-fit:contain!important" src="./assets/intake_1.png" alt="Move request intake screen" /></div>
-  <div v-click="[1, 1]" style="position:absolute!important; inset:0!important; display:flex!important; align-items:center!important; justify-content:center!important; padding:12px!important"><img style="max-width:100%!important; max-height:100%!important; object-fit:contain!important" src="./assets/extraction_1.png" alt="Extracted move details screen" /></div>
-  <div v-click="[2, 2]" style="position:absolute!important; inset:0!important; display:flex!important; align-items:center!important; justify-content:center!important; padding:12px!important"><img style="max-width:100%!important; max-height:100%!important; object-fit:contain!important" src="./assets/answer_1.png" alt="Live carrier call screen" /></div>
-</div>
-
-<div style="display:flex!important; justify-content:center!important; gap:.5rem!important; margin-top:.6rem!important; font-size:.63em!important; font-weight:700!important">
-  <span v-click="[0, 0]" class="pill">01 · intake</span>
-  <span v-click="[1, 1]" class="pill">02 · extraction</span>
-  <span v-click="[2, 2]" class="pill">03 · live call</span>
-</div>
