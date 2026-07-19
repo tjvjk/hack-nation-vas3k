@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import Any
 from typing import Protocol, cast
 
 from elevenlabs.client import ElevenLabs
@@ -28,6 +29,17 @@ class ElevenLabsGateway:
             )
             response.raise_for_status()
             return response.json()["signed_url"]
+
+    async def get_conversation_details(self, conversation_id: str) -> dict[str, Any]:
+        if not self.settings.elevenlabs_api_key:
+            raise RuntimeError("ELEVENLABS_API_KEY is not configured")
+        async with httpx.AsyncClient(timeout=15) as client:
+            response = await client.get(
+                f"https://api.elevenlabs.io/v1/convai/conversations/{conversation_id}",
+                headers={"xi-api-key": self.settings.elevenlabs_api_key},
+            )
+            response.raise_for_status()
+            return response.json()
 
 
 def verify_webhook(raw_body: bytes, signature: str | None, secret: str) -> dict:

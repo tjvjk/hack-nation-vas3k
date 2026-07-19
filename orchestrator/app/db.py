@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 import json
 from pathlib import Path
 import secrets
@@ -34,6 +34,7 @@ PERSONAS = [
 ]
 
 TERMINAL_STATUSES = {"completed", "declined", "failed", "no_answer"}
+CLAIM_TTL_SECONDS = 60
 
 
 def _now() -> str:
@@ -84,6 +85,7 @@ class Store:
                     conversation_id TEXT UNIQUE,
                     progress_json TEXT,
                     result_json TEXT,
+                    transcript_json TEXT,
                     claim_nonce TEXT,
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL,
@@ -104,6 +106,8 @@ class Store:
             columns = {row["name"] for row in db.execute("PRAGMA table_info(call_jobs)")}
             if "claim_nonce" not in columns:
                 db.execute("ALTER TABLE call_jobs ADD COLUMN claim_nonce TEXT")
+            if "transcript_json" not in columns:
+                db.execute("ALTER TABLE call_jobs ADD COLUMN transcript_json TEXT")
             db.execute(
                 """UPDATE call_jobs
                 SET status='offered_to_widget', updated_at=?
@@ -170,8 +174,8 @@ class Store:
                 db.execute(
                     """INSERT INTO call_jobs (
                         id, campaign_id, sequence_no, carrier_json, status, capability,
-                        conversation_id, progress_json, result_json, created_at, updated_at, claim_nonce
-                    ) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, NULL, ?, ?, NULL)""",
+                        conversation_id, progress_json, result_json, transcript_json, created_at, updated_at, claim_nonce
+                    ) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, NULL)""",
                     (
                         str(uuid.uuid4()),
                         campaign_id,
@@ -195,9 +199,20 @@ class Store:
         return self._campaign_dict(campaign, move, jobs)
 
     def snapshot(self) -> dict[str, Any]:
+        self.release_stale_claims()
         with self.connect() as db:
             rows = db.execute("SELECT id FROM campaigns ORDER BY created_at DESC").fetchall()
         return {"campaigns": [self.get_campaign(row["id"]) for row in rows]}
+
+    def release_stale_claims(self) -> int:
+        cutoff = (datetime.now(UTC) - timedelta(seconds=CLAIM_TTL_SECONDS)).isoformat()
+        with self._lock, self.connect() as db:
+            return db.execute(
+                """UPDATE call_jobs
+                SET status='offered_to_widget', claim_nonce=NULL, updated_at=?
+                WHERE status='claimed' AND conversation_id IS NULL AND updated_at<?""",
+                (_now(), cutoff),
+            ).rowcount
 
     def _campaign_dict(self, campaign: sqlite3.Row, move: sqlite3.Row, jobs: list[sqlite3.Row]) -> dict[str, Any]:
         public_jobs = []
@@ -211,6 +226,7 @@ class Store:
                     "status": row["status"],
                     "conversation_id": row["conversation_id"],
                     "result": result,
+                    "transcript": json.loads(row["transcript_json"]) if row["transcript_json"] else None,
                 }
             )
         return {
@@ -258,6 +274,7 @@ class Store:
         return job, campaign, move
 
     def answer_call(self, call_id: str) -> dict[str, Any]:
+        self.release_stale_claims()
         claim_token = secrets.token_urlsafe(32)
         with self._lock, self.connect() as db:
             changed = db.execute(
@@ -269,6 +286,13 @@ class Store:
                 raise ValueError("call is not available to answer")
             job, _, _ = self._job_with_context(db, call_id)
         return {"id": job["id"], "status": "claimed", "claim_token": claim_token}
+
+    def current_claim_token(self, call_id: str) -> str:
+        with self.connect() as db:
+            job, _, _ = self._job_with_context(db, call_id)
+            if job["status"] != "claimed" or not job["claim_nonce"]:
+                raise ValueError("call does not have an active claim")
+        return job["claim_nonce"]
 
     def release_call(self, call_id: str, claim_token: str) -> dict[str, Any]:
         with self._lock, self.connect() as db:
@@ -308,18 +332,42 @@ class Store:
             if capability is not None and not secrets.compare_digest(job["capability"], capability):
                 raise PermissionError("invalid call capability")
             previous = db.execute(
-                "SELECT result_json FROM call_jobs WHERE campaign_id=? AND sequence_no<? AND result_json IS NOT NULL ORDER BY sequence_no",
+                """SELECT carrier_json, result_json FROM call_jobs
+                WHERE campaign_id=? AND sequence_no<? AND result_json IS NOT NULL ORDER BY sequence_no""",
                 (campaign["id"], job["sequence_no"]),
             ).fetchall()
+        carrier = json.loads(job["carrier_json"])
+        public_carrier = {
+            key: carrier[key]
+            for key in ("carrier_id", "carrier_name", "headline")
+            if key in carrier
+        }
         verified_quotes = []
         for row in previous:
             result = json.loads(row["result_json"])
-            if result.get("outcome") == "itemized_quote" and result.get("final_total") is not None:
-                verified_quotes.append({"final_total": result["final_total"], "currency": "USD"})
+            if result.get("outcome") in {"itemized_quote", "partial_decline"} and result.get("final_total") is not None:
+                previous_carrier = json.loads(row["carrier_json"])
+                verified_quotes.append(
+                    {
+                        "carrier_name": previous_carrier["carrier_name"],
+                        "quote_quality": "itemized" if result.get("outcome") == "itemized_quote" else "preliminary_unitemized",
+                        "initial_total": result.get("initial_total"),
+                        "final_total": result["final_total"],
+                        "currency": "USD",
+                        "fees": result.get("fees", []),
+                        "included_services": result.get("included_services", []),
+                        "excluded_services": result.get("excluded_services", []),
+                        "binding": result.get("binding", "unknown"),
+                        "availability": result.get("availability", ""),
+                        "deposit_terms": result.get("deposit_terms", ""),
+                        "cancellation_terms": result.get("cancellation_terms", ""),
+                        "quote_validity": result.get("quote_validity", ""),
+                    }
+                )
         return {
             "call_id": call_id,
             "move_spec": json.loads(move["spec_json"]),
-            "carrier": json.loads(job["carrier_json"]),
+            "carrier": public_carrier,
             "benchmark": {"low": campaign["benchmark_low"], "high": campaign["benchmark_high"], "currency": "USD"},
             "verified_quotes": verified_quotes,
             "honesty_rules": ["Disclose that you are an AI assistant", "Never invent inventory or competing offers", "Do not book or pay a deposit"],
@@ -330,7 +378,26 @@ class Store:
             job, _, _ = self._job_with_context(db, call_id)
             if job["status"] != "claimed" or not secrets.compare_digest(job["claim_nonce"] or "", claim_token):
                 raise ValueError("call must have an active claim")
-        return {"call_id": call_id, "call_capability": job["capability"]}
+        context = self.call_context(call_id)
+        safe_move_spec = {
+            key: value
+            for key, value in context["move_spec"].items()
+            if key != "max_carriers"
+        }
+        move_context = json.dumps(
+            {
+                "move_spec": safe_move_spec,
+                "carrier": context["carrier"],
+                "internal_benchmark": context["benchmark"],
+                "verified_quotes": context["verified_quotes"],
+            },
+            separators=(",", ":"),
+        )
+        return {
+            "call_id": call_id,
+            "call_capability": job["capability"],
+            "move_context": move_context,
+        }
 
     def record_started(self, call_id: str, capability: str, conversation_id: str) -> dict[str, Any]:
         self.call_context(call_id, capability)
@@ -351,11 +418,28 @@ class Store:
                 raise ValueError("conversation is already assigned to another call") from exc
         return {"ok": True, "call_id": call_id, "conversation_id": conversation_id}
 
-    def save_progress(self, call_id: str, capability: str, progress: dict[str, Any]) -> dict[str, Any]:
+    def save_progress(self, call_id: str, capability: str | None, progress: dict[str, Any]) -> dict[str, Any]:
         self.call_context(call_id, capability)
         with self.connect() as db:
             db.execute("UPDATE call_jobs SET progress_json=?, updated_at=? WHERE id=?", (json.dumps(progress), _now(), call_id))
         return {"ok": True}
+
+    def conversation_id_for_call(self, call_id: str) -> str | None:
+        with self.connect() as db:
+            job, _, _ = self._job_with_context(db, call_id)
+        return job["conversation_id"]
+
+    def save_transcript(self, call_id: str, conversation_id: str, transcript: list[dict[str, Any]]) -> None:
+        with self._lock, self.connect() as db:
+            job, _, _ = self._job_with_context(db, call_id)
+            if job["conversation_id"] not in {None, conversation_id}:
+                raise ValueError("call already has a different conversation")
+            db.execute(
+                """UPDATE call_jobs
+                SET conversation_id=COALESCE(conversation_id, ?), transcript_json=?, updated_at=?
+                WHERE id=?""",
+                (conversation_id, json.dumps(transcript), _now(), call_id),
+            )
 
     def finish_call(self, call_id: str, result: dict[str, Any], capability: str | None = None) -> dict[str, Any]:
         with self._lock, self.connect() as db:
@@ -363,9 +447,16 @@ class Store:
             if capability is not None and not secrets.compare_digest(job["capability"], capability):
                 raise PermissionError("invalid call capability")
             if job["status"] in TERMINAL_STATUSES:
+                existing = json.loads(job["result_json"]) if job["result_json"] else {}
+                if existing.get("outcome") == "documented_decline" and result.get("outcome") == "partial_decline":
+                    db.execute(
+                        "UPDATE call_jobs SET status='completed', result_json=?, updated_at=? WHERE id=?",
+                        (json.dumps(result), _now(), call_id),
+                    )
+                    return {"id": call_id, "status": "completed", "idempotent": False}
                 return {"id": call_id, "status": job["status"], "idempotent": True}
             outcome = result["outcome"]
-            status = "completed" if outcome == "itemized_quote" else ("declined" if outcome == "documented_decline" else "failed")
+            status = "completed" if outcome in {"itemized_quote", "partial_decline"} else ("declined" if outcome == "documented_decline" else "failed")
             red_flags = list(result.get("red_flags", []))
             if result.get("final_total") is not None and float(result["final_total"]) < float(campaign["benchmark_low"]) * 0.7:
                 red_flags.append("suspicious_lowball")

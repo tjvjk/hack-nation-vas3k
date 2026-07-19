@@ -9,6 +9,7 @@ from starlette.requests import Request
 from starlette.responses import FileResponse, JSONResponse, StreamingResponse
 from starlette.routing import Route
 from starlette.staticfiles import StaticFiles
+from starlette.types import Scope
 
 from prompts import (
     AGENT_NEGOTIATOR_ANALYSIS_SCHEMA,
@@ -20,6 +21,14 @@ from .config import settings
 from .db import Store
 from .domain import MoveCreate, QuoteResult
 from .elevenlabs_client import ElevenLabsGateway, verify_webhook
+
+
+class NoCacheStaticFiles(StaticFiles):
+    async def get_response(self, path: str, scope: Scope):
+        response = await super().get_response(path, scope)
+        response.headers["Cache-Control"] = "no-store"
+        return response
+
 
 store = Store(settings.database_path)
 gateway = ElevenLabsGateway(settings)
@@ -76,7 +85,7 @@ def error(message: str, status: int = 400, details=None) -> JSONResponse:
 
 
 async def homepage(_: Request):
-    return FileResponse(settings.static_dir / "index.html")
+    return FileResponse(settings.static_dir / "index.html", headers={"Cache-Control": "no-store"})
 
 
 async def health(_: Request):
@@ -101,7 +110,7 @@ async def agent_negotiator_config(_: Request):
             "system_prompt": AGENT_NEGOTIATOR_SYSTEM_PROMPT,
             "first_message": AGENT_NEGOTIATOR_FIRST_MESSAGE,
             "analysis_schema": AGENT_NEGOTIATOR_ANALYSIS_SCHEMA,
-            "dynamic_variables": ["call_id", "call_capability"],
+            "dynamic_variables": ["call_id", "call_capability", "move_context"],
             "agent_id": store.get_setting("elevenlabs_agent_negotiator_id"),
             "mcp_url": f"{settings.public_base_url.rstrip('/')}/mcp",
             "webhook_url": f"{settings.public_base_url.rstrip('/')}/webhooks/elevenlabs",
@@ -192,6 +201,24 @@ async def release_call(request: Request):
     return JSONResponse(result)
 
 
+async def call_session(request: Request):
+    call_id = request.path_params["call_id"]
+    try:
+        claim_token = store.current_claim_token(call_id)
+        variables = store.session_variables(call_id, claim_token)
+        agent_id = store.get_setting("elevenlabs_agent_negotiator_id")
+        signed_url = await gateway.get_signed_url(agent_id)
+        if not signed_url:
+            raise RuntimeError("Agent Negotiator is not configured")
+    except KeyError as exc:
+        return error(str(exc), 404)
+    except ValueError as exc:
+        return error(str(exc), 409)
+    except Exception as exc:
+        return error(f"could not create ElevenLabs session: {exc}", 502)
+    return JSONResponse({"mode": "live", "signed_url": signed_url, "dynamic_variables": variables})
+
+
 async def decline_call(request: Request):
     call_id = request.path_params["call_id"]
     try:
@@ -218,6 +245,120 @@ async def call_result(request: Request):
     except KeyError as exc:
         return error(str(exc), 404)
     return JSONResponse(result)
+
+
+async def call_progress(request: Request):
+    try:
+        body = await request.json()
+        if not isinstance(body, dict):
+            return error("progress must be a JSON object", 422)
+        result = store.save_progress(request.path_params["call_id"], None, body)
+    except json.JSONDecodeError as exc:
+        return error("invalid json in call progress", 422, str(exc))
+    except KeyError as exc:
+        return error(str(exc), 404)
+    return JSONResponse(result)
+
+
+def _analysis_values(details: dict) -> dict:
+    analysis = details.get("analysis") or {}
+    collected = analysis.get("data_collection_results") or {}
+    values = {}
+    for name, record in collected.items():
+        values[name] = record.get("value") if isinstance(record, dict) else getattr(record, "value", None)
+    return values
+
+
+def _json_list(value) -> list:
+    if isinstance(value, list):
+        return value
+    if not isinstance(value, str) or not value.strip():
+        return []
+    try:
+        parsed = json.loads(value)
+    except json.JSONDecodeError:
+        return []
+    return parsed if isinstance(parsed, list) else []
+
+
+def _quote_from_analysis(details: dict, conversation_id: str) -> QuoteResult | None:
+    values = _analysis_values(details)
+    outcome = values.get("outcome")
+    if outcome == "documented_decline" and (
+        values.get("initial_total") is not None or values.get("final_total") is not None
+    ):
+        outcome = "partial_decline"
+    if outcome not in {
+        "itemized_quote",
+        "partial_decline",
+        "callback_commitment",
+        "documented_decline",
+        "no_answer",
+        "technical_failure",
+    }:
+        return None
+    try:
+        return QuoteResult(
+            outcome=outcome,
+            initial_total=values.get("initial_total"),
+            final_total=values.get("final_total"),
+            fees=_json_list(values.get("fees_json")),
+            included_services=_json_list(values.get("included_services_json")),
+            excluded_services=_json_list(values.get("excluded_services_json")),
+            binding=values.get("binding") or "unknown",
+            availability=values.get("availability") or "",
+            deposit_terms=values.get("deposit_terms") or "",
+            cancellation_terms=values.get("cancellation_terms") or "",
+            quote_validity=values.get("quote_validity") or "",
+            notes=values.get("notes") or "",
+            conversation_id=conversation_id,
+        )
+    except ValidationError:
+        return None
+
+
+async def reconcile_call(request: Request):
+    call_id = request.path_params["call_id"]
+    try:
+        conversation_id = store.conversation_id_for_call(call_id)
+        if not conversation_id:
+            return error("call has no ElevenLabs conversation", 409)
+        details = await gateway.get_conversation_details(conversation_id)
+    except KeyError as exc:
+        return error(str(exc), 404)
+    except Exception as exc:
+        return error(f"could not retrieve ElevenLabs conversation: {exc}", 502)
+
+    transcript = details.get("transcript")
+    if isinstance(transcript, list):
+        try:
+            store.save_transcript(call_id, conversation_id, transcript)
+        except ValueError as exc:
+            return error(str(exc), 409)
+
+    status = details.get("status")
+    if status in {"initiated", "in-progress", "processing"}:
+        return JSONResponse({"status": status, "reconciled": False}, status_code=202)
+    if status == "failed":
+        result = QuoteResult(
+            outcome="technical_failure",
+            notes="ElevenLabs conversation failed before a structured result was available.",
+            conversation_id=conversation_id,
+        )
+    else:
+        result = _quote_from_analysis(details, conversation_id)
+        if result is None:
+            summary = (details.get("analysis") or {}).get("transcript_summary") or ""
+            result = QuoteResult(
+                outcome="technical_failure",
+                notes=(
+                    "ElevenLabs conversation ended without a valid structured negotiation result."
+                    + (f" Summary: {summary}" if summary else "")
+                ),
+                conversation_id=conversation_id,
+            )
+    saved = store.finish_call(call_id, result.model_dump(mode="json"))
+    return JSONResponse({"status": status, "reconciled": True, "result": saved})
 
 
 async def events(request: Request):
@@ -268,12 +409,15 @@ routes = [
     Route("/api/calls/{call_id:str}/answer", answer_call, methods=["POST"]),
     Route("/api/calls/{call_id:str}/started", call_started, methods=["POST"]),
     Route("/api/calls/{call_id:str}/release", release_call, methods=["POST"]),
+    Route("/api/calls/{call_id:str}/session", call_session),
     Route("/api/calls/{call_id:str}/decline", decline_call, methods=["POST"]),
+    Route("/api/calls/{call_id:str}/progress", call_progress, methods=["POST"]),
     Route("/api/calls/{call_id:str}/result", call_result, methods=["POST"]),
+    Route("/api/calls/{call_id:str}/reconcile", reconcile_call, methods=["POST"]),
     Route("/webhooks/elevenlabs", elevenlabs_webhook, methods=["POST"]),
 ]
 
 app = mcp.streamable_http_app()
 for route in reversed(routes):
     app.router.routes.insert(0, route)
-app.mount("/static", StaticFiles(directory=settings.static_dir), name="static")
+app.mount("/static", NoCacheStaticFiles(directory=settings.static_dir), name="static")

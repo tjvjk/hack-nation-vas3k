@@ -3,6 +3,64 @@ import { Conversation } from "https://cdn.jsdelivr.net/npm/@elevenlabs/client@1.
 const select = (selector) => document.querySelector(selector);
 let currentCallId = null;
 let activeConversation = null;
+let callEndTimer = null;
+let farewellPending = false;
+let animatedOfferId = null;
+let lastRenderedCallId = null;
+let campaignStartedThisPage = false;
+
+function clearCallEndTimer() {
+	if (callEndTimer !== null) window.clearTimeout(callEndTimer);
+	callEndTimer = null;
+}
+
+function endConversationSoon(conversation, delay = 1200) {
+	clearCallEndTimer();
+	callEndTimer = window.setTimeout(() => {
+		void conversation?.endSession();
+	}, delay);
+}
+
+function enforceCallLimit(conversation) {
+	clearCallEndTimer();
+	farewellPending = false;
+	callEndTimer = window.setTimeout(() => {
+		select("#voice-status").textContent = "Call time limit reached; ending…";
+		void conversation?.endSession();
+	}, 180000);
+}
+
+function messageText(message) {
+	if (typeof message === "string") return message;
+	if (!message || typeof message !== "object") return "";
+	return (
+		message.message ||
+		message.agent_response ||
+		message.agent_response_event?.agent_response ||
+		message.text ||
+		""
+	);
+}
+
+function isFarewell(message) {
+	return /\b(goodbye|bye-bye|have a great day|end the call now)\b/i.test(messageText(message));
+}
+
+function animateIncomingAnswer(call, isNextCarrier) {
+	if (
+		!isNextCarrier ||
+		call.status !== "offered_to_widget" ||
+		animatedOfferId === call.id
+	)
+		return;
+	const answer = select("#answer");
+	animatedOfferId = call.id;
+	answer.classList.remove("incoming-answer");
+	void answer.offsetWidth;
+	answer.classList.add("incoming-answer");
+	answer.scrollIntoView({ behavior: "smooth", block: "center" });
+	answer.focus({ preventScroll: true });
+}
 
 function inventoryFrom(text) {
 	return text
@@ -28,6 +86,53 @@ async function api(url, options = {}) {
 	const body = await response.json();
 	if (!response.ok) throw new Error(body.error || JSON.stringify(body));
 	return body;
+}
+
+function jsonArray(value) {
+	if (Array.isArray(value)) return value;
+	if (typeof value !== "string" || !value.trim()) return [];
+	try {
+		const parsed = JSON.parse(value);
+		return Array.isArray(parsed) ? parsed : [];
+	} catch {
+		return [];
+	}
+}
+
+function structuredResult(params) {
+	return {
+		outcome: params.outcome,
+		initial_total: params.initial_total ?? null,
+		final_total: params.final_total ?? null,
+		fees: jsonArray(params.fees_json),
+		included_services: jsonArray(params.included_services_json),
+		excluded_services: jsonArray(params.excluded_services_json),
+		binding: params.binding || "unknown",
+		availability: params.availability || "",
+		deposit_terms: params.deposit_terms || "",
+		cancellation_terms: params.cancellation_terms || "",
+		quote_validity: params.quote_validity || "",
+		notes: params.notes || "",
+	};
+}
+
+async function reconcileUntilSettled(callId, attempts = 8) {
+	for (let attempt = 0; attempt < attempts; attempt += 1) {
+		try {
+			const result = await api(`/api/calls/${callId}/reconcile`, {
+				method: "POST",
+			});
+			if (result.reconciled || ["done", "failed"].includes(result.status)) break;
+		} catch {
+			// The client tool is primary; reconciliation is a best-effort backstop.
+		}
+		await new Promise((resolve) => setTimeout(resolve, 2000));
+	}
+	try {
+		render(await api("/api/state"));
+	} catch {
+		// SSE will retry state delivery if this immediate refresh fails.
+	}
 }
 
 select("#move-form [name=move_date]").valueAsDate = new Date(
@@ -65,6 +170,8 @@ select("#move-form").addEventListener("submit", async (event) => {
 			body: JSON.stringify(payload),
 		});
 		await api(`/api/moves/${move.id}/campaign`, { method: "POST" });
+		campaignStartedThisPage = true;
+		document.body.classList.add("campaign-started");
 		select("#intake-card").classList.add("hidden");
 		listen();
 	} catch (error) {
@@ -89,6 +196,10 @@ function render(state) {
 	const active = campaign.jobs.find((job) => job.status === "in_progress");
 	const call = offered || claimed || active;
 	if (call) {
+		const isNextCarrier =
+			campaignStartedThisPage &&
+			lastRenderedCallId !== null &&
+			lastRenderedCallId !== call.id;
 		currentCallId = call.id;
 		select("#call-card").classList.remove("hidden");
 		select("#caller-name").textContent = "Incoming call from The Negotiator";
@@ -102,6 +213,8 @@ function render(state) {
 			"hidden",
 			call.status !== "offered_to_widget",
 		);
+		animateIncomingAnswer(call, isNextCarrier);
+		lastRenderedCallId = call.id;
 		select("#decline").classList.toggle(
 			"hidden",
 			call.status !== "offered_to_widget",
@@ -117,6 +230,7 @@ function renderResults(campaign) {
 	select("#results-card").classList.remove("hidden");
 	select("#benchmark").innerHTML =
 		`<strong>Benchmark:</strong> $${campaign.benchmark.low}–$${campaign.benchmark.high}`;
+	renderCallResults(campaign);
 	const ranking = campaign.ranking;
 	if (ranking.length === 0) {
 		select("#ranking").replaceChildren(
@@ -126,6 +240,43 @@ function renderResults(campaign) {
 	}
 	select("#ranking").innerHTML =
 		`<table><thead><tr><th>Carrier</th><th>Final</th><th>Risk</th><th>Verdict</th></tr></thead><tbody>${ranking.map((row) => `<tr class="${row.recommended ? "recommended" : ""}"><td>${row.carrier_name}</td><td>$${row.final_total}</td><td class="flag">${row.red_flags.join(", ") || "—"}</td><td>${row.recommended ? "✓ Recommended" : ""}</td></tr>`).join("")}</tbody></table>`;
+}
+
+function renderCallResults(campaign) {
+	const container = select("#call-results");
+	container.replaceChildren();
+	const completed = campaign.jobs.filter((job) => job.result);
+	if (completed.length === 0) return;
+	const title = document.createElement("h3");
+	title.textContent = "Structured call records";
+	container.append(title);
+	for (const job of completed) {
+		const result = job.result;
+		const record = document.createElement("article");
+		record.className = "persona";
+		const heading = document.createElement("strong");
+		heading.textContent = `${job.carrier.carrier_name} · ${result.outcome}`;
+		const details = document.createElement("pre");
+		details.textContent = JSON.stringify(
+			{
+				initial_total: result.initial_total,
+				final_total: result.final_total,
+				fees: result.fees,
+				included_services: result.included_services,
+				excluded_services: result.excluded_services,
+				binding: result.binding,
+				availability: result.availability,
+				deposit_terms: result.deposit_terms,
+				cancellation_terms: result.cancellation_terms,
+				quote_validity: result.quote_validity,
+				notes: result.notes,
+			},
+			null,
+			2,
+		);
+		record.append(heading, details);
+		container.append(record);
+	}
 }
 
 function listen() {
@@ -162,20 +313,58 @@ select("#answer").addEventListener("click", async () => {
 		pendingConversation = await Conversation.startSession({
 			signedUrl: session.signed_url,
 			dynamicVariables: session.dynamic_variables,
+			clientTools: {
+				save_quote_progress: async (params) =>
+					api(`/api/calls/${callId}/progress`, {
+						method: "POST",
+						body: JSON.stringify({
+							initial_total: params.initial_total ?? null,
+							fees: jsonArray(params.fees_json),
+							notes: params.notes || "",
+						}),
+					}),
+				save_negotiation_result: async (params) => {
+					const saved = await api(`/api/calls/${callId}/result`, {
+						method: "POST",
+						body: JSON.stringify(structuredResult(params)),
+					});
+					endConversationSoon(activeConversation || pendingConversation);
+					return saved;
+				},
+			},
 			onConnect: () => {
 				select("#voice-status").textContent = "Connected to The Negotiator";
 				select("#hang-up").classList.remove("hidden");
 			},
+			onMessage: (message) => {
+				if (isFarewell(message)) {
+					farewellPending = true;
+					endConversationSoon(activeConversation || pendingConversation, 15000);
+				}
+			},
+			onModeChange: (mode) => {
+				const modeName = typeof mode === "string" ? mode : mode?.mode;
+				if (farewellPending && modeName === "listening") {
+					endConversationSoon(activeConversation || pendingConversation, 250);
+				}
+			},
 			onDisconnect: () => {
 				select("#voice-status").textContent = "Call ended";
 				select("#hang-up").classList.add("hidden");
+				voiceSession.classList.add("hidden");
+				answer.disabled = false;
+				answer.textContent = "Answer";
 				activeConversation = null;
+				clearCallEndTimer();
+				farewellPending = false;
+				void reconcileUntilSettled(callId);
 			},
 			onError: (error) => {
 				select("#form-error").textContent = `Voice call error: ${error.message || error}`;
 			},
 		});
 		activeConversation = pendingConversation;
+		enforceCallLimit(pendingConversation);
 		await api(`/api/calls/${callId}/started`, {
 			method: "POST",
 			body: JSON.stringify({
@@ -193,6 +382,8 @@ select("#answer").addEventListener("click", async () => {
 			}
 		}
 		activeConversation = null;
+		clearCallEndTimer();
+		farewellPending = false;
 		if (claimToken) {
 			try {
 				await api(`/api/calls/${callId}/release`, {

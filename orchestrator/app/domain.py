@@ -46,6 +46,7 @@ class MoveCreate(BaseModel):
 class QuoteResult(BaseModel):
     outcome: Literal[
         "itemized_quote",
+        "partial_decline",
         "callback_commitment",
         "documented_decline",
         "no_answer",
@@ -57,6 +58,10 @@ class QuoteResult(BaseModel):
     included_services: list[str] = Field(default_factory=list)
     excluded_services: list[str] = Field(default_factory=list)
     binding: Literal["binding", "non_binding", "unknown"] = "unknown"
+    availability: str = Field(default="", max_length=500)
+    deposit_terms: str = Field(default="", max_length=1000)
+    cancellation_terms: str = Field(default="", max_length=1000)
+    quote_validity: str = Field(default="", max_length=500)
     notes: str = Field(default="", max_length=4000)
     conversation_id: str | None = Field(default=None, max_length=200)
 
@@ -64,4 +69,6 @@ class QuoteResult(BaseModel):
     def validate_quote(self) -> QuoteResult:
         if self.outcome == "itemized_quote" and self.final_total is None:
             raise ValueError("itemized_quote requires final_total")
+        if self.outcome == "partial_decline" and self.initial_total is None and self.final_total is None:
+            raise ValueError("partial_decline requires a stated price")
         return self
