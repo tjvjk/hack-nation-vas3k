@@ -94,28 +94,36 @@ function animateIncomingAnswer(call, isNextCarrier) {
 	answer.focus({ preventScroll: true });
 }
 
-function dateTwoWeeksFromNow() {
-	const date = new Date(Date.now() + 14 * 86400000);
+function saturdayThreeWeeksFromNow() {
+	const date = new Date(Date.now() + 21 * 86400000);
+	date.setDate(date.getDate() + ((6 - date.getDay() + 7) % 7));
 	return date.toISOString().slice(0, 10);
 }
 
 function requestPayloadFromText(requestText) {
 	return {
-		origin: "See request details",
-		destination: "See request details",
-		move_date: dateTwoWeeksFromNow(),
-		budget_min: 0,
-		budget_max: 10000,
+		origin: "Rock Hill, SC",
+		destination: "Charlotte, NC",
+		move_date: saturdayThreeWeeksFromNow(),
+		budget_min: 1500,
+		budget_max: 2800,
 		service_type: "truck_and_movers",
-		bedrooms: 1,
+		bedrooms: 2,
 		movers_count: 2,
-		origin_floor: 0,
-		destination_floor: 0,
+		origin_floor: 2,
+		destination_floor: 2,
 		origin_elevator: false,
 		destination_elevator: false,
 		long_carry: false,
-		parking_constraints: "See request details",
-		inventory: [{ name: "See request details", quantity: 1, large: false }],
+		parking_constraints: "Standard stairs at both buildings",
+		inventory: [
+			{ name: "Sofa", quantity: 1, large: true },
+			{ name: "Queen bed and mattress", quantity: 1, large: true },
+			{ name: "Refrigerator", quantity: 1, large: true },
+			{ name: "Washing machine", quantity: 1, large: true },
+			{ name: "Dining table for 4", quantity: 1, large: true },
+			{ name: "Boxes", quantity: 15, large: false },
+		],
 		notes: requestText,
 		confirmed: true,
 		outreach_consent: true,

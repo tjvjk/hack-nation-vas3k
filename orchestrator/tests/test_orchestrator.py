@@ -21,21 +21,28 @@ from prompts import AGENT_NEGOTIATOR_FIRST_MESSAGE, AGENT_NEGOTIATOR_SYSTEM_PROM
 
 def payload(**overrides):
     data = {
-        "origin": "San Francisco, CA 94110",
-        "destination": "San Jose, CA 95113",
+        "origin": "Rock Hill, SC",
+        "destination": "Charlotte, NC",
         "move_date": "2026-08-01",
-        "budget_min": 1600,
-        "budget_max": 2600,
+        "budget_min": 1500,
+        "budget_max": 2800,
         "service_type": "truck_and_movers",
         "bedrooms": 2,
         "movers_count": 2,
         "origin_floor": 2,
-        "destination_floor": 1,
+        "destination_floor": 2,
         "origin_elevator": False,
-        "destination_elevator": True,
+        "destination_elevator": False,
         "long_carry": False,
         "parking_constraints": "",
-        "inventory": [{"name": "Sofa", "quantity": 1, "large": True}],
+        "inventory": [
+            {"name": "Sofa", "quantity": 1, "large": True},
+            {"name": "Queen bed and mattress", "quantity": 1, "large": True},
+            {"name": "Refrigerator", "quantity": 1, "large": True},
+            {"name": "Washing machine", "quantity": 1, "large": True},
+            {"name": "Dining table for 4", "quantity": 1, "large": True},
+            {"name": "Boxes", "quantity": 15, "large": False},
+        ],
         "notes": "",
         "confirmed": True,
         "outreach_consent": True,
@@ -138,7 +145,7 @@ def test_second_carrier_receives_first_verified_quote_as_honest_leverage():
 
     context = json.loads(store.session_variables(second["id"], claim["claim_token"])["move_context"])
 
-    assert context["move_spec"]["budget_max"] == 2600
+    assert context["move_spec"]["budget_max"] == 2800
     assert context["verified_quotes"] == [
         {
             "carrier_name": "Carolina Swift Movers",
