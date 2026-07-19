@@ -1,0 +1,8 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "include": ["orchestrator"],
+  "exclude": ["**/__pycache__", ".venv"],
+  "extraPaths": ["orchestrator"],
+  "typeCheckingMode": "basic"
+}

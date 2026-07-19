@@ -1,0 +1,21 @@
+services:
+  orchestrator:
+    build:
+      context: ./orchestrator
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    environment:
+      ORCHESTRATOR_DATA_DIR: /app/data
+      DATABASE_URL: sqlite:////app/data/negotiator.db
+      PUBLIC_BASE_URL: http://localhost:8000
+      CALL_TRANSPORT: widget
+    ports:
+      - "8000:8000"
+    volumes:
+      - negotiator-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  negotiator-data:
+

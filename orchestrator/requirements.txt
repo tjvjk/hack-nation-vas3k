@@ -1,0 +1,8 @@
+starlette>=0.47,<1
+uvicorn[standard]>=0.34,<1
+pydantic>=2.11,<3
+httpx>=0.28,<1
+mcp>=1.26,<2
+elevenlabs>=2.0,<3
+pytest>=8.3,<9
+

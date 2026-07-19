@@ -1,0 +1,43 @@
+[project]
+name = "hack-nation-vas3k"
+version = "0.1.0"
+requires-python = ">=3.11"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+include = ["orchestrator"]
+exclude = ["**/__pycache__", ".venv"]
+extraPaths = ["orchestrator"]
+typeCheckingMode = "basic"
+reportMissingImports = "warning"
+
+[tool.ruff]
+target-version = "py314"
+line-length = 160
+extend-exclude = [".venv", "__pycache__", ".git"]
+
+[tool.ruff.lint]
+select = [
+  "E",   # pycodestyle errors
+  "F",   # pyflakes
+  "W",   # pycodestyle warnings
+  "I",   # isort
+  "N",   # pep8-naming
+  "UP",  # pyupgrade
+  "B",   # flake8-bugbear
+  "SIM", # flake8-simplify
+  "RUF", # ruff-specific
+]
+ignore = [
+  "E501", # line-too-long (handled by formatter)
+  "B008", # do-not-perform-function-calls-in-argument-defaults
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "prompts", "create_agents"]
+force-sort-within-sections = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

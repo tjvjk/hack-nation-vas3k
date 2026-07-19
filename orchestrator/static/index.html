@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Negotiator — Moving Quotes</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+</head>
+<body>
+  <header class="hero">
+    <div><span class="eyebrow">HACK NATION · THE NEGOTIATOR</span><h1>Move without pricing surprises</h1><p>One confirmed specification. Three live conversations. Comparable, evidence-backed quotes.</p></div>
+    <div class="status-pill"><span></span> Orchestrator online</div>
+  </header>
+
+  <main>
+    <section class="card" id="intake-card">
+      <div class="section-title"><span>01</span><div><h2>Move specification</h2><p>The web form replaces the interview agent.</p></div></div>
+      <form id="move-form">
+        <div class="grid two"><label>Origin<input name="origin" value="San Francisco, CA 94110" required></label><label>Destination<input name="destination" value="San Jose, CA 95113" required></label></div>
+        <div class="grid four"><label>Move date<input type="date" name="move_date" required></label><label>Budget minimum, $<input type="number" name="budget_min" value="1600" min="0" required></label><label>Budget maximum, $<input type="number" name="budget_max" value="2600" min="1" required></label><label>Service<select name="service_type"><option value="truck_and_movers">Truck + movers</option><option value="full_service">Full service</option><option value="labor_only">Labor only</option></select></label></div>
+        <div class="grid four"><label>Bedrooms<input type="number" name="bedrooms" value="2" min="0"></label><label>Movers needed<input type="number" name="movers_count" value="2" min="1"></label><label>Origin floor<input type="number" name="origin_floor" value="2" min="0"></label><label>Destination floor<input type="number" name="destination_floor" value="1" min="0"></label></div>
+        <div class="checks"><label><input type="checkbox" name="origin_elevator"> Origin elevator</label><label><input type="checkbox" name="destination_elevator"> Destination elevator</label><label><input type="checkbox" name="long_carry"> Long carry</label></div>
+        <div class="grid two"><label>Inventory <small>one per line: name, quantity, large</small><textarea name="inventory" rows="5">Sofa,1,true
+Queen bed,1,true
+Dining table,1,true
+Boxes,24,false</textarea></label><label>Constraints and notes<textarea name="notes" rows="5" placeholder="Parking, fragile items…"></textarea></label></div>
+        <div class="consent"><label><input type="checkbox" name="confirmed" required> I reviewed and confirm this immutable move specification.</label><label><input type="checkbox" name="outreach_consent" required> I separately authorize demo outreach to three carriers.</label></div>
+        <button class="primary" type="submit">Confirm and start campaign →</button>
+        <p class="error" id="form-error"></p>
+      </form>
+    </section>
+
+    <section class="card hidden" id="campaign-card">
+      <div class="section-title"><span>02</span><div><h2>Campaign</h2><p>Calls run sequentially, so only real saved quotes can become negotiation leverage.</p></div></div>
+      <div id="jobs" class="jobs"></div>
+    </section>
+
+    <section class="card call-card hidden" id="call-card">
+      <div class="ring-orbit"><div>☎</div></div>
+      <span class="eyebrow">BROWSER DEMO CALL · NOT PSTN</span>
+      <h2 id="caller-name">Incoming demo call</h2>
+      <p id="caller-style"></p>
+      <div class="persona" id="persona"></div>
+      <div class="actions"><button class="answer" id="answer">Answer</button><button class="decline" id="decline">Decline</button></div>
+      <div id="voice-widget"></div>
+      <form id="result-form" class="result-form hidden">
+        <h3>Structured result</h3>
+        <div class="grid three"><label>Outcome<select name="outcome"><option value="itemized_quote">Itemized quote</option><option value="callback_commitment">Callback</option><option value="documented_decline">Decline</option><option value="technical_failure">Technical failure</option></select></label><label>Initial total<input name="initial_total" type="number" min="0" step="0.01"></label><label>Final total<input name="final_total" type="number" min="0" step="0.01"></label></div>
+        <label>Fees <small>JSON array</small><textarea name="fees" rows="2">[]</textarea></label>
+        <label>Notes<textarea name="result_notes" rows="2"></textarea></label>
+        <button class="primary" type="submit">Complete call</button>
+      </form>
+    </section>
+
+    <section class="card hidden" id="results-card">
+      <div class="section-title"><span>03</span><div><h2>Comparison</h2><p>A lowball below 70% of the benchmark is flagged as a risk.</p></div></div>
+      <div id="benchmark"></div><div id="ranking"></div>
+    </section>
+  </main>
+  <script type="module" src="/static/app.js"></script>
+</body>
+</html>
