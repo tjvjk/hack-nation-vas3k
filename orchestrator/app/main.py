@@ -130,8 +130,61 @@ async def start_campaign(request: Request):
 
 
 async def answer_call(request: Request):
+    call_id = request.path_params["call_id"]
     try:
-        result = store.answer_call(request.path_params["call_id"])
+        claim = store.answer_call(call_id)
+    except KeyError as exc:
+        return error(str(exc), 404)
+    except ValueError as exc:
+        return error(str(exc), 409)
+    try:
+        variables = store.session_variables(call_id, claim["claim_token"])
+        agent_id = store.get_setting("elevenlabs_agent_negotiator_id")
+        signed_url = await gateway.get_signed_url(agent_id)
+        if not signed_url:
+            raise RuntimeError("Agent Negotiator is not configured")
+    except Exception as exc:
+        try:
+            store.release_call(call_id, claim["claim_token"])
+        except (KeyError, ValueError):
+            pass
+        return error(f"could not create ElevenLabs session: {exc}", 502)
+    return JSONResponse(
+        {
+            "mode": "live",
+            "signed_url": signed_url,
+            "dynamic_variables": variables,
+            "claim_token": claim["claim_token"],
+        }
+    )
+
+
+async def call_started(request: Request):
+    try:
+        body = await request.json()
+        claim_token = body.get("claim_token")
+        conversation_id = body.get("conversation_id")
+        if not isinstance(claim_token, str) or not isinstance(conversation_id, str):
+            return error("claim_token and conversation_id are required", 422)
+        result = store.start_call(request.path_params["call_id"], claim_token, conversation_id)
+    except json.JSONDecodeError as exc:
+        return error("invalid json", 422, str(exc))
+    except KeyError as exc:
+        return error(str(exc), 404)
+    except ValueError as exc:
+        return error(str(exc), 409)
+    return JSONResponse(result)
+
+
+async def release_call(request: Request):
+    try:
+        body = await request.json()
+        claim_token = body.get("claim_token")
+        if not isinstance(claim_token, str):
+            return error("claim_token is required", 422)
+        result = store.release_call(request.path_params["call_id"], claim_token)
+    except json.JSONDecodeError as exc:
+        return error("invalid json", 422, str(exc))
     except KeyError as exc:
         return error(str(exc), 404)
     except ValueError as exc:
@@ -152,28 +205,6 @@ async def decline_call(request: Request):
     except ValueError as exc:
         return error(str(exc), 409)
     return JSONResponse(result)
-
-
-async def call_session(request: Request):
-    call_id = request.path_params["call_id"]
-    try:
-        variables = store.session_variables(call_id)
-        agent_id = store.get_setting("elevenlabs_agent_negotiator_id")
-        signed_url = await gateway.get_signed_url(agent_id)
-    except KeyError as exc:
-        return error(str(exc), 404)
-    except ValueError as exc:
-        return error(str(exc), 409)
-    except Exception as exc:
-        return error(f"could not create ElevenLabs session: {exc}", 502)
-    return JSONResponse(
-        {
-            "mode": "live" if signed_url else "mock",
-            "signed_url": signed_url,
-            "dynamic_variables": variables,
-            "agent_id_configured": bool(agent_id),
-        }
-    )
 
 
 async def call_result(request: Request):
@@ -235,8 +266,9 @@ routes = [
     Route("/api/moves", create_move, methods=["POST"]),
     Route("/api/moves/{move_id:str}/campaign", start_campaign, methods=["POST"]),
     Route("/api/calls/{call_id:str}/answer", answer_call, methods=["POST"]),
+    Route("/api/calls/{call_id:str}/started", call_started, methods=["POST"]),
+    Route("/api/calls/{call_id:str}/release", release_call, methods=["POST"]),
     Route("/api/calls/{call_id:str}/decline", decline_call, methods=["POST"]),
-    Route("/api/calls/{call_id:str}/session", call_session),
     Route("/api/calls/{call_id:str}/result", call_result, methods=["POST"]),
     Route("/webhooks/elevenlabs", elevenlabs_webhook, methods=["POST"]),
 ]

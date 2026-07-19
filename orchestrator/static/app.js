@@ -1,5 +1,8 @@
+import { Conversation } from "https://cdn.jsdelivr.net/npm/@elevenlabs/client@1.14.1/+esm";
+
 const select = (selector) => document.querySelector(selector);
 let currentCallId = null;
+let activeConversation = null;
 
 function inventoryFrom(text) {
 	return text
@@ -82,13 +85,17 @@ function render(state) {
 	const offered = campaign.jobs.find(
 		(job) => job.status === "offered_to_widget",
 	);
+	const claimed = campaign.jobs.find((job) => job.status === "claimed");
 	const active = campaign.jobs.find((job) => job.status === "in_progress");
-	const call = offered || active;
+	const call = offered || claimed || active;
 	if (call) {
 		currentCallId = call.id;
 		select("#call-card").classList.remove("hidden");
-		select("#caller-name").textContent = call.carrier.carrier_name;
-		select("#caller-style").textContent = call.carrier.headline;
+		select("#caller-name").textContent = "Incoming call from The Negotiator";
+		select("#caller-style").textContent =
+			"AI assistant calling on behalf of a customer";
+		select("#answering-as").textContent =
+			`You are answering as ${call.carrier.carrier_name} · ${call.carrier.headline}`;
 		select("#persona").innerHTML =
 			`<strong>Private operator card</strong><p>${call.carrier.private_brief}</p>`;
 		select("#answer").classList.toggle(
@@ -133,24 +140,78 @@ function listen() {
 }
 
 select("#answer").addEventListener("click", async () => {
-	await api(`/api/calls/${currentCallId}/answer`, { method: "POST" });
-	const session = await api(`/api/calls/${currentCallId}/session`);
-	const host = select("#voice-widget");
-	host.replaceChildren();
-	if (session.mode === "live") {
-		const widget = document.createElement("elevenlabs-convai");
-		widget.setAttribute("signed-url", session.signed_url);
-		widget.setAttribute(
-			"dynamic-variables",
-			JSON.stringify(session.dynamic_variables),
-		);
-		host.append(widget);
-	} else {
-		const msg = document.createElement("p");
-		msg.textContent =
-			"Agent setup unavailable: Agent Negotiator must be created automatically from prompts.py before the server starts. Check the startup log.";
-		host.append(msg);
+	const answer = select("#answer");
+	const voiceSession = select("#voice-session");
+	const callId = currentCallId;
+	let claimToken = null;
+	let pendingConversation = null;
+	answer.disabled = true;
+	answer.textContent = "Answering…";
+	select("#form-error").textContent = "";
+	voiceSession.classList.remove("hidden");
+	select("#voice-status").textContent = "Requesting microphone access…";
+
+	try {
+		const permissionStream = await navigator.mediaDevices.getUserMedia({
+			audio: true,
+		});
+		permissionStream.getTracks().forEach((track) => track.stop());
+		const session = await api(`/api/calls/${callId}/answer`, { method: "POST" });
+		claimToken = session.claim_token;
+		select("#voice-status").textContent = "Connecting…";
+		pendingConversation = await Conversation.startSession({
+			signedUrl: session.signed_url,
+			dynamicVariables: session.dynamic_variables,
+			onConnect: () => {
+				select("#voice-status").textContent = "Connected to The Negotiator";
+				select("#hang-up").classList.remove("hidden");
+			},
+			onDisconnect: () => {
+				select("#voice-status").textContent = "Call ended";
+				select("#hang-up").classList.add("hidden");
+				activeConversation = null;
+			},
+			onError: (error) => {
+				select("#form-error").textContent = `Voice call error: ${error.message || error}`;
+			},
+		});
+		activeConversation = pendingConversation;
+		await api(`/api/calls/${callId}/started`, {
+			method: "POST",
+			body: JSON.stringify({
+				claim_token: claimToken,
+				conversation_id: pendingConversation.getId(),
+			}),
+		});
+		claimToken = null;
+	} catch (error) {
+		if (pendingConversation) {
+			try {
+				await pendingConversation.endSession();
+			} catch {
+				// The failed SDK session may already be disconnected.
+			}
+		}
+		activeConversation = null;
+		if (claimToken) {
+			try {
+				await api(`/api/calls/${callId}/release`, {
+					method: "POST",
+					body: JSON.stringify({ claim_token: claimToken }),
+				});
+			} catch {
+				// A concurrent successful start owns the claim and must not be rolled back.
+			}
+		}
+		voiceSession.classList.add("hidden");
+		answer.disabled = false;
+		answer.textContent = "Answer";
+		select("#form-error").textContent = `Could not answer call: ${error.message || error}`;
 	}
+});
+
+select("#hang-up").addEventListener("click", async () => {
+	if (activeConversation) await activeConversation.endSession();
 });
 
 select("#decline").addEventListener("click", () =>
@@ -182,7 +243,8 @@ select("#result-form").addEventListener("submit", async (event) => {
 		}),
 	});
 	event.currentTarget.reset();
-	select("#voice-widget").replaceChildren();
+	if (activeConversation) await activeConversation.endSession();
+	select("#voice-session").classList.add("hidden");
 });
 
 api("/api/state").then(render);

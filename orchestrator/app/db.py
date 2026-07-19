@@ -84,6 +84,7 @@ class Store:
                     conversation_id TEXT UNIQUE,
                     progress_json TEXT,
                     result_json TEXT,
+                    claim_nonce TEXT,
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL,
                     UNIQUE(campaign_id, sequence_no)
@@ -99,6 +100,15 @@ class Store:
                     updated_at TEXT NOT NULL
                 );
                 """
+            )
+            columns = {row["name"] for row in db.execute("PRAGMA table_info(call_jobs)")}
+            if "claim_nonce" not in columns:
+                db.execute("ALTER TABLE call_jobs ADD COLUMN claim_nonce TEXT")
+            db.execute(
+                """UPDATE call_jobs
+                SET status='offered_to_widget', updated_at=?
+                WHERE status='in_progress' AND conversation_id IS NULL AND claim_nonce IS NULL""",
+                (_now(),),
             )
 
     def reset(self) -> None:
@@ -158,7 +168,10 @@ class Store:
             for index, persona in enumerate(PERSONAS[: consent["max_carriers"]]):
                 status = "offered_to_widget" if index == 0 else "scheduled"
                 db.execute(
-                    "INSERT INTO call_jobs VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, NULL, ?, ?)",
+                    """INSERT INTO call_jobs (
+                        id, campaign_id, sequence_no, carrier_json, status, capability,
+                        conversation_id, progress_json, result_json, created_at, updated_at, claim_nonce
+                    ) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, NULL, ?, ?, NULL)""",
                     (
                         str(uuid.uuid4()),
                         campaign_id,
@@ -245,15 +258,49 @@ class Store:
         return job, campaign, move
 
     def answer_call(self, call_id: str) -> dict[str, Any]:
+        claim_token = secrets.token_urlsafe(32)
         with self._lock, self.connect() as db:
             changed = db.execute(
-                "UPDATE call_jobs SET status='in_progress', updated_at=? WHERE id=? AND status='offered_to_widget'",
-                (_now(), call_id),
+                """UPDATE call_jobs SET status='claimed', claim_nonce=?, updated_at=?
+                WHERE id=? AND status='offered_to_widget'""",
+                (claim_token, _now(), call_id),
             ).rowcount
             if changed != 1:
                 raise ValueError("call is not available to answer")
             job, _, _ = self._job_with_context(db, call_id)
-        return {"id": job["id"], "status": "in_progress"}
+        return {"id": job["id"], "status": "claimed", "claim_token": claim_token}
+
+    def release_call(self, call_id: str, claim_token: str) -> dict[str, Any]:
+        with self._lock, self.connect() as db:
+            changed = db.execute(
+                """UPDATE call_jobs
+                SET status='offered_to_widget', claim_nonce=NULL, updated_at=?
+                WHERE id=? AND status='claimed' AND claim_nonce=? AND conversation_id IS NULL""",
+                (_now(), call_id, claim_token),
+            ).rowcount
+            if changed != 1:
+                raise ValueError("call claim is no longer releasable")
+        return {"id": call_id, "status": "offered_to_widget"}
+
+    def start_call(self, call_id: str, claim_token: str, conversation_id: str) -> dict[str, Any]:
+        if not conversation_id:
+            raise ValueError("conversation id is required")
+        with self._lock, self.connect() as db:
+            try:
+                changed = db.execute(
+                    """UPDATE call_jobs
+                    SET status='in_progress', conversation_id=?, claim_nonce=NULL, updated_at=?
+                    WHERE id=? AND status='claimed' AND claim_nonce=? AND conversation_id IS NULL""",
+                    (conversation_id, _now(), call_id, claim_token),
+                ).rowcount
+            except sqlite3.IntegrityError as exc:
+                raise ValueError("conversation is already assigned to another call") from exc
+            if changed == 1:
+                return {"id": call_id, "status": "in_progress", "conversation_id": conversation_id, "idempotent": False}
+            job, _, _ = self._job_with_context(db, call_id)
+            if job["status"] == "in_progress" and job["conversation_id"] == conversation_id:
+                return {"id": call_id, "status": "in_progress", "conversation_id": conversation_id, "idempotent": True}
+            raise ValueError("call claim is not available to start")
 
     def call_context(self, call_id: str, capability: str | None = None) -> dict[str, Any]:
         with self.connect() as db:
@@ -278,20 +325,30 @@ class Store:
             "honesty_rules": ["Disclose that you are an AI assistant", "Never invent inventory or competing offers", "Do not book or pay a deposit"],
         }
 
-    def session_variables(self, call_id: str) -> dict[str, Any]:
+    def session_variables(self, call_id: str, claim_token: str) -> dict[str, Any]:
         with self.connect() as db:
             job, _, _ = self._job_with_context(db, call_id)
-            if job["status"] != "in_progress":
-                raise ValueError("call must be answered first")
+            if job["status"] != "claimed" or not secrets.compare_digest(job["claim_nonce"] or "", claim_token):
+                raise ValueError("call must have an active claim")
         return {"call_id": call_id, "call_capability": job["capability"]}
 
     def record_started(self, call_id: str, capability: str, conversation_id: str) -> dict[str, Any]:
         self.call_context(call_id, capability)
-        with self.connect() as db:
-            db.execute(
-                "UPDATE call_jobs SET conversation_id=COALESCE(conversation_id, ?), updated_at=? WHERE id=?",
-                (conversation_id, _now(), call_id),
-            )
+        with self._lock, self.connect() as db:
+            job, _, _ = self._job_with_context(db, call_id)
+            if job["conversation_id"] not in {None, conversation_id}:
+                raise ValueError("call already has a different conversation")
+            if job["status"] not in {"claimed", "in_progress"}:
+                raise ValueError("call is not active")
+            try:
+                db.execute(
+                    """UPDATE call_jobs
+                    SET status='in_progress', conversation_id=?, claim_nonce=NULL, updated_at=?
+                    WHERE id=?""",
+                    (conversation_id, _now(), call_id),
+                )
+            except sqlite3.IntegrityError as exc:
+                raise ValueError("conversation is already assigned to another call") from exc
         return {"ok": True, "call_id": call_id, "conversation_id": conversation_id}
 
     def save_progress(self, call_id: str, capability: str, progress: dict[str, Any]) -> dict[str, Any]:
@@ -314,7 +371,9 @@ class Store:
                 red_flags.append("suspicious_lowball")
             result["red_flags"] = sorted(set(red_flags))
             db.execute(
-                "UPDATE call_jobs SET status=?, result_json=?, conversation_id=COALESCE(conversation_id, ?), updated_at=? WHERE id=?",
+                """UPDATE call_jobs
+                SET status=?, result_json=?, conversation_id=COALESCE(conversation_id, ?), claim_nonce=NULL, updated_at=?
+                WHERE id=?""",
                 (status, json.dumps(result), result.get("conversation_id"), _now(), call_id),
             )
             next_job = db.execute(
@@ -322,7 +381,10 @@ class Store:
                 (campaign["id"],),
             ).fetchone()
             if next_job:
-                db.execute("UPDATE call_jobs SET status='offered_to_widget', updated_at=? WHERE id=?", (_now(), next_job["id"]))
+                db.execute(
+                    "UPDATE call_jobs SET status='offered_to_widget', claim_nonce=NULL, updated_at=? WHERE id=?",
+                    (_now(), next_job["id"]),
+                )
             else:
                 unfinished = db.execute(
                     "SELECT COUNT(*) AS n FROM call_jobs WHERE campaign_id=? AND status NOT IN ('completed','declined','failed','no_answer')",

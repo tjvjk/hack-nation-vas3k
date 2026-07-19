@@ -4,8 +4,12 @@ from pathlib import Path
 import tempfile
 from types import SimpleNamespace
 
+import pytest
+from starlette.testclient import TestClient
+
 os.environ["ORCHESTRATOR_DATA_DIR"] = tempfile.mkdtemp(prefix="negotiator-tests-")
 
+from app import main as main_module
 from app.config import settings
 from app.db import Store
 from app.domain import MoveCreate, QuoteResult
@@ -68,12 +72,118 @@ def test_answer_is_compare_and_swap():
     store = fresh_store()
     move = store.create_move(MoveCreate.model_validate(payload()).model_dump(mode="json"))
     call_id = store.start_campaign(move["id"])["jobs"][0]["id"]
-    assert store.answer_call(call_id)["status"] == "in_progress"
+    claim = store.answer_call(call_id)
+    assert claim["status"] == "claimed"
     try:
         store.answer_call(call_id)
         raise AssertionError("second answer should fail")
     except ValueError:
         pass
+    assert store.release_call(call_id, claim["claim_token"])["status"] == "offered_to_widget"
+    retry = store.answer_call(call_id)
+    assert retry["claim_token"] != claim["claim_token"]
+    started = store.start_call(call_id, retry["claim_token"], "conversation-1")
+    assert started["status"] == "in_progress"
+    assert store.start_call(call_id, retry["claim_token"], "conversation-1")["idempotent"]
+    try:
+        store.release_call(call_id, retry["claim_token"])
+        raise AssertionError("a started call must not be released")
+    except ValueError:
+        pass
+
+
+class FakeGateway:
+    def __init__(self, results):
+        self.results = iter(results)
+        self.call_count = 0
+
+    async def get_signed_url(self, _agent_id):
+        self.call_count += 1
+        result = next(self.results)
+        if isinstance(result, Exception):
+            raise result
+        return result
+
+
+@pytest.fixture(scope="module")
+def client():
+    with TestClient(main_module.app) as test_client:
+        yield test_client
+
+
+def api_call(monkeypatch, gateway):
+    store = fresh_store()
+    move = store.create_move(MoveCreate.model_validate(payload()).model_dump(mode="json"))
+    call_id = store.start_campaign(move["id"])["jobs"][0]["id"]
+    store.set_setting("elevenlabs_agent_negotiator_id", "agent-test")
+    monkeypatch.setattr(main_module, "store", store)
+    monkeypatch.setattr(main_module, "gateway", gateway)
+    return store, call_id
+
+
+def test_session_start_failure_releases_call(monkeypatch, client):
+    gateway = FakeGateway([RuntimeError("signed URL unavailable")])
+    store, call_id = api_call(monkeypatch, gateway)
+
+    response = client.post(f"/api/calls/{call_id}/answer")
+
+    assert response.status_code == 502
+    job = store.snapshot()["campaigns"][0]["jobs"][0]
+    assert job["status"] == "offered_to_widget"
+    assert job["conversation_id"] is None
+
+
+def test_session_start_can_be_retried_after_failure(monkeypatch, client):
+    gateway = FakeGateway([RuntimeError("temporary failure"), "wss://signed.test"])
+    store, call_id = api_call(monkeypatch, gateway)
+
+    assert client.post(f"/api/calls/{call_id}/answer").status_code == 502
+    answer = client.post(f"/api/calls/{call_id}/answer")
+    assert answer.status_code == 200
+    body = answer.json()
+    started = client.post(
+        f"/api/calls/{call_id}/started",
+        json={"claim_token": body["claim_token"], "conversation_id": "conversation-retry"},
+    )
+
+    assert started.status_code == 200
+    assert store.snapshot()["campaigns"][0]["jobs"][0]["status"] == "in_progress"
+
+
+def test_successful_session_start_is_single_use(monkeypatch, client):
+    gateway = FakeGateway(["wss://signed.test"])
+    store, call_id = api_call(monkeypatch, gateway)
+
+    answer = client.post(f"/api/calls/{call_id}/answer")
+    assert answer.status_code == 200
+    body = answer.json()
+    started = client.post(
+        f"/api/calls/{call_id}/started",
+        json={"claim_token": body["claim_token"], "conversation_id": "conversation-once"},
+    )
+    duplicate = client.post(f"/api/calls/{call_id}/answer")
+
+    assert started.status_code == 200
+    assert duplicate.status_code == 409
+    assert gateway.call_count == 1
+    job = store.snapshot()["campaigns"][0]["jobs"][0]
+    assert job["status"] == "in_progress"
+    assert job["conversation_id"] == "conversation-once"
+
+
+def test_browser_demo_models_one_click_incoming_answer():
+    static_dir = Path(__file__).parents[1] / "static"
+    html = (static_dir / "index.html").read_text()
+    javascript = (static_dir / "app.js").read_text()
+
+    assert "Incoming call from The Negotiator" in html
+    assert "You are answering as" in javascript
+    assert "Conversation.startSession" in javascript
+    assert "/started" in javascript
+    assert "/release" in javascript
+    assert "dynamicVariables: session.dynamic_variables" in javascript
+    assert "document.createElement(\"elevenlabs-convai\")" not in javascript
+    assert "convai-widget-embed" not in html
 
 
 def test_lowball_is_flagged_and_not_recommended():
