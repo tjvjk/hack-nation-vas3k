@@ -214,7 +214,7 @@ function render(state) {
 	select("#jobs").innerHTML = campaign.jobs
 		.map(
 			(job) =>
-				`<div class="job"><span class="number">${job.sequence_no}</span><div><strong>${job.carrier.carrier_name}</strong><br><small>${job.carrier.headline}</small></div><span class="badge ${job.status}">${job.status.replaceAll("_", " ")}</span></div>`,
+				`<div class="job"><span class="number">${job.sequence_no}</span><div><strong>${job.carrier.carrier_name}</strong><br><small>${job.carrier.location} · USDOT ${job.carrier.dot_number} · ${job.carrier.headline}</small></div><span class="badge ${job.status}">${job.status.replaceAll("_", " ")}</span></div>`,
 		)
 		.join("");
 	const offered = campaign.jobs.find(

@@ -20,6 +20,24 @@ ELEVENLABS_WEBHOOK_SECRET=optional_webhook_secret
 ELEVENLABS_AGENT_NEGOTIATOR_LLM=gpt-4o-mini
 ```
 
+## Real company directory
+
+The campaign uses real active carrier directory records from the official FMCSA
+Company Census, bundled in `seed/fmcsa_carriers.json`. The counterparties in
+the widget remain explicitly simulated; this directory must not be represented
+as a real quote or a confirmation that a carrier serves a particular move.
+
+Refresh the directory without an API key:
+
+```bash
+python orchestrator/scripts/download_fmcsa_carriers.py
+```
+
+The script queries the public FMCSA Socrata endpoint and writes the three
+records used by the demo. It does not download or store credentials.
+Set `CARRIERS_DATA_FILE` only when overriding the bundled directory (inside the
+container its default is `/app/seed/fmcsa_carriers.json`).
+
 Run:
 
 ```bash

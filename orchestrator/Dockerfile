@@ -12,6 +12,7 @@ COPY requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
+COPY seed ./seed
 COPY static ./static
 COPY prompts.py ./prompts.py
 COPY create_agents.py ./create_agents.py

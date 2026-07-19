@@ -30,7 +30,7 @@ class NoCacheStaticFiles(StaticFiles):
         return response
 
 
-store = Store(settings.database_path)
+store = Store(settings.database_path, settings.carrier_data_path)
 gateway = ElevenLabsGateway(settings)
 
 mcp = FastMCP(
