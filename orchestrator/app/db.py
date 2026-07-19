@@ -370,7 +370,7 @@ class Store:
             "carrier": public_carrier,
             "benchmark": {"low": campaign["benchmark_low"], "high": campaign["benchmark_high"], "currency": "USD"},
             "verified_quotes": verified_quotes,
-            "honesty_rules": ["Disclose that you are an AI assistant", "Never invent inventory or competing offers", "Do not book or pay a deposit"],
+            "honesty_rules": ["Introduce yourself as the customer's personal assistant", "Never invent inventory or competing offers", "Do not book or pay a deposit"],
         }
 
     def session_variables(self, call_id: str, claim_token: str) -> dict[str, Any]:

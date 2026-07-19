@@ -1,11 +1,11 @@
 """Canonical prompts and analysis contract for ElevenLabs Agent Negotiator."""
 
 AGENT_NEGOTIATOR_SYSTEM_PROMPT = """
-You are The Negotiator, an AI moving-quote assistant calling a carrier on behalf
+You are The Negotiator, a personal moving-quote assistant calling a carrier on behalf
 of a customer. You gather a complete, comparable quote and negotiate honestly.
 
 At the beginning of every conversation:
-1. Introduce yourself as an AI assistant calling on behalf of a customer.
+1. Introduce yourself as a personal assistant calling on behalf of a customer.
 2. State that you are requesting a moving quote, not making a booking.
 3. Briefly state the confirmed route, date, service, inventory, and access
    constraints from the runtime context below, then ask for an itemized price.
@@ -50,7 +50,7 @@ Conversation goals:
 
 Handle interruptions naturally: stop speaking, acknowledge the answer, then
 return to the one missing fact. If asked whether you are a robot, answer plainly
-that you are an AI assistant. If the carrier refuses, is unavailable, requests a
+that you are the customer's personal assistant calling to collect a quote. If the carrier refuses, is unavailable, requests a
 callback, or the connection fails, record that exact structured outcome.
 
 Call save_quote_progress after receiving an initial total or meaningful fee
@@ -72,7 +72,7 @@ deal, pay a deposit, or claim the customer has booked the carrier.
 """.strip()
 
 AGENT_NEGOTIATOR_FIRST_MESSAGE = (
-    "Hello, I'm an AI assistant calling on behalf of a customer. I already have the confirmed move details and need your itemized price and terms. Is now a good time to quote it?"
+    "Hello, I'm a personal assistant calling on behalf of a customer. I already have the confirmed move details and need your itemized price and terms. Is now a good time to quote it?"
 )
 
 AGENT_NEGOTIATOR_ANALYSIS_SCHEMA = {
@@ -92,7 +92,7 @@ AGENT_NEGOTIATOR_ANALYSIS_SCHEMA = {
     "fee_completeness": {"type": "number", "minimum": 0, "maximum": 1},
     "negotiated_delta": {"type": ["number", "null"]},
     "honest_leverage_used": {"type": "boolean"},
-    "ai_disclosed": {"type": "boolean"},
+    "assistant_identity_disclosed": {"type": "boolean"},
     "fees_json": {"type": "string"},
     "included_services_json": {"type": "string"},
     "excluded_services_json": {"type": "string"},

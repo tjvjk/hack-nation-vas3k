@@ -60,10 +60,22 @@ def save_quote_progress(call_id: str, capability: str, progress: dict) -> dict:
     return store.save_progress(call_id, capability, progress)
 
 
+def _quote_result_from_payload(payload: dict) -> QuoteResult:
+    normalized = dict(payload)
+    for json_key, target_key in (
+        ("fees_json", "fees"),
+        ("included_services_json", "included_services"),
+        ("excluded_services_json", "excluded_services"),
+    ):
+        if json_key in normalized and target_key not in normalized:
+            normalized[target_key] = _json_list(normalized.get(json_key))
+    return QuoteResult.model_validate(normalized)
+
+
 @mcp.tool()
 def save_negotiation_result(call_id: str, capability: str, result: dict) -> dict:
     """Persist the single structured terminal result for a call."""
-    parsed = QuoteResult.model_validate(result)
+    parsed = _quote_result_from_payload(result)
     return store.finish_call(call_id, parsed.model_dump(mode="json"), capability)
 
 
@@ -236,7 +248,7 @@ async def decline_call(request: Request):
 
 async def call_result(request: Request):
     try:
-        parsed = QuoteResult.model_validate(await request.json())
+        parsed = _quote_result_from_payload(await request.json())
         result = store.finish_call(request.path_params["call_id"], parsed.model_dump(mode="json"))
     except ValidationError as exc:
         return error("invalid call result", 422, exc.errors(include_url=False))

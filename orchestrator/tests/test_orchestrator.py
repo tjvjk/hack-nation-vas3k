@@ -332,7 +332,8 @@ def test_client_tool_progress_and_result_advance_campaign(monkeypatch, client):
             "outcome": "itemized_quote",
             "initial_total": 2300,
             "final_total": 2050,
-            "fees": [{"name": "fuel", "amount": 100}],
+            "fees_json": '[{"name":"fuel","amount":100}]',
+            "included_services_json": '["truck","labor"]',
             "binding": "non_binding",
         },
     )
@@ -342,6 +343,8 @@ def test_client_tool_progress_and_result_advance_campaign(monkeypatch, client):
     jobs = store.snapshot()["campaigns"][0]["jobs"]
     assert jobs[0]["status"] == "completed"
     assert jobs[0]["result"]["final_total"] == 2050
+    assert jobs[0]["result"]["fees"] == [{"name": "fuel", "amount": 100}]
+    assert jobs[0]["result"]["included_services"] == ["truck", "labor"]
     assert jobs[1]["status"] == "offered_to_widget"
 
 
@@ -417,7 +420,8 @@ def test_browser_demo_models_one_click_incoming_answer():
     html = (static_dir / "index.html").read_text()
     javascript = (static_dir / "app.js").read_text()
 
-    assert "Incoming call from The Negotiator" in html
+    assert 'id="call-card"' in html
+    assert "Calling on your behalf..." in html
     assert "You are answering as" in javascript
     assert "Conversation.startSession" in javascript
     assert "/started" in javascript
@@ -438,9 +442,9 @@ def test_browser_demo_models_one_click_incoming_answer():
     assert "answer.focus" in javascript
     assert "lastRenderedCallId" in javascript
     assert "campaignStartedThisPage" in javascript
-    assert "campaign-started .hero" in (static_dir / "styles.css").read_text()
+    assert ".agent-card" in (static_dir / "styles.css").read_text()
     assert "incoming-answer" in (static_dir / "styles.css").read_text()
-    assert "Structured call records" in javascript
+    assert "Call results" in javascript
     assert 'id="call-results"' in html
     assert "/reconcile" in javascript
     assert "answer.disabled = false" in javascript
