@@ -47,6 +47,25 @@ An end-to-end voice-agent system that runs the mandatory loop **intake -> calls 
 
 ## 5. Implementation & Technology
 
+### Live orchestrator architecture
+
+```mermaid
+flowchart LR
+    EL[ElevenLabs Agents]
+    W[Orchestrator widget<br/>Browser voice session]
+    B[Orchestrator backend<br/>REST · MCP · signed URLs · webhooks]
+    G[Google Maps Geocoding API]
+    M[MovingBuddha API]
+
+    EL <--> |live voice session| W
+    W <--> |campaign state and session setup| B
+    EL <--> |MCP tools and verified post-call webhooks| B
+    B --> |origin and destination → Place IDs| G
+    B --> |Place IDs and move spec → market benchmark| M
+```
+
+The browser receives only a short-lived ElevenLabs signed URL; ElevenLabs and data-provider credentials remain in the backend.
+
 - **Voice agents:** two private ElevenLabs Agents; `@elevenlabs/react` for the intake session and the carrier console (browser voice session for the demo, with a feature-flagged Twilio/SIP outbound adapter for real PSTN calls - off by default).
 - **Control plane:** Fastify + official TypeScript MCP SDK exposing one Streamable HTTP `/mcp` endpoint, REST API, ElevenLabs webhooks, and a scheduler/dispatcher - a single process.
 - **MCP security:** one server registered twice (Agent 1 / Agent 2) with distinct scoped credentials and tool allowlists; per-session short-lived signed capabilities carry `move_id`, `spec_version`, `call_id`, `carrier_id`, `consent_id`. The server derives scope from verified credentials, never from LLM-supplied arguments.

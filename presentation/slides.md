@@ -174,3 +174,54 @@ class: deck-white
 </div>
 
 <p class="caption" style="margin-top:1rem">LLM Plumbers · The Negotiator · HackNation / ElevenLabs</p>
+
+---
+layout: default
+class: deck-white
+---
+
+<div class="deck-kicker">Live system architecture</div>
+
+# One voice workflow. One control plane.
+
+<div style="display:flex!important; align-items:stretch!important; justify-content:center!important; gap:.45rem!important; margin-top:1.25rem!important">
+  <div class="callout soft-purple" style="width:27%!important; margin:0!important; text-align:center!important"><b>ElevenLabs Agents</b><br><span class="caption">Voice reasoning<br>Conversation runtime</span></div>
+  <div style="display:flex!important; align-items:center!important; font-size:1.5em!important">↔</div>
+  <div class="callout soft-blue" style="width:27%!important; margin:0!important; text-align:center!important"><b>Orchestrator widget</b><br><span class="caption">Browser voice session<br>Carrier demo console</span></div>
+  <div style="display:flex!important; align-items:center!important; font-size:1.5em!important">↔</div>
+  <div class="callout soft-orange" style="width:27%!important; margin:0!important; text-align:center!important"><b>Orchestrator backend</b><br><span class="caption">REST state · MCP tools<br>Signed URLs · webhooks</span></div>
+</div>
+
+<div style="display:flex!important; justify-content:flex-end!important; gap:.6rem!important; margin-top:1rem!important; padding-right:2.5%!important">
+  <div style="font-size:1.4em!important; line-height:1!important">↙</div>
+  <div style="font-size:1.4em!important; line-height:1!important">↘</div>
+</div>
+
+<div style="display:flex!important; justify-content:flex-end!important; gap:.8rem!important">
+  <div class="callout soft-green" style="width:27%!important; margin:0!important; text-align:center!important"><b>Google Maps API</b><br><span class="caption">Origin / destination → Place IDs</span></div>
+  <div class="callout soft-pink" style="width:27%!important; margin:0!important; text-align:center!important"><b>MovingBuddha API</b><br><span class="caption">Market benchmark range</span></div>
+</div>
+
+<p class="caption" style="margin-top:1rem; text-align:center"><b>Data stays server-side:</b> API keys and ElevenLabs credentials never enter the browser.</p>
+
+---
+layout: default
+class: deck-white
+clicks: 3
+---
+
+<div class="deck-kicker">Product walkthrough · click to advance</div>
+
+# From intake to a live call
+
+<div style="position:relative!important; height:355px!important; margin-top:.8rem!important; border:2px solid #000!important; border-radius:16px!important; overflow:hidden!important; background:#f7f7f7!important">
+  <div v-click="[0, 0]" style="position:absolute!important; inset:0!important; display:flex!important; align-items:center!important; justify-content:center!important; padding:12px!important"><img style="max-width:100%!important; max-height:100%!important; object-fit:contain!important" src="./assets/intake_1.png" alt="Move request intake screen" /></div>
+  <div v-click="[1, 1]" style="position:absolute!important; inset:0!important; display:flex!important; align-items:center!important; justify-content:center!important; padding:12px!important"><img style="max-width:100%!important; max-height:100%!important; object-fit:contain!important" src="./assets/extraction_1.png" alt="Extracted move details screen" /></div>
+  <div v-click="[2, 2]" style="position:absolute!important; inset:0!important; display:flex!important; align-items:center!important; justify-content:center!important; padding:12px!important"><img style="max-width:100%!important; max-height:100%!important; object-fit:contain!important" src="./assets/answer_1.png" alt="Live carrier call screen" /></div>
+</div>
+
+<div style="display:flex!important; justify-content:center!important; gap:.5rem!important; margin-top:.6rem!important; font-size:.63em!important; font-weight:700!important">
+  <span v-click="[0, 0]" class="pill">01 · intake</span>
+  <span v-click="[1, 1]" class="pill">02 · extraction</span>
+  <span v-click="[2, 2]" class="pill">03 · live call</span>
+</div>
