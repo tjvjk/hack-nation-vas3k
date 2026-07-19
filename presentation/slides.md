@@ -50,7 +50,7 @@ The only way to find a fair price is to call 5–8 movers, repeat the same story
 .demo-card { border: 2px solid #000; border-radius: 18px; padding: 1.1rem; }.demo-card p { margin: .25rem 0; font-size: .66em; }.demo-step { display: flex; gap: .65rem; align-items: baseline; margin: .5rem 0; }.demo-step b { font-size: .85em; }
 .team-photo { width: 100%; height: 440px; object-fit: cover; object-position: 50% 42%; border: 2px solid #000; border-radius: 16px; display:block; }
 .github-links { margin-top: 1.2rem; font-size: .62em; line-height: 1.65; }.github-links a { text-decoration: underline; }
-.video-wrap { width: 100%; height: 430px; border: 2px solid #000; border-radius: 16px; overflow: hidden; background: #000; }.video-wrap video { width: 100%; height: 100%; object-fit: contain; display:block; }
+.video-wrap { border: 2px solid #000; border-radius: 16px; overflow: hidden; background: #000; }.video-wrap video { width: 100%; height: 100%; object-fit: contain; display:block; }
 .approaches { display:grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: 1.1rem; }.approaches > div { border: 2px solid #000; border-radius: 16px; padding: .85rem; min-height: 215px; }.approaches h3 { margin: .3rem 0 .55rem; font-size: .78em; }.approaches p { margin:0; font-size: .61em; line-height: 1.4; }
 .architecture { display:grid; grid-template-columns: 1fr .25fr 1fr .25fr 1fr .25fr 1fr; align-items:center; gap:.25rem; margin-top:1.5rem; }.architecture .box { border:2px solid #000; border-radius:16px; padding:.8rem; min-height:155px; font-size:.62em; line-height:1.35; }.architecture b { display:block; font-size:1.15em; margin-bottom:.4rem; }.architecture .arr { font-size:1.4em; text-align:center; }
 .mentor-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:1.25rem; align-items:end; margin-top:1rem; }.mentor { text-align:center; }.mentor img { height:265px; max-width:100%; object-fit:contain; display:block; margin:auto; }.mentor b { display:block; margin-top:.25rem; }.qr-grid { display:grid; grid-template-columns:repeat(2, 1fr); gap:3rem; max-width:800px; margin:1.25rem auto 0; text-align:center; }.qr-grid img { width:205px; height:205px; image-rendering:auto; border:1px solid #000; }.qr-grid a { display:block; font-size:.61em; margin-top:.35rem; text-decoration:underline; }
@@ -134,87 +134,14 @@ layout: default
 class: deck-white
 ---
 
-<div class="deck-kicker">Live working demo</div>
-
-# From one move request to a recommendation
-
-<div class="demo-grid" style="margin-top:1.1rem">
-  <div class="demo-card soft-blue">
-    <div class="demo-step"><b>01</b><span><b>Intake</b><br><span class="caption">Rock Hill → Charlotte · 45 miles · 2-bedroom apartment</span></span></div>
-    <div class="demo-step"><b>02</b><span><b>Consent & campaign</b><br><span class="caption">Three carriers, one immutable spec</span></span></div>
-    <div class="demo-step"><b>03</b><span><b>Calls</b><br><span class="caption">Price, terms, and transcript are collected live</span></span></div>
-    <div class="demo-step"><b>04</b><span><b>Recommendation</b><br><span class="caption">Comparable quotes + evidence, not a black box</span></span></div>
-  </div>
-  <div>
-    <div class="callout soft-orange"><b>Demo order</b><br><span class="caption">1. A market benchmark moves a high quote.<br>2. A mover refuses to quote — the agent records the decline, it does not bluff.<br>3. A verified quote becomes leverage and reduces the final price.</span></div>
-    <div class="callout soft-green" style="margin-top:.7rem"><b>What the jury should watch for</b><br><span class="caption">The campaign card changes to a structured terminal result immediately after every call.</span></div>
-  </div>
-</div>
-
-<!--
-0:55–1:35 — This is the live-demo setup. Switch to the open product tabs: intake, campaign, carrier console, and final report.
-The next slide contains the local recorded fallback video.
--->
-
----
-layout: default
-class: deck-white
----
-
 <div class="deck-kicker">Recorded demo · fallback for the live flow</div>
 
 # The Negotiator in action
 
-<div class="video-wrap" style="margin-top:.8rem"><video src="/video/demo.mp4" controls preload="metadata" poster="" aria-label="The Negotiator demo video"></video></div>
-
-<p class="caption" style="margin-top:.35rem">52-second recording of the working voice-agent flow. Click play during the pitch if the live session is unavailable.</p>
+<div class="video-wrap" style="width:220px!important; height:391px!important; margin:.8rem auto 0!important; overflow:hidden!important"><video src="/video/demo.mp4" controls preload="metadata" poster="" aria-label="The Negotiator demo video"></video></div>
 
 <!--
 1:35–2:27 — Play the video. It is intentionally embedded from presentation/public/video/demo.mp4 so the deck remains self-contained after build.
--->
-
----
-layout: default
-class: deck-white
----
-
-<div class="deck-kicker">Three conversation approaches we tested</div>
-
-# Negotiation means adapting — not reading one script.
-
-<div class="approaches">
-  <div class="soft-orange"><span class="pill">01 · benchmark</span><h3>Firm price → market reference</h3><p>Carolina Swift opens at <b>$2,950</b>. The agent cites a real market range; the mover reduces the quote to <b>$2,780</b>.</p></div>
-  <div class="soft-pink"><span class="pill">02 · honest stop</span><h3>No quote → documented decline</h3><p>Queen City refuses a phone quote. The agent thanks them and records <b>documented_decline</b> — no fabricated price, no fake success.</p></div>
-  <div class="soft-green"><span class="pill">03 · verified leverage</span><h3>Prior quote → lower final price</h3><p>Palmetto starts at <b>$2,400</b>. The agent references a verified competing quote, and reaches <b>$2,250</b>.</p></div>
-</div>
-
-<!--
-2:27–2:42 — These are the three call patterns from the demo script. Emphasize causality: the price changes only after real leverage appears.
--->
-
----
-layout: default
-class: deck-white
----
-
-<div class="deck-kicker">How it works</div>
-
-# Voice in. Evidence-backed outcome out.
-
-<div class="architecture">
-  <div class="box soft-blue"><b>Estimator agent</b>Voice or document intake creates the confirmed job specification.</div>
-  <div class="arr">→</div>
-  <div class="box soft-purple"><b>Control plane</b>Consent, benchmark, carrier campaign, and scoped call context.</div>
-  <div class="arr">→</div>
-  <div class="box soft-orange"><b>Negotiator agent</b>Calls through the browser demo session and saves structured outcomes.</div>
-  <div class="arr">→</div>
-  <div class="box soft-green"><b>Decision report</b>Ranked quotes, terms, red flags, transcript, and recording links.</div>
-</div>
-
-<div class="callout" style="margin-top:1.15rem"><b>Trust is a product feature:</b> same immutable spec for every provider · separate consent before outreach · real leverage only · suspicious lowballs are flagged, never auto-selected.</div>
-
-<!--
-2:42–2:55 — High-level diagram only. No code, SDK logos, or file tree.
 -->
 
 ---
@@ -224,10 +151,10 @@ class: deck-white
 
 # Спасибо mentors!
 
-<div class="mentor-grid">
-  <div class="mentor"><img src="./assets/mentor1.png" alt="Vardineh QR code" /><b>Vardineh</b></div>
-  <div class="mentor"><img src="./assets/mentor2.png" alt="Wolf QR code" /><b>Wolf</b></div>
-  <div class="mentor"><img src="./assets/mentor3.png" alt="Levon QR code" /><b>Levon</b></div>
+<div class="mentor-grid" style="display:flex!important; width:100%!important; gap:1rem!important; align-items:flex-start!important; justify-content:center!important">
+  <div class="mentor" style="flex:1 1 0!important; min-width:0!important"><img style="width:100%!important; height:230px!important; object-fit:contain!important" src="./assets/mentor1.png" alt="Vardineh QR code" /><b>Vardineh</b></div>
+  <div class="mentor" style="flex:1 1 0!important; min-width:0!important"><img style="width:100%!important; height:230px!important; object-fit:contain!important" src="./assets/mentor2.png" alt="Wolf QR code" /><b>Wolf</b></div>
+  <div class="mentor" style="flex:1 1 0!important; min-width:0!important"><img style="width:100%!important; height:230px!important; object-fit:contain!important" src="./assets/mentor3.png" alt="Levon QR code" /><b>Levon</b></div>
 </div>
 
 <!--
@@ -241,9 +168,9 @@ class: deck-white
 
 # Try The Negotiator
 
-<div class="qr-grid">
-  <div><a href="http://calls.feedfinch.com" target="_blank"><img src="/qrs/product.png" alt="QR code for calls.feedfinch.com" /></a><b style="display:block; margin-top:.35rem">Live product</b><a href="http://calls.feedfinch.com" target="_blank">calls.feedfinch.com</a></div>
-  <div><a href="https://github.com/tjvjk/hack-nation-vas3k" target="_blank"><img src="/qrs/repository.png" alt="QR code for GitHub repository" /></a><b style="display:block; margin-top:.35rem">Source code</b><a href="https://github.com/tjvjk/hack-nation-vas3k" target="_blank">github.com/tjvjk/hack-nation-vas3k</a></div>
+<div class="qr-grid" style="display:flex!important; width:100%!important; max-width:none!important; margin:1.25rem auto 0!important; gap:2.5rem!important; justify-content:center!important">
+  <div style="flex:0 0 auto!important; text-align:center!important; white-space:nowrap!important"><a href="http://calls.feedfinch.com" target="_blank" style="display:block!important"><img style="display:block!important; width:180px!important; height:180px!important; margin:0 auto!important" src="/qrs/product.png" alt="QR code for calls.feedfinch.com" /></a><b style="display:block; margin-top:.35rem; white-space:nowrap!important">Live product</b><a href="http://calls.feedfinch.com" target="_blank" style="display:block!important; white-space:nowrap!important">calls.feedfinch.com</a></div>
+  <div style="flex:0 0 auto!important; text-align:center!important; white-space:nowrap!important"><a href="https://github.com/tjvjk/hack-nation-vas3k" target="_blank" style="display:block!important"><img style="display:block!important; width:180px!important; height:180px!important; margin:0 auto!important" src="/qrs/repository.png" alt="QR code for GitHub repository" /></a><b style="display:block; margin-top:.35rem; white-space:nowrap!important">Source code</b><a href="https://github.com/tjvjk/hack-nation-vas3k" target="_blank" style="display:block!important; white-space:nowrap!important">github.com/tjvjk/hack-nation-vas3k</a></div>
 </div>
 
 <p class="caption" style="margin-top:1rem">LLM Plumbers · The Negotiator · HackNation / ElevenLabs</p>
