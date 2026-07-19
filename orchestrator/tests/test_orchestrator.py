@@ -436,6 +436,7 @@ def test_browser_demo_models_one_click_incoming_answer():
     assert "dynamicVariables: session.dynamic_variables" in javascript
     assert "clientTools:" in javascript
     assert "get_movebuddha_benchmark" in javascript
+    assert 'movebuddha-benchmark`, { method: "POST" }' in javascript
     assert "save_quote_progress" in javascript
     assert "save_negotiation_result" in javascript
     assert "resultSaved = true" in javascript

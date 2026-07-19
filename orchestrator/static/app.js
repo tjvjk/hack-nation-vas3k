@@ -316,7 +316,8 @@ select("#answer").addEventListener("click", async () => {
 			signedUrl: session.signed_url,
 			dynamicVariables: session.dynamic_variables,
 			clientTools: {
-				get_movebuddha_benchmark: async () => api(`/api/calls/${callId}/movebuddha-benchmark`),
+				get_movebuddha_benchmark: async () =>
+					api(`/api/calls/${callId}/movebuddha-benchmark`, { method: "POST" }),
 				save_quote_progress: async (params) =>
 					api(`/api/calls/${callId}/progress`, {
 						method: "POST",
