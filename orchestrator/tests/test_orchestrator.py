@@ -435,6 +435,7 @@ def test_browser_demo_models_one_click_incoming_answer():
     assert "/release" in javascript
     assert "dynamicVariables: session.dynamic_variables" in javascript
     assert "clientTools:" in javascript
+    assert "get_movebuddha_benchmark" in javascript
     assert "save_quote_progress" in javascript
     assert "save_negotiation_result" in javascript
     assert "resultSaved = true" in javascript
@@ -458,6 +459,9 @@ def test_browser_demo_models_one_click_incoming_answer():
     assert 'answer.textContent = "Answer"' in javascript
     assert 'render(await api("/api/state"))' in javascript
     assert "{{move_context}}" in AGENT_NEGOTIATOR_SYSTEM_PROMPT
+    assert "# Required workflow" in AGENT_NEGOTIATOR_SYSTEM_PROMPT
+    assert "call save_quote_progress immediately" in AGENT_NEGOTIATOR_SYSTEM_PROMPT
+    assert "There is no normal assistant" in AGENT_NEGOTIATOR_SYSTEM_PROMPT
     assert "confirmed move details" in AGENT_NEGOTIATOR_FIRST_MESSAGE
     assert "document.createElement(\"elevenlabs-convai\")" not in javascript
     assert "convai-widget-embed" not in html
@@ -565,8 +569,9 @@ def test_agent_negotiator_is_created_then_reconfigured_from_sqlite():
     remote = agents.get(created.agent_id)["conversation_config"]["agent"]
     assert remote["prompt"]["prompt"] == AGENT_NEGOTIATOR_SYSTEM_PROMPT
     assert remote["first_message"] == AGENT_NEGOTIATOR_FIRST_MESSAGE
-    assert len(remote["prompt"]["tool_ids"]) == 2
+    assert len(remote["prompt"]["tool_ids"]) == 3
     assert {tool.tool_config.name for tool in tools.remote.values()} == {
+        "get_movebuddha_benchmark",
         "save_quote_progress",
         "save_negotiation_result",
     }
@@ -582,5 +587,5 @@ def test_agent_negotiator_is_created_then_reconfigured_from_sqlite():
     assert updated.agent_id == created.agent_id
     assert agents.created == 1
     assert agents.updated == 1
-    assert tools.created == 2
-    assert tools.updated == 2
+    assert tools.created == 3
+    assert tools.updated == 3

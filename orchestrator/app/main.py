@@ -21,6 +21,7 @@ from .config import settings
 from .db import Store
 from .domain import MoveCreate, QuoteResult
 from .elevenlabs_client import ElevenLabsGateway, verify_webhook
+from .movebuddha import MoveBuddhaClient
 
 
 class NoCacheStaticFiles(StaticFiles):
@@ -32,6 +33,7 @@ class NoCacheStaticFiles(StaticFiles):
 
 store = Store(settings.database_path, settings.carrier_data_path)
 gateway = ElevenLabsGateway(settings)
+movebuddha = MoveBuddhaClient(settings)
 
 mcp = FastMCP(
     "The Negotiator Agent Negotiator Tools",
@@ -102,6 +104,14 @@ async def health(_: Request):
 
 async def state(_: Request):
     return JSONResponse(store.snapshot())
+
+
+async def movebuddha_benchmark(request: Request):
+    try:
+        context = store.call_context(request.path_params["call_id"])
+    except KeyError as exc:
+        return error(str(exc), 404)
+    return JSONResponse(await movebuddha.benchmark(context["move_spec"]))
 
 
 async def agent_negotiator_config(_: Request):
@@ -412,6 +422,7 @@ routes = [
     Route("/api/calls/{call_id:str}/session", call_session),
     Route("/api/calls/{call_id:str}/decline", decline_call, methods=["POST"]),
     Route("/api/calls/{call_id:str}/progress", call_progress, methods=["POST"]),
+    Route("/api/calls/{call_id:str}/movebuddha-benchmark", movebuddha_benchmark, methods=["POST"]),
     Route("/api/calls/{call_id:str}/result", call_result, methods=["POST"]),
     Route("/api/calls/{call_id:str}/reconcile", reconcile_call, methods=["POST"]),
     Route("/webhooks/elevenlabs", elevenlabs_webhook, methods=["POST"]),

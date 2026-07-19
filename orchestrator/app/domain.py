@@ -14,6 +14,8 @@ class InventoryItem(BaseModel):
 class MoveCreate(BaseModel):
     origin: str = Field(min_length=5, max_length=300)
     destination: str = Field(min_length=5, max_length=300)
+    origin_place_id: str = Field(default="", max_length=300)
+    destination_place_id: str = Field(default="", max_length=300)
     move_date: str = Field(min_length=8, max_length=32)
     budget_min: int = Field(ge=0, le=1_000_000)
     budget_max: int = Field(gt=0, le=1_000_000)

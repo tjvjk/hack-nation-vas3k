@@ -20,6 +20,24 @@ ELEVENLABS_WEBHOOK_SECRET=optional_webhook_secret
 ELEVENLABS_AGENT_NEGOTIATOR_LLM=gpt-4o-mini
 ```
 
+## Google Maps key for moveBuddha benchmarks
+
+The moveBuddha client tool turns the confirmed origin and destination into Google
+Place IDs before requesting a live moving-cost range. To configure it:
+
+1. Open [Google Maps Platform Credentials](https://console.cloud.google.com/google/maps-apis/credentials)
+   and select or create a billing-enabled Google Cloud project.
+2. Enable **Geocoding API** in **APIs & Services → Library**.
+3. Create an API key in **Credentials**, restrict it to **Geocoding API**, and
+   restrict server-side use to the public IP address of the deployed backend.
+4. Store the key only in the root `.env` file:
+
+   ```dotenv
+   GOOGLE_MAPS_API_KEY=your_key
+   ```
+
+Do not commit the key or expose it in browser JavaScript.
+
 ## Real company directory
 
 The campaign uses real active carrier directory records from the official FMCSA
