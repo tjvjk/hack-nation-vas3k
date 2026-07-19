@@ -1,0 +1,13 @@
+{
+  "name": "the-negotiator-pitch",
+  "private": true,
+  "scripts": {
+    "dev": "bunx --bun @slidev/cli slides.md",
+    "build": "bunx --bun @slidev/cli build slides.md",
+    "export": "bunx --bun @slidev/cli export slides.md"
+  },
+  "devDependencies": {
+    "@slidev/cli": "^52.18.0",
+    "@slidev/theme-default": "^0.25.0"
+  }
+}
