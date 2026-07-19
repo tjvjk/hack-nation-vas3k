@@ -86,7 +86,11 @@ CLIENT_TOOL_DEFINITIONS = {
 
 END_CALL_DESCRIPTION = (
     "End the call after a completed quote or an explicit request to stop. "
-    "This tool alone delivers the single final farewell."
+    "This tool alone delivers the single final farewell. Speak one short outbound "
+    "close to the carrier, for example: \"Thanks, I've got what I need. The "
+    "customer will follow up if they proceed. Goodbye.\" Do not invite the carrier "
+    "to ask questions or offer further help. Never say inbound-support phrases "
+    "like \"If you need anything else\", \"let me know\", or \"further questions\"."
 )
 
 
