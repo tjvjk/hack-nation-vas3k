@@ -9,28 +9,10 @@ import threading
 from typing import Any
 import uuid
 
-PERSONAS = [
-    {
-        "carrier_id": "metro-tough",
-        "carrier_name": "Metro Tough Movers",
-        "style": "tough_negotiator",
-        "headline": "Tough negotiator",
-        "private_brief": "Start at $2,450. Your floor is $2,050. Concede only after a concrete benchmark or a verified competing quote.",
-    },
-    {
-        "carrier_id": "budget-hidden",
-        "carrier_name": "Budget Hidden Fee Moving",
-        "style": "hidden_fee_lowballer",
-        "headline": "Hidden-fee lowballer",
-        "private_brief": "Quote $1,100, then add $350 stairs, $250 fuel, and $300 long-carry fees. Resist itemizing until pressed.",
-    },
-    {
-        "carrier_id": "premium-stonewall",
-        "carrier_name": "Premium Hard Sell Logistics",
-        "style": "hard_sell_stonewaller",
-        "headline": "Hard sell / stonewall",
-        "private_brief": "Start at $2,300 and demand a deposit. Your floor is $1,900, or offer free packing when shown strong verified leverage.",
-    },
+SIMULATION_SCENARIOS = [
+    ("Tough negotiator", "Start at $2,450. Your floor is $2,050. Concede only after a concrete benchmark or a verified competing quote."),
+    ("Hidden-fee lowballer", "Quote $1,100, then add $350 stairs, $250 fuel, and $300 long-carry fees. Resist itemizing until pressed."),
+    ("Hard sell / stonewall", "Start at $2,300 and demand a deposit. Your floor is $1,900, or offer free packing when shown strong verified leverage."),
 ]
 
 TERMINAL_STATUSES = {"completed", "declined", "failed", "no_answer"}
@@ -42,11 +24,36 @@ def _now() -> str:
 
 
 class Store:
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, carrier_data_path: Path | None = None):
         self.path = path
+        self.carrier_data_path = carrier_data_path or Path(__file__).resolve().parents[1] / "seed" / "fmcsa_carriers.json"
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._lock = threading.RLock()
         self._init_schema()
+
+    def carriers(self, limit: int) -> list[dict[str, Any]]:
+        try:
+            records = json.loads(self.carrier_data_path.read_text())
+        except (OSError, json.JSONDecodeError) as exc:
+            raise ValueError(f"could not load carrier directory: {exc}") from exc
+        if not isinstance(records, list) or len(records) < limit:
+            raise ValueError("carrier directory does not contain enough records")
+        carriers = []
+        for index, record in enumerate(records[:limit]):
+            headline, private_brief = SIMULATION_SCENARIOS[index % len(SIMULATION_SCENARIOS)]
+            carriers.append(
+                {
+                    "carrier_id": f"fmcsa-{record['dot_number']}",
+                    "carrier_name": record["legal_name"],
+                    "headline": f"{headline} · simulated counterparty",
+                    "private_brief": private_brief,
+                    "source": "FMCSA Company Census",
+                    "dot_number": record["dot_number"],
+                    "phone": record["phone"],
+                    "location": f"{record['phy_city']}, {record['phy_state']} {record.get('phy_zip', '')}".strip(),
+                }
+            )
+        return carriers
 
     def connect(self) -> sqlite3.Connection:
         connection = sqlite3.connect(self.path, timeout=10)
@@ -169,7 +176,7 @@ class Store:
                 "INSERT INTO campaigns VALUES (?, ?, 'calling', ?, ?, ?, ?)",
                 (campaign_id, move_id, benchmark_low, benchmark_high, now, now),
             )
-            for index, persona in enumerate(PERSONAS[: consent["max_carriers"]]):
+            for index, persona in enumerate(self.carriers(consent["max_carriers"])):
                 status = "offered_to_widget" if index == 0 else "scheduled"
                 db.execute(
                     """INSERT INTO call_jobs (

@@ -15,6 +15,7 @@ class Settings:
     elevenlabs_webhook_secret: str
     public_base_url: str
     call_transport: str
+    carrier_data_path: Path
 
     @property
     def live_agent_enabled(self) -> bool:
@@ -40,6 +41,9 @@ def load_settings() -> Settings:
         elevenlabs_webhook_secret=os.getenv("ELEVENLABS_WEBHOOK_SECRET", ""),
         public_base_url=os.getenv("PUBLIC_BASE_URL", "http://localhost:8000"),
         call_transport=os.getenv("CALL_TRANSPORT", "widget"),
+        carrier_data_path=Path(
+            os.getenv("CARRIERS_DATA_FILE", package_root / "seed" / "fmcsa_carriers.json")
+        ),
     )
 
 

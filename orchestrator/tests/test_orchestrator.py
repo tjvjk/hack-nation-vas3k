@@ -141,7 +141,7 @@ def test_second_carrier_receives_first_verified_quote_as_honest_leverage():
     assert context["move_spec"]["budget_max"] == 2600
     assert context["verified_quotes"] == [
         {
-            "carrier_name": "Metro Tough Movers",
+            "carrier_name": "DIXIE MOVING & STORAGE CO INC",
             "quote_quality": "itemized",
             "initial_total": 2350.0,
             "final_total": 2050.0,
@@ -156,6 +156,17 @@ def test_second_carrier_receives_first_verified_quote_as_honest_leverage():
             "quote_validity": "7 days",
         }
     ]
+
+
+def test_campaign_uses_active_fmcsa_directory_records():
+    store = fresh_store()
+    move = store.create_move(MoveCreate.model_validate(payload()).model_dump(mode="json"))
+
+    carriers = [job["carrier"] for job in store.start_campaign(move["id"])["jobs"]]
+
+    assert [carrier["dot_number"] for carrier in carriers] == ["285683", "300453", "302292"]
+    assert all(carrier["source"] == "FMCSA Company Census" for carrier in carriers)
+    assert all("simulated counterparty" in carrier["headline"] for carrier in carriers)
 
 
 def test_partial_decline_price_is_available_as_preliminary_leverage():

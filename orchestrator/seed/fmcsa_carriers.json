@@ -1,0 +1,44 @@
+[
+  {
+    "legal_name": "DIXIE MOVING & STORAGE CO INC",
+    "phone": "9194833182",
+    "phy_city": "FAYETTEVILLE",
+    "phy_state": "NC",
+    "phy_zip": "28302",
+    "dot_number": "285683",
+    "status_code": "A",
+    "carrier_operation": "C",
+    "truck_units": "9",
+    "source": "FMCSA Company Census",
+    "source_url": "https://data.transportation.gov/Trucking-and-Motorcoaches/Company-Census-File/az4n-8mr2",
+    "retrieved_at": "2026-07-19T09:02:01.109435+00:00"
+  },
+  {
+    "legal_name": "CROWN MOVING AND STORAGE INC",
+    "phone": "9104830118",
+    "phy_city": "FAYETTEVILLE",
+    "phy_state": "NC",
+    "phy_zip": "28301-6377",
+    "dot_number": "300453",
+    "status_code": "A",
+    "carrier_operation": "A",
+    "truck_units": "3",
+    "source": "FMCSA Company Census",
+    "source_url": "https://data.transportation.gov/Trucking-and-Motorcoaches/Company-Census-File/az4n-8mr2",
+    "retrieved_at": "2026-07-19T09:02:01.109448+00:00"
+  },
+  {
+    "legal_name": "LAFAYETTE MOVING & STORAGE INC",
+    "phone": "9104883101",
+    "phy_city": "FAYETTEVILLE",
+    "phy_state": "NC",
+    "phy_zip": "28301",
+    "dot_number": "302292",
+    "status_code": "A",
+    "carrier_operation": "A",
+    "truck_units": "3",
+    "source": "FMCSA Company Census",
+    "source_url": "https://data.transportation.gov/Trucking-and-Motorcoaches/Company-Census-File/az4n-8mr2",
+    "retrieved_at": "2026-07-19T09:02:01.109450+00:00"
+  }
+]
