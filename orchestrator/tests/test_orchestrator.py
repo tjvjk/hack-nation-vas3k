@@ -455,6 +455,8 @@ def test_browser_demo_models_one_click_incoming_answer():
     assert "isFarewell" in javascript
     assert "onMessage:" in javascript
     assert "enforceCallLimit" in javascript
+    assert "startCallDurationTimer" in javascript
+    assert 'id="call-timer"' in html
     assert "180000" in javascript
     assert "animateIncomingAnswer" in javascript
     assert "answer.scrollIntoView" in javascript

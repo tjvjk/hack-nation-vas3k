@@ -4,6 +4,8 @@ const select = (selector) => document.querySelector(selector);
 let currentCallId = null;
 let activeConversation = null;
 let callEndTimer = null;
+let callDurationTimer = null;
+let callStartedAt = null;
 let farewellPending = false;
 let resultSaved = false;
 let animatedOfferId = null;
@@ -13,6 +15,37 @@ let campaignStartedThisPage = false;
 function clearCallEndTimer() {
 	if (callEndTimer !== null) window.clearTimeout(callEndTimer);
 	callEndTimer = null;
+}
+
+function formatCallDuration(totalSeconds) {
+	const minutes = Math.floor(totalSeconds / 60);
+	const seconds = totalSeconds % 60;
+	return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function updateCallDuration() {
+	const elapsedSeconds = callStartedAt
+		? Math.floor((Date.now() - callStartedAt) / 1000)
+		: 0;
+	select("#call-timer").textContent = formatCallDuration(elapsedSeconds);
+}
+
+function startCallDurationTimer() {
+	if (callDurationTimer !== null) window.clearInterval(callDurationTimer);
+	callStartedAt = Date.now();
+	updateCallDuration();
+	callDurationTimer = window.setInterval(updateCallDuration, 1000);
+}
+
+function stopCallDurationTimer() {
+	if (callDurationTimer !== null) window.clearInterval(callDurationTimer);
+	callDurationTimer = null;
+	callStartedAt = null;
+}
+
+function resetCallDurationTimer() {
+	stopCallDurationTimer();
+	select("#call-timer").textContent = "00:00";
 }
 
 function endConversationSoon(conversation, delay = 1200) {
@@ -329,6 +362,7 @@ select("#answer").addEventListener("click", async () => {
 	let claimToken = null;
 	let pendingConversation = null;
 	clearSubtitles();
+	resetCallDurationTimer();
 	setPostCallProcessing(false);
 	answer.disabled = true;
 	answer.textContent = "Answering...";
@@ -368,6 +402,7 @@ select("#answer").addEventListener("click", async () => {
 			},
 			onConnect: () => {
 				select("#voice-status").textContent = "Connected to Call Assistant";
+				startCallDurationTimer();
 				select("#hang-up").classList.remove("hidden");
 			},
 			onMessage: (message) => {
@@ -387,6 +422,7 @@ select("#answer").addEventListener("click", async () => {
 				select("#voice-status").textContent = "Call ended";
 				select("#hang-up").classList.add("hidden");
 				voiceSession.classList.add("hidden");
+				stopCallDurationTimer();
 				setPostCallProcessing(true);
 				answer.disabled = false;
 				answer.textContent = "Answer";
@@ -420,6 +456,7 @@ select("#answer").addEventListener("click", async () => {
 		}
 		activeConversation = null;
 		clearCallEndTimer();
+		resetCallDurationTimer();
 		farewellPending = false;
 		resultSaved = false;
 		if (claimToken) {
