@@ -36,9 +36,9 @@ if [[ -n "${SSH_USER:-}" ]]; then
 	REMOTE_HOST="${SSH_USER}@${SSH_HOST}"
 fi
 
-SSH_ARGS=(-i "${SSH_KEY}" -o IdentitiesOnly=yes)
+SSH_ARGS=(-i "${SSH_KEY}" -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new)
 printf -v SSH_KEY_QUOTED "%q" "${SSH_KEY}"
-RSYNC_SSH="ssh -i ${SSH_KEY_QUOTED} -o IdentitiesOnly=yes"
+RSYNC_SSH="ssh -i ${SSH_KEY_QUOTED} -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
 
 echo "Preparing ${REMOTE_HOST}:~/${REMOTE_DIR}"
 ssh "${SSH_ARGS[@]}" "${REMOTE_HOST}" "mkdir -p ~/${REMOTE_DIR}"
